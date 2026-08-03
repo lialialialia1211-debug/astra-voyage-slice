@@ -14,6 +14,7 @@ export type GameAction =
   | { type: 'MARK_EVENT_VIEWED'; eventId: EventId }
   | { type: 'ADD_RELATION_XP'; characterId: CharacterId; xp: number }
   | { type: 'SET_ADULT_MODE'; mode: AdultDisplayMode }
+  | { type: 'IMPORT_SAVE'; state: GameState }
   | { type: 'NAVIGATE'; screen: ScreenId }
   | { type: 'RESET' };
 
@@ -93,6 +94,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'SET_ADULT_MODE':
       return { ...state, adultMode: action.mode };
+    case 'IMPORT_SAVE':
+      return action.state;
     case 'NAVIGATE':
       return { ...state, screen: action.screen };
     case 'RESET':

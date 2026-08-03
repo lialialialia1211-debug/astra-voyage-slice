@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useGame } from '../../game/GameProvider';
-import type { AdultDisplayMode } from '../../game/initial-state';
+import { type AdultDisplayMode, type GameState } from '../../game/initial-state';
+import { gameStateSchema } from '../../game/storage';
 
 const modes: readonly { id: AdultDisplayMode; label: string; copy: string }[] = [
   { id: 'full', label: '完整顯示', copy: '解鎖後顯示已匯入的事件 CG。' },
@@ -9,6 +11,28 @@ const modes: readonly { id: AdultDisplayMode; label: string; copy: string }[] = 
 
 export function SettingsScreen() {
   const { state, dispatch } = useGame();
+  const [saveMessage, setSaveMessage] = useState('');
+
+  function exportSave() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'astra-voyage-save.json';
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setSaveMessage('存檔已匯出。');
+  }
+
+  async function importSave(file: File | undefined) {
+    if (!file) return;
+    try {
+      const imported = gameStateSchema.parse(JSON.parse(await file.text())) as GameState;
+      dispatch({ type: 'IMPORT_SAVE', state: imported });
+    } catch {
+      setSaveMessage('匯入失敗：檔案格式或版本不符。');
+    }
+  }
 
   return (
     <section className="screen-card screen-card--wide settings-screen" aria-labelledby="settings-title">
@@ -26,6 +50,22 @@ export function SettingsScreen() {
             <strong>{mode.label}</strong><span>{mode.copy}</span>
           </button>
         ))}
+      </div>
+      <div className="save-tools" aria-label="本機存檔工具">
+        <button type="button" onClick={exportSave}>匯出存檔 JSON</button>
+        <label>
+          匯入存檔
+          <input
+            accept="application/json,.json"
+            aria-label="匯入存檔"
+            type="file"
+            onChange={(event) => {
+              void importSave(event.currentTarget.files?.[0]);
+              event.currentTarget.value = '';
+            }}
+          />
+        </label>
+        {saveMessage && <p aria-live="polite">{saveMessage}</p>}
       </div>
       <button className="primary-action" type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'gallery' })}>返回事件收藏</button>
     </section>
