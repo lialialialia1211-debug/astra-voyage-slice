@@ -1,4 +1,5 @@
-import type { CaptainId, EncounterId, EventId, SummonId } from '../domain/types';
+import type { CaptainId, CharacterId, EncounterId, EventId, SummonId } from '../domain/types';
+import { relationLevelForXp } from '../features/cabin/relation';
 import { createInitialState, type AdultDisplayMode, type GameState, type ScreenId, type WeaponGrid } from './initial-state';
 
 export type GameAction =
@@ -11,6 +12,7 @@ export type GameAction =
   | { type: 'FINISH_ENCOUNTER'; result: 'victory' | 'defeat'; flags: string[]; enemyHp?: number }
   | { type: 'UNLOCK_EVENT'; eventId: EventId }
   | { type: 'MARK_EVENT_VIEWED'; eventId: EventId }
+  | { type: 'ADD_RELATION_XP'; characterId: CharacterId; xp: number }
   | { type: 'SET_ADULT_MODE'; mode: AdultDisplayMode }
   | { type: 'NAVIGATE'; screen: ScreenId }
   | { type: 'RESET' };
@@ -27,13 +29,6 @@ function assertUniqueParty(party: GameState['party']) {
 function assertValidLoadout(grid: WeaponGrid) {
   const weapons = [grid.main, ...grid.sub].filter((weapon) => weapon !== null);
   if (new Set(weapons).size !== weapons.length) throw new Error('武器不可重複裝備');
-}
-
-function relationLevelForXp(xp: number): 1 | 2 | 3 | 4 {
-  if (xp >= 220) return 4;
-  if (xp >= 100) return 3;
-  if (xp >= 40) return 2;
-  return 1;
 }
 
 function grantVictoryRelation(state: GameState): GameState['relation'] {
@@ -85,6 +80,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return { ...state, flags: unique([...state.flags, `unlocked:${action.eventId}`]) };
     case 'MARK_EVENT_VIEWED':
       return { ...state, viewedEvents: unique([...state.viewedEvents, action.eventId]) };
+    case 'ADD_RELATION_XP': {
+      if (!Number.isInteger(action.xp) || action.xp <= 0) throw new Error('關係經驗必須是正整數');
+      const xp = state.relation[action.characterId].xp + action.xp;
+      return {
+        ...state,
+        relation: {
+          ...state.relation,
+          [action.characterId]: { xp, level: relationLevelForXp(xp) },
+        },
+      };
+    }
     case 'SET_ADULT_MODE':
       return { ...state, adultMode: action.mode };
     case 'NAVIGATE':

@@ -7,6 +7,9 @@ import { FormationScreen } from '../features/formation/FormationScreen';
 import { LoadoutScreen } from '../features/loadout/LoadoutScreen';
 import { BattleScreen } from '../features/battle/BattleScreen';
 import { ResultsScreen } from '../features/battle/ResultsScreen';
+import { CabinScreen } from '../features/cabin/CabinScreen';
+import { GalleryScreen } from '../features/cabin/GalleryScreen';
+import { SettingsScreen } from '../features/settings/SettingsScreen';
 import './app.css';
 
 function GameRouter() {
@@ -30,6 +33,12 @@ function GameRouter() {
         return <BattleScreen />;
       case 'results':
         return <ResultsScreen />;
+      case 'cabin':
+        return <CabinScreen />;
+      case 'gallery':
+        return <GalleryScreen />;
+      case 'settings':
+        return <SettingsScreen />;
       default:
         return (
           <section className="screen-card">

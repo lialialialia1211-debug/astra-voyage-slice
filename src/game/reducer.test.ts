@@ -33,3 +33,14 @@ it('grants relation experience only after victory', () => {
   expect(victory.relation.chr_02).toEqual({ xp: 40, level: 2 });
   expect(defeat.relation.chr_02).toEqual({ xp: 0, level: 1 });
 });
+
+it('keeps party and loadout unchanged when adult collection state changes', () => {
+  const initial = createInitialState();
+  const relation = gameReducer(initial, { type: 'ADD_RELATION_XP', characterId: 'chr_02', xp: 100 });
+  const viewed = gameReducer(relation, { type: 'MARK_EVENT_VIEWED', eventId: 'evt_chr02_bond03' });
+  const hidden = gameReducer(viewed, { type: 'SET_ADULT_MODE', mode: 'hidden-thumbnails' });
+
+  expect(hidden.party).toEqual(initial.party);
+  expect(hidden.weaponGrid).toEqual(initial.weaponGrid);
+  expect(hidden.relation.chr_02).toEqual({ xp: 100, level: 3 });
+});
