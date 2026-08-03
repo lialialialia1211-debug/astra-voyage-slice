@@ -50,7 +50,10 @@ function GameRouter() {
   })();
 
   return (
-    <main data-testid="app-shell" className="app-shell">
+    <main
+      data-testid="app-shell"
+      className={`app-shell app-shell--${state.screen}${state.screen === 'battle' && state.currentEncounterId ? ` app-shell--battle-${state.currentEncounterId}` : ''}`}
+    >
       <div className="atmosphere" aria-hidden="true" />
       {screen}
     </main>

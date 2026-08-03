@@ -60,7 +60,7 @@ export function BattleStage({ initialBattle, onComplete }: BattleStageProps) {
   }
 
   return (
-    <section className={`battle-screen ${motion}`} aria-labelledby="battle-title">
+    <section className={`battle-screen battle-screen--${battle.encounterId} ${motion}`} aria-labelledby="battle-title">
       <BattleHud battle={battle} />
       <div className="battle-stage" aria-label="戰鬥區域">
         <div className="enemy-silhouettes" aria-hidden="true">

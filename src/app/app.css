@@ -1,4 +1,10 @@
 :root {
+  --ivory: #f4ead1;
+  --navy: #0b2032;
+  --brass: #c49a4b;
+  --abyss: #050d17;
+  --cyan: #79d5e6;
+  --warning: #d86658;
   color: #eaf5f7;
   background: #06111d;
   font-family: Inter, "Noto Sans TC", system-ui, sans-serif;
@@ -29,9 +35,53 @@ button {
   place-items: center;
   overflow: hidden;
   padding: 24px;
-  background:
+  background-color: #071522;
+  background-image:
     radial-gradient(circle at 70% 18%, rgb(34 211 238 / 18%), transparent 32%),
-    linear-gradient(145deg, #07111f, #0f3044 50%, #06101b);
+    linear-gradient(145deg, rgb(7 17 31 / 80%), rgb(15 48 68 / 72%) 50%, rgb(6 16 27 / 88%)),
+    var(--screen-background, linear-gradient(145deg, #07111f, #0f3044 50%, #06101b));
+  background-position: center;
+  background-size: cover;
+}
+
+.app-shell--adult-gate,
+.app-shell--captain-select,
+.app-shell--prologue {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_title_harbor.webp");
+}
+
+.app-shell--recruit {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_recruit_observatory.webp");
+}
+
+.app-shell--formation {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_hub_harbor.webp");
+}
+
+.app-shell--loadout {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_loadout_console.webp");
+}
+
+.app-shell--battle {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_battle_land.webp");
+}
+
+.app-shell--battle-enc_tutorial {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_battle_land.webp");
+}
+
+.app-shell--battle-enc_tidal_boss {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_battle_ocean.webp");
+}
+
+.app-shell--cabin,
+.app-shell--gallery,
+.app-shell--settings {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_private_cabin.webp");
+}
+
+.app-shell--results {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_ending_star_signal.webp");
 }
 
 .atmosphere {
@@ -131,7 +181,12 @@ button {
   padding: 12px;
   border: 1px solid #50677a;
   border-radius: 12px;
-  background: linear-gradient(145deg, #213b51, #0c1727);
+  background-color: #0c1727;
+  background-image:
+    url("/assets/generated-ui/frames/frame_common.webp"),
+    linear-gradient(145deg, rgb(33 59 81 / 88%), rgb(12 23 39 / 94%));
+  background-position: center;
+  background-size: 100% 100%, cover;
   place-items: center;
 }
 
@@ -149,6 +204,9 @@ button {
 
 .rarity-ssr {
   border-color: #f7d36f;
+  background-image:
+    url("/assets/generated-ui/frames/frame_ssr.webp"),
+    linear-gradient(145deg, rgb(52 48 49 / 82%), rgb(12 23 39 / 94%));
   box-shadow: inset 0 0 24px rgb(247 211 111 / 12%);
 }
 
@@ -169,8 +227,14 @@ button {
   border: 1px solid #4b687c;
   border-radius: 12px;
   color: #d9e8ef;
-  background: #152b3d;
+  background-color: #152b3d;
+  background-image: url("/assets/generated-ui/controls/button_idle.webp");
+  background-size: 100% 100%;
   cursor: pointer;
+}
+
+.secondary-action:hover {
+  background-image: url("/assets/generated-ui/controls/button_hover.webp");
 }
 
 .party-slots,
@@ -218,10 +282,12 @@ button {
   border-radius: 50%;
 }
 
-.element-fire { background: #ef5b4f; }
-.element-water { background: #3bb6d6; }
-.element-wind { background: #56c98a; }
-.element-light { background: #f4d56f; }
+.element-fire { background: #ef5b4f url("/assets/generated-ui/badges/badge_fire.webp") center / cover; }
+.element-water { background: #3bb6d6 url("/assets/generated-ui/badges/badge_water.webp") center / cover; }
+.element-wind { background: #56c98a url("/assets/generated-ui/badges/badge_wind.webp") center / cover; }
+.element-earth { background: #a38b4d url("/assets/generated-ui/badges/badge_earth.webp") center / cover; }
+.element-light { background: #f4d56f url("/assets/generated-ui/badges/badge_light.webp") center / cover; }
+.element-dark { background: #68519b url("/assets/generated-ui/badges/badge_dark.webp") center / cover; }
 
 .primary-action:disabled,
 .secondary-action:disabled,
@@ -238,7 +304,11 @@ button:disabled {
   padding: clamp(18px, 3vw, 34px);
   border: 1px solid rgb(246 199 107 / 42%);
   border-radius: 22px;
-  background: linear-gradient(145deg, rgb(8 25 41 / 96%), rgb(5 14 25 / 95%));
+  background-image:
+    linear-gradient(145deg, rgb(8 25 41 / 94%), rgb(5 14 25 / 93%)),
+    url("/assets/generated-ui/backgrounds/bg_loadout_console.webp");
+  background-position: center;
+  background-size: cover;
   box-shadow: 0 28px 80px rgb(0 0 0 / 45%);
 }
 
@@ -295,6 +365,11 @@ button:disabled {
   border-radius: 9px;
   color: #d9e7ed;
   background: #12263a;
+}
+
+.loadout-tabs button {
+  background-image: url("/assets/generated-ui/controls/tab_plate.webp");
+  background-size: 100% 100%;
 }
 
 .loadout-tabs select {
@@ -445,10 +520,21 @@ button:disabled {
   overflow: hidden;
   border: 1px solid rgb(121 213 230 / 38%);
   border-radius: 22px;
-  background:
+  background-image:
     radial-gradient(circle at 50% 35%, rgb(37 176 198 / 24%), transparent 35%),
-    linear-gradient(165deg, rgb(5 23 38 / 98%), rgb(3 10 19 / 98%));
+    linear-gradient(165deg, rgb(5 23 38 / 80%), rgb(3 10 19 / 92%)),
+    var(--battle-background);
+  background-position: center;
+  background-size: cover;
   box-shadow: 0 28px 90px rgb(0 0 0 / 52%);
+}
+
+.battle-screen--enc_tutorial {
+  --battle-background: url("/assets/generated-ui/backgrounds/bg_battle_land.webp");
+}
+
+.battle-screen--enc_tidal_boss {
+  --battle-background: url("/assets/generated-ui/backgrounds/bg_battle_ocean.webp");
 }
 
 .battle-hud {
@@ -515,7 +601,9 @@ progress {
   border: 1px solid #f08c78;
   border-radius: 8px;
   color: #ffe5d5;
-  background: rgb(91 23 24 / 94%);
+  background-color: rgb(91 23 24 / 94%);
+  background-image: url("/assets/generated-ui/controls/boss_mode_frame.webp");
+  background-size: 100% 100%;
   box-shadow: 0 8px 26px rgb(0 0 0 / 35%);
 }
 
@@ -689,7 +777,11 @@ progress {
   padding: clamp(18px, 3vw, 32px);
   border: 1px solid rgb(246 199 107 / 38%);
   border-radius: 22px;
-  background: linear-gradient(145deg, rgb(8 25 41 / 96%), rgb(5 14 25 / 96%));
+  background-image:
+    linear-gradient(145deg, rgb(8 25 41 / 88%), rgb(5 14 25 / 94%)),
+    url("/assets/generated-ui/backgrounds/bg_private_cabin.webp");
+  background-position: center;
+  background-size: cover;
   box-shadow: 0 28px 80px rgb(0 0 0 / 45%);
 }
 
@@ -969,7 +1061,9 @@ progress {
   border: 1px solid #3c596b;
   border-radius: 9px;
   color: #c5d5dc;
-  background: #0d2131;
+  background-color: #0d2131;
+  background-image: url("/assets/generated-ui/controls/dialog_plate.webp");
+  background-size: 100% 100%;
 }
 
 .event-dialogue-plate p {
@@ -1012,6 +1106,51 @@ progress {
 
 @keyframes battle-cast {
   50% { box-shadow: inset 0 0 80px rgb(89 222 229 / 25%); }
+}
+
+@media (max-height: 860px) and (min-width: 801px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .loadout-screen {
+    height: calc(100vh - 32px);
+    min-height: 0;
+    padding: 18px 26px;
+  }
+
+  .loadout-header {
+    padding-bottom: 10px;
+  }
+
+  .loadout-header h1 {
+    font-size: 2.25rem;
+  }
+
+  .loadout-tabs,
+  .loadout-actions {
+    margin: 8px 0;
+  }
+
+  .weapon-slot {
+    min-height: 88px;
+  }
+
+  .weapon-slot--main {
+    min-height: 272px;
+  }
+
+  .weapon-slot--main .weapon-art-placeholder {
+    height: 104px;
+  }
+
+  .main-hand-panel p {
+    margin-bottom: 0;
+  }
+
+  .skill-summary {
+    margin-top: 6px;
+  }
 }
 
 @media (max-width: 800px) {
@@ -1089,17 +1228,21 @@ h1 {
 .primary-action {
   min-width: 220px;
   padding: 13px 22px;
-  border: 1px solid #ffe3a1;
+  border: 0;
   border-radius: 12px;
-  color: #271906;
-  background: linear-gradient(180deg, #f7d995, #b9782f);
+  color: #fff1c4;
+  background-color: #b9782f;
+  background-image: url("/assets/generated-ui/controls/button_hover.webp");
+  background-size: 100% 100%;
   box-shadow: 0 8px 24px rgb(246 199 107 / 20%);
   cursor: pointer;
   font-weight: 900;
+  text-shadow: 0 1px 2px #02070d;
 }
 
 .primary-action:hover {
-  filter: brightness(1.08);
+  background-image: url("/assets/generated-ui/controls/button_hover.webp");
+  filter: brightness(1.14);
 }
 
 .primary-action:focus-visible {
