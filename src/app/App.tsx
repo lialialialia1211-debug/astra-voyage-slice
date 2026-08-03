@@ -1,18 +1,17 @@
-import { useState } from 'react';
+import { GameProvider, useGame } from '../game/GameProvider';
 import './app.css';
 
-export function App() {
-  const [confirmed, setConfirmed] = useState(false);
-
+function GameRouter() {
+  const { state, dispatch } = useGame();
   return (
     <main data-testid="app-shell" className="app-shell">
       <div className="atmosphere" aria-hidden="true" />
-      {!confirmed ? (
+      {state.screen === 'adult-gate' ? (
         <section className="modal-card" aria-labelledby="adult-gate-title">
           <p className="eyebrow">ASTRA VOYAGE // PROTOTYPE</p>
           <h1 id="adult-gate-title">成年內容確認</h1>
           <p className="intro-copy">本遊戲僅供年滿 18 歲的成年人使用。</p>
-          <button className="primary-action" type="button" onClick={() => setConfirmed(true)}>
+          <button className="primary-action" type="button" onClick={() => dispatch({ type: 'CONFIRM_ADULT' })}>
             我已年滿 18 歲
           </button>
         </section>
@@ -24,5 +23,13 @@ export function App() {
         </section>
       )}
     </main>
+  );
+}
+
+export function App() {
+  return (
+    <GameProvider>
+      <GameRouter />
+    </GameProvider>
   );
 }
