@@ -3,6 +3,8 @@ import { AdultGate } from '../features/onboarding/AdultGate';
 import { CaptainSelect } from '../features/onboarding/CaptainSelect';
 import { PrologueScreen } from '../features/onboarding/PrologueScreen';
 import { RecruitScreen } from '../features/recruitment/RecruitScreen';
+import { FormationScreen } from '../features/formation/FormationScreen';
+import { LoadoutScreen } from '../features/loadout/LoadoutScreen';
 import './app.css';
 
 function GameRouter() {
@@ -18,6 +20,10 @@ function GameRouter() {
         return <PrologueScreen />;
       case 'recruit':
         return <RecruitScreen />;
+      case 'formation':
+        return <FormationScreen />;
+      case 'loadout':
+        return <LoadoutScreen />;
       default:
         return (
           <section className="screen-card">
