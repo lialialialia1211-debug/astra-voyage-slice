@@ -1,17 +1,28 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { content } from '../../content';
 import type { EventDefinition } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
+import { resolveAsset, type AssetManifest } from '../../lib/assets';
 import { EventViewer } from './EventViewer';
 import { eventConditionLabel, isEventUnlocked } from './relation';
 
 export function GalleryScreen() {
   const { state, dispatch } = useGame();
   const [activeEvent, setActiveEvent] = useState<EventDefinition | null>(null);
+  const [assetManifest, setAssetManifest] = useState<AssetManifest>({});
   const closeViewer = useCallback(() => setActiveEvent(null), []);
   const markViewed = useCallback(() => {
     if (activeEvent) dispatch({ type: 'MARK_EVENT_VIEWED', eventId: activeEvent.id });
   }, [activeEvent, dispatch]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/assets/user/manifest.json')
+      .then((response) => response.ok ? response.json() as Promise<Record<string, string>> : {})
+      .then((manifest) => { if (!cancelled) setAssetManifest(manifest); })
+      .catch(() => { if (!cancelled) setAssetManifest({}); });
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <section className="gallery-screen" aria-labelledby="gallery-title">
@@ -46,7 +57,7 @@ export function GalleryScreen() {
         <EventViewer
           event={activeEvent}
           mode={state.adultMode}
-          assetUrl={null}
+          assetUrl={resolveAsset(activeEvent.assetId, assetManifest).url}
           onClose={closeViewer}
           onViewed={markViewed}
         />
