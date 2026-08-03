@@ -1,27 +1,37 @@
 import { GameProvider, useGame } from '../game/GameProvider';
+import { AdultGate } from '../features/onboarding/AdultGate';
+import { CaptainSelect } from '../features/onboarding/CaptainSelect';
+import { PrologueScreen } from '../features/onboarding/PrologueScreen';
+import { RecruitScreen } from '../features/recruitment/RecruitScreen';
 import './app.css';
 
 function GameRouter() {
-  const { state, dispatch } = useGame();
+  const { state } = useGame();
+
+  const screen = (() => {
+    switch (state.screen) {
+      case 'adult-gate':
+        return <AdultGate />;
+      case 'captain-select':
+        return <CaptainSelect />;
+      case 'prologue':
+        return <PrologueScreen />;
+      case 'recruit':
+        return <RecruitScreen />;
+      default:
+        return (
+          <section className="screen-card">
+            <p className="eyebrow">SYSTEM STATUS</p>
+            <h1>下一階段建置中</h1>
+          </section>
+        );
+    }
+  })();
+
   return (
     <main data-testid="app-shell" className="app-shell">
       <div className="atmosphere" aria-hidden="true" />
-      {state.screen === 'adult-gate' ? (
-        <section className="modal-card" aria-labelledby="adult-gate-title">
-          <p className="eyebrow">ASTRA VOYAGE // PROTOTYPE</p>
-          <h1 id="adult-gate-title">成年內容確認</h1>
-          <p className="intro-copy">本遊戲僅供年滿 18 歲的成年人使用。</p>
-          <button className="primary-action" type="button" onClick={() => dispatch({ type: 'CONFIRM_ADULT' })}>
-            我已年滿 18 歲
-          </button>
-        </section>
-      ) : (
-        <section className="screen-card" aria-labelledby="captain-title">
-          <p className="eyebrow">EXPEDITION REGISTRY</p>
-          <h1 id="captain-title">選擇遠征艦長</h1>
-          <p className="intro-copy">建立你的遠征身分，從地表文明航向未知星空。</p>
-        </section>
-      )}
+      {screen}
     </main>
   );
 }

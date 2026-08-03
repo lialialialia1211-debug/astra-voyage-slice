@@ -59,6 +59,130 @@ button {
   backdrop-filter: blur(18px);
 }
 
+.screen-card--wide {
+  width: min(100%, 980px);
+}
+
+.screen-card--story {
+  text-align: left;
+}
+
+.captain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.captain-choice {
+  display: grid;
+  min-height: 230px;
+  padding: 18px;
+  border: 1px solid rgb(121 213 230 / 32%);
+  border-radius: 16px;
+  color: #eaf5f7;
+  background: linear-gradient(145deg, rgb(20 58 76 / 84%), rgb(8 18 32 / 88%));
+  cursor: pointer;
+  place-items: center;
+}
+
+.captain-choice:hover,
+.captain-choice:focus-visible {
+  border-color: #f7d995;
+  transform: translateY(-2px);
+}
+
+.captain-choice:focus-visible,
+.secondary-action:focus-visible {
+  outline: 3px solid #67e8f9;
+  outline-offset: 3px;
+}
+
+.captain-silhouette {
+  width: 74px;
+  height: 118px;
+  border-radius: 50% 50% 18% 18%;
+  background: linear-gradient(180deg, #647f8d 0 24%, #203b4a 25%);
+  box-shadow: 0 0 30px rgb(103 232 249 / 14%);
+}
+
+.captain-choice strong {
+  color: #fff1c4;
+  font-size: 1.2rem;
+}
+
+.captain-choice small {
+  color: #aabecd;
+}
+
+.story-copy {
+  color: #c4d2dd;
+  line-height: 1.9;
+}
+
+.recruit-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.recruit-card {
+  display: grid;
+  min-height: 132px;
+  padding: 12px;
+  border: 1px solid #50677a;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #213b51, #0c1727);
+  place-items: center;
+}
+
+.recruit-card strong {
+  color: #f4ead1;
+  font-size: 0.78rem;
+}
+
+.recruit-card span {
+  color: #8edce8;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.rarity-ssr {
+  border-color: #f7d36f;
+  box-shadow: inset 0 0 24px rgb(247 211 111 / 12%);
+}
+
+.card-back {
+  opacity: 0.55;
+}
+
+.action-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.secondary-action {
+  min-width: 170px;
+  padding: 12px 18px;
+  border: 1px solid #4b687c;
+  border-radius: 12px;
+  color: #d9e8ef;
+  background: #152b3d;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .captain-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .recruit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .eyebrow {
   margin: 0 0 16px;
   color: #79d5e6;
