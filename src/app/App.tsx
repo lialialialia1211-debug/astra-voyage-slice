@@ -5,6 +5,8 @@ import { PrologueScreen } from '../features/onboarding/PrologueScreen';
 import { RecruitScreen } from '../features/recruitment/RecruitScreen';
 import { FormationScreen } from '../features/formation/FormationScreen';
 import { LoadoutScreen } from '../features/loadout/LoadoutScreen';
+import { BattleScreen } from '../features/battle/BattleScreen';
+import { ResultsScreen } from '../features/battle/ResultsScreen';
 import './app.css';
 
 function GameRouter() {
@@ -24,6 +26,10 @@ function GameRouter() {
         return <FormationScreen />;
       case 'loadout':
         return <LoadoutScreen />;
+      case 'battle':
+        return <BattleScreen />;
+      case 'results':
+        return <ResultsScreen />;
       default:
         return (
           <section className="screen-card">

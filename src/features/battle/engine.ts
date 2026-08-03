@@ -190,6 +190,7 @@ function updateBossMode(state: BattleState, damage: number): Pick<BattleState, '
 function resolvePartyAttack(
   state: BattleState,
   useOugi: boolean,
+  ougiActorIds: readonly CharacterId[] | undefined,
   randomBand: number,
 ): { party: BattleActor[]; enemies: BattleActor[]; damage: number; log: BattleLogEntry[] } {
   let enemies = state.enemies;
@@ -202,7 +203,9 @@ function resolvePartyAttack(
     const target = enemies.find((enemy) => enemy.hp > 0);
     if (!target) return actor;
     const character = findCharacter(actor.id);
-    const isOugi = useOugi && actor.charge >= 100;
+    const isOugi = useOugi
+      && actor.charge >= 100
+      && (ougiActorIds === undefined || ougiActorIds.includes(actor.id as CharacterId));
     const power = isOugi ? character.ougi.power : 100;
     const amount = damageAmount(actor.attack, power, actor.element, target.element, randomBand);
     enemies = enemies.map((enemy) => enemy.id === target.id ? receiveDamage(enemy, amount) : enemy);
@@ -325,7 +328,7 @@ export function resolveTurn(state: BattleState, command: BattleCommand, randomBa
   if (state.result || state.phase === 'complete') throw new Error('戰鬥已結束');
   if (command.kind === 'summon') return resolveSummon(state, randomBand);
 
-  const attack = resolvePartyAttack(state, Boolean(command.useOugi), randomBand);
+  const attack = resolvePartyAttack(state, Boolean(command.useOugi), command.ougiActorIds, randomBand);
   const mode = updateBossMode({ ...state, enemies: attack.enemies }, attack.damage);
   const modeLog: BattleLogEntry[] = mode.bossMode !== state.bossMode ? [{ kind: 'mode', mode: mode.bossMode }] : [];
   const afterAttack = { ...state, ...mode, party: attack.party, enemies: attack.enemies };
@@ -358,4 +361,3 @@ export function resolveTurn(state: BattleState, command: BattleCommand, randomBa
     log: [...attack.log, ...modeLog, ...enemy.log, ...telegraphLog],
   };
 }
-

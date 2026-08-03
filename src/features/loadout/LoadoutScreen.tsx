@@ -19,6 +19,7 @@ export function LoadoutScreen() {
   const [activeSlot, setActiveSlot] = useState<ActiveSlot>(null);
   const totals = useMemo(() => calculateLoadout(grid, content.weapons), [grid]);
   const equipped = new Set([grid.main, ...grid.sub].filter((id) => id !== null));
+  const encounterId = state.flags.includes('flag_tutorial_victory') ? 'enc_tidal_boss' : 'enc_tutorial';
 
   function equipWeapon(weaponId: WeaponId) {
     if (activeSlot === 'main') setGrid({ ...grid, main: weaponId });
@@ -98,10 +99,10 @@ export function LoadoutScreen() {
           type="button"
           onClick={() => {
             dispatch({ type: 'SET_LOADOUT', weaponGrid: grid, summonId });
-            dispatch({ type: 'START_ENCOUNTER', encounterId: 'enc_tutorial' });
+            dispatch({ type: 'START_ENCOUNTER', encounterId });
           }}
         >
-          確認艦裝
+          {encounterId === 'enc_tutorial' ? '確認艦裝' : '進入潮汐戰線'}
         </button>
       </footer>
     </section>

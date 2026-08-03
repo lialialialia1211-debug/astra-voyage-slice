@@ -41,6 +41,7 @@ export const gameStateSchema = z.object({
   viewedEvents: z.array(z.enum(['evt_chr02_bond03', 'evt_chr02_status', 'evt_chr02_defeat'])),
   currentEncounterId: z.enum(['enc_tutorial', 'enc_tidal_boss']).nullable(),
   lastResult: z.enum(['victory', 'defeat']).nullable(),
+  lastEnemyHp: z.number().int().nonnegative().nullable().default(null),
 });
 
 export interface SaveLoadResult {

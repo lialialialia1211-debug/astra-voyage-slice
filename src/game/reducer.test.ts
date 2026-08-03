@@ -24,3 +24,12 @@ it('rejects duplicate party members', () => {
     }),
   ).toThrow('隊伍角色不可重複');
 });
+
+it('grants relation experience only after victory', () => {
+  const initial = createInitialState();
+  const victory = gameReducer(initial, { type: 'FINISH_ENCOUNTER', result: 'victory', flags: [] });
+  const defeat = gameReducer(initial, { type: 'FINISH_ENCOUNTER', result: 'defeat', flags: [] });
+
+  expect(victory.relation.chr_02).toEqual({ xp: 40, level: 2 });
+  expect(defeat.relation.chr_02).toEqual({ xp: 0, level: 1 });
+});

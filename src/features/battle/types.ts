@@ -46,7 +46,7 @@ export interface CreateBattleInput {
 }
 
 export type BattleCommand =
-  | { kind: 'attack'; useOugi?: boolean; guard?: boolean }
+  | { kind: 'attack'; useOugi?: boolean; ougiActorIds?: readonly CharacterId[]; guard?: boolean }
   | { kind: 'summon' };
 
 export type BattleLogEntry =

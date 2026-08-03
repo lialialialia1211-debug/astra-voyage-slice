@@ -52,6 +52,7 @@ export interface GameState {
   viewedEvents: EventId[];
   currentEncounterId: EncounterId | null;
   lastResult: 'victory' | 'defeat' | null;
+  lastEnemyHp: number | null;
 }
 
 export function createInitialState(): GameState {
@@ -75,5 +76,6 @@ export function createInitialState(): GameState {
     viewedEvents: [],
     currentEncounterId: null,
     lastResult: null,
+    lastEnemyHp: null,
   };
 }
