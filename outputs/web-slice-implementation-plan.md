@@ -1,5 +1,7 @@
 # Original Adult Fleet RPG Web Slice Implementation Plan
 
+> **Archive status (2026-08-05):** This plan has been implemented and remotely QA-verified as a playable prototype. The unchecked boxes below are preserved as the original execution specification; they are not an active backlog. Future adjustments and optimization should be tracked separately.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a complete 20–30 minute offline browser slice covering adult confirmation, captain choice, fixed recruitment, formation, a GBF-inspired main-hand-plus-3×3 weapon grid, two turn-based battles, save recovery, a private cabin, and optional adult collection unlocks.

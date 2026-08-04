@@ -3,10 +3,13 @@
 ## 同步位置
 
 - GitHub：<https://github.com/lialialialia1211-debug/astra-voyage-slice>
-- 可執行分支：`codex/web-slice`
-- 儲存庫為私人模式。
+- 主要分支：`master`
+- 原型完成紀錄分支：`codex/web-slice`
+- 固定 QA 網址：<https://lialialialia1211-debug.github.io/astra-voyage-slice/>
 
-依需求只使用 GitHub 做原始碼雲端同步，未建立 PR、部署平台、後端、帳號系統或其他外部服務。
+目前為已完成 QA、可遊玩的原型版本。GitHub Pages 僅作為固定遠端 QA 環境；專案仍不含正式發行部署、後端、帳號、付款或雲端存檔服務。
+
+原始實作計畫已全部落地，之後的調整與優化會依新需求另外追蹤；`outputs/web-slice-implementation-plan.md` 保留為歷史規格，不再作為未完成工作清單。
 
 ## 已完成範圍
 
@@ -36,14 +39,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-完整驗證：
-
-```powershell
-pnpm test
-pnpm exec playwright install chromium
-pnpm test:e2e
-pnpm build
-```
+合併驗收不使用本機測試結果；推送分支後，由 `Remote QA - GitHub Pages` workflow 執行測試、production build 與部署，並在固定 Pages 網址進行瀏覽器 QA。
 
 重新驗收或替換人物／CG 美術：
 
@@ -54,3 +50,5 @@ pnpm validate:art -- C:\path\to\art-drop
 本次 63 張來源 PNG 已位於 `art-drop/`。驗證成功的素材會轉入 `public/assets/user/`，並同步更新公開與執行期 manifest；遊戲目前已全面使用這批正式美術。
 
 本階段亦已在 1280×720、1440×810、1920×1080 三種桌面解析度執行完整流程測試；另以瀏覽器人工檢查地圖、劇情、武器盤、戰鬥與養成畫面，確認無水平溢出、主要操作未被裁切，且圖片載入與瀏覽器主控台均正常。
+
+遠端 QA 由 `.github/workflows/qa-pages.yml` 執行，正式合併以最新成功的 GitHub Actions run、部署 commit SHA 與固定 Pages 網址為準。
