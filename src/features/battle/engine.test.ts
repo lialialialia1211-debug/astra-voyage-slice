@@ -57,4 +57,19 @@ describe('battle engine', () => {
     expect(result.log).toContainEqual(expect.objectContaining({ kind: 'ougi-chain', count: 4 }));
     expect(result.state.party.every((actor) => actor.charge === 0)).toBe(true);
   });
+
+  it('uses saved character levels in initial battle stats', () => {
+    const base = tutorialBattle();
+    const leveled = createBattle({
+      encounterId: 'enc_tutorial',
+      partyIds,
+      loadoutAttack: 8420,
+      loadoutHp: 2180,
+      summonId: 'smn_01_solar_leviathan',
+      characterLevels: { chr_01: 10 },
+    });
+
+    expect(leveled.party[0]?.attack).toBeGreaterThan(base.party[0]?.attack ?? 0);
+    expect(leveled.party[0]?.maxHp).toBeGreaterThan(base.party[0]?.maxHp ?? 0);
+  });
 });

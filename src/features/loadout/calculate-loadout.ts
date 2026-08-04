@@ -1,5 +1,6 @@
 import type { Element, WeaponDefinition, WeaponId } from '../../domain/types';
 import type { WeaponGrid } from '../../game/initial-state';
+import { effectiveWeapon } from '../growth/growth';
 
 export interface LoadoutTotals {
   weaponCount: number;
@@ -16,13 +17,15 @@ function missingWeapon(id: WeaponId): never {
 export function calculateLoadout(
   grid: WeaponGrid,
   weapons: readonly WeaponDefinition[],
+  weaponLevels: Partial<Record<WeaponId, number>> = {},
 ): LoadoutTotals {
   const ids = [grid.main, ...grid.sub].filter((id): id is WeaponId => id !== null);
   if (new Set(ids).size !== ids.length) throw new Error('武器不可重複裝備');
 
-  const selected = ids.map(
-    (id) => weapons.find((weapon) => weapon.id === id) ?? missingWeapon(id),
-  );
+  const selected = ids.map((id) => effectiveWeapon(
+    weapons.find((weapon) => weapon.id === id) ?? missingWeapon(id),
+    weaponLevels[id] ?? 1,
+  ));
   const skills = { might: 0, vitality: 0, ougiCap: 0 };
 
   for (const weapon of selected) {

@@ -43,6 +43,7 @@ export interface CreateBattleInput {
   loadoutAttack: number;
   loadoutHp: number;
   summonId: SummonId | null;
+  characterLevels?: Partial<Record<CharacterId, number>> | undefined;
 }
 
 export type BattleCommand =

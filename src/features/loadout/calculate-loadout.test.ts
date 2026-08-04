@@ -34,3 +34,11 @@ it('rejects duplicate equipment IDs', () => {
 
   expect(() => calculateLoadout(duplicateGrid, content.weapons)).toThrow('武器不可重複裝備');
 });
+
+it('uses saved weapon levels in loadout totals', () => {
+  const totals = calculateLoadout(fullGrid, content.weapons, { wpn_01_sunblade: 10 });
+
+  expect(totals.attack).toBe(9073);
+  expect(totals.hp).toBe(2288);
+  expect(totals.skills.might).toBe(38);
+});

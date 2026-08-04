@@ -14,6 +14,7 @@ import type {
   CreateBattleInput,
   TurnResult,
 } from './types';
+import { effectiveCharacter } from '../growth/growth';
 
 function findCharacter(id: string): CharacterDefinition {
   const character = content.characters.find((entry) => entry.id === id);
@@ -67,7 +68,7 @@ export function createBattle(input: CreateBattleInput): BattleState {
   const partyAttackBonus = Math.round(input.loadoutAttack / 40);
   const partyHpBonus = Math.round(input.loadoutHp / input.partyIds.length);
   const party = input.partyIds.map((id) => {
-    const character = findCharacter(id);
+    const character = effectiveCharacter(findCharacter(id), input.characterLevels?.[id] ?? 1);
     const maxHp = character.maxHp + partyHpBonus;
     return {
       id: character.id,
