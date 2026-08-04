@@ -17,6 +17,7 @@ beforeEach(() => {
 
 it('telegraphs the tidal strike and allows all-party guard', async () => {
   const user = userEvent.setup();
+  const onSnapshot = vi.fn();
   const base = createBattle({
     encounterId: 'enc_tidal_boss',
     partyIds: fullParty,
@@ -29,11 +30,12 @@ it('telegraphs the tidal strike and allows all-party guard', async () => {
     telegraph: { name: '全體潮汐衝擊', target: 'all' as const },
   };
 
-  render(<BattleStage initialBattle={battle} onComplete={vi.fn()} />);
+  render(<BattleStage initialBattle={battle} onComplete={vi.fn()} onSnapshot={onSnapshot} />);
 
   expect(screen.getByText('預告：全體潮汐衝擊')).toBeVisible();
   await user.click(screen.getByRole('button', { name: '全隊防禦' }));
   expect(screen.getByText('全隊進入防禦姿態')).toBeVisible();
+  expect(onSnapshot).toHaveBeenCalledWith(expect.objectContaining({ turn: 2 }));
 });
 
 it('keeps the selected loadout when retrying a defeat', async () => {
@@ -49,15 +51,25 @@ it('keeps the selected loadout when retrying a defeat', async () => {
     summonId: 'smn_01_solar_leviathan' as const,
     screen: 'results' as const,
     currentEncounterId: 'enc_tutorial' as const,
+    selectedStageId: 'land_01_port_defense' as const,
     lastResult: 'defeat' as const,
     lastEnemyHp: 820,
+    lastStageRewards: {
+      stageId: 'land_01_port_defense' as const,
+      clear: { expeditionPoints: 0, surfaceAlloy: 0, ruinChip: 0, leylineCore: 0, fieldRation: 0 },
+      firstClear: { expeditionPoints: 0, surfaceAlloy: 0, ruinChip: 0, leylineCore: 0, fieldRation: 0 },
+      relationXp: 0,
+      refundedAp: 5,
+      seaUnlocked: false,
+    },
   } satisfies GameState;
   const repository = createSaveRepository(window.localStorage);
   repository.save(state);
 
   render(<App />);
-  await user.click(screen.getByRole('button', { name: '以原編成重試' }));
+  expect(screen.getByText('已退還 AP 5')).toBeVisible();
+  await user.click(screen.getByRole('button', { name: '調整艦裝後重試' }));
 
-  expect(await screen.findByRole('heading', { name: '港都防衛演習' })).toBeVisible();
+  expect(await screen.findByRole('heading', { name: '艦裝武器盤' })).toBeVisible();
   await waitFor(() => expect(repository.load().state.weaponGrid).toEqual(weaponGrid));
 });

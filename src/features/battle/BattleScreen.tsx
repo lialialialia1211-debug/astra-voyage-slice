@@ -11,13 +11,14 @@ import type { BattleCommand, BattleState } from './types';
 interface BattleStageProps {
   initialBattle: BattleState;
   onComplete: (battle: BattleState) => void;
+  onSnapshot?: (battle: BattleState) => void;
 }
 
 function actorName(actorId: string) {
   return content.characters.find((character) => character.id === actorId)?.name ?? actorId;
 }
 
-export function BattleStage({ initialBattle, onComplete }: BattleStageProps) {
+export function BattleStage({ initialBattle, onComplete, onSnapshot }: BattleStageProps) {
   const [battle, setBattle] = useState(initialBattle);
   const [message, setMessage] = useState('技能階段：可先施放技能，再發動全隊攻擊。');
   const [ougiActors, setOugiActors] = useState<Set<CharacterId>>(() => new Set());
@@ -28,6 +29,7 @@ export function BattleStage({ initialBattle, onComplete }: BattleStageProps) {
     setBattle(next);
     setMessage(nextMessage);
     setMotion(nextMotion);
+    onSnapshot?.(next);
     if (next.result) onComplete(next);
   }
 
@@ -151,29 +153,37 @@ interface BattleSessionProps {
 
 function BattleSession({ encounterId, partyIds }: BattleSessionProps) {
   const { state, dispatch } = useGame();
-  const totals = calculateLoadout(state.weaponGrid, content.weapons);
-  const [initialBattle] = useState(() => createBattle({
-    encounterId,
-    partyIds,
-    loadoutAttack: totals.attack,
-    loadoutHp: totals.hp,
-    summonId: state.summonId,
-  }));
+  const totals = calculateLoadout(state.weaponGrid, content.weapons, state.weaponLevels);
+  const [initialBattle] = useState(() => {
+    if (state.battleSnapshot?.encounterId === encounterId) return state.battleSnapshot;
+    return createBattle({
+      encounterId,
+      partyIds,
+      loadoutAttack: totals.attack,
+      loadoutHp: totals.hp,
+      summonId: state.summonId,
+      characterLevels: state.characterLevels,
+    });
+  });
 
   return (
     <BattleStage
       initialBattle={initialBattle}
+      onSnapshot={(battle) => {
+        if (state.activeChallenge) dispatch({ type: 'SAVE_BATTLE_SNAPSHOT', battle });
+      }}
       onComplete={(finished) => {
         const encounter = content.encounters.find((entry) => entry.id === encounterId);
         const flags = finished.result === 'victory' && encounter
           ? [...finished.flags, encounter.victoryFlag]
           : finished.flags;
-        dispatch({
-          type: 'FINISH_ENCOUNTER',
-          result: finished.result ?? 'defeat',
-          flags,
-          enemyHp: finished.enemies.reduce((sum, enemy) => sum + enemy.hp, 0),
-        });
+        const result = finished.result ?? 'defeat';
+        const enemyHp = finished.enemies.reduce((sum, enemy) => sum + enemy.hp, 0);
+        if (state.activeChallenge) {
+          dispatch({ type: 'FINISH_STAGE', result, flags, enemyHp });
+        } else {
+          dispatch({ type: 'FINISH_ENCOUNTER', result, flags, enemyHp });
+        }
       }}
     />
   );

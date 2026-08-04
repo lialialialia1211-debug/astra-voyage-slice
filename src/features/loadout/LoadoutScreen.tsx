@@ -18,10 +18,17 @@ export function LoadoutScreen() {
   const [grid, setGrid] = useState<WeaponGrid>(state.weaponGrid);
   const [summonId, setSummonId] = useState(state.summonId ?? 'smn_01_solar_leviathan');
   const [activeSlot, setActiveSlot] = useState<ActiveSlot>(null);
-  const totals = useMemo(() => calculateLoadout(grid, content.weapons), [grid]);
+  const totals = useMemo(
+    () => calculateLoadout(grid, content.weapons, state.weaponLevels),
+    [grid, state.weaponLevels],
+  );
   const equipped = new Set([grid.main, ...grid.sub].filter((id) => id !== null));
-  const encounterId = state.flags.includes('flag_tutorial_victory') ? 'enc_tidal_boss' : 'enc_tutorial';
+  const selectedStage = content.stages.find((stage) => stage.id === state.selectedStageId);
   const selectedSummon = content.summons.find((summon) => summon.id === summonId);
+
+  if (!selectedStage) {
+    return <section className="screen-card"><h1>找不到選取的遠征關卡</h1></section>;
+  }
 
   function equipWeapon(weaponId: WeaponId) {
     if (activeSlot === 'main') setGrid({ ...grid, main: weaponId });
@@ -99,6 +106,7 @@ export function LoadoutScreen() {
         </aside>
       )}
       <footer className="loadout-actions">
+        <button className="secondary-action" type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'expedition-map' })}>返回地表地圖</button>
         <button className="secondary-action" type="button" onClick={() => setGrid(recommendLoadout('fire', content.weapons))}>推薦編成</button>
         <button className="secondary-action" type="button" onClick={() => setGrid({ main: null, sub: [null, null, null, null, null, null, null, null, null] })}>全部卸下</button>
         <button
@@ -107,10 +115,10 @@ export function LoadoutScreen() {
           type="button"
           onClick={() => {
             dispatch({ type: 'SET_LOADOUT', weaponGrid: grid, summonId });
-            dispatch({ type: 'START_ENCOUNTER', encounterId });
+            dispatch({ type: 'START_STAGE', stageId: selectedStage.id, now: Date.now() });
           }}
         >
-          {encounterId === 'enc_tutorial' ? '確認艦裝' : '進入潮汐戰線'}
+          進入{selectedStage.name}
         </button>
       </footer>
     </section>

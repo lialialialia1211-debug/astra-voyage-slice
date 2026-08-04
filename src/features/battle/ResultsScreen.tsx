@@ -5,6 +5,9 @@ export function ResultsScreen() {
   const { state, dispatch } = useGame();
   const encounter = content.encounters.find((entry) => entry.id === state.currentEncounterId);
   const victory = state.lastResult === 'victory';
+  const stageResult = state.lastStageRewards;
+  const stage = content.stages.find((entry) => entry.id === stageResult?.stageId);
+  const postStoryUnread = Boolean(stage && !state.viewedStories.includes(stage.postStoryId));
 
   if (!encounter || !state.lastResult) {
     return <section className="screen-card"><h1>沒有可顯示的戰果</h1></section>;
@@ -17,18 +20,35 @@ export function ResultsScreen() {
       <p className="result-encounter">{encounter.name}</p>
       {victory ? (
         <>
-          <p className="intro-copy">全員關係經驗 +40，遠征紀錄已寫入本機存檔。</p>
+          <p className="intro-copy">全員關係經驗 +{stageResult?.relationXp ?? 40}，遠征紀錄已寫入本機存檔。</p>
+          {stageResult && (
+            <div className="result-rewards" aria-label="任務獎勵">
+              <p>遠征點數 +{stageResult.clear.expeditionPoints + stageResult.firstClear.expeditionPoints}</p>
+              {(stageResult.clear.surfaceAlloy + stageResult.firstClear.surfaceAlloy) > 0 && <p>地表合金 +{stageResult.clear.surfaceAlloy + stageResult.firstClear.surfaceAlloy}</p>}
+              {(stageResult.clear.ruinChip + stageResult.firstClear.ruinChip) > 0 && <p>遺跡晶片 +{stageResult.clear.ruinChip + stageResult.firstClear.ruinChip}</p>}
+              {(stageResult.clear.leylineCore + stageResult.firstClear.leylineCore) > 0 && <p>地脈核心 +{stageResult.clear.leylineCore + stageResult.firstClear.leylineCore}</p>}
+              {(stageResult.clear.fieldRation + stageResult.firstClear.fieldRation) > 0 && <p>遠征補給劑 +{stageResult.clear.fieldRation + stageResult.firstClear.fieldRation}</p>}
+              {stageResult.seaUnlocked && <strong>新航路開放：潮汐戰線</strong>}
+            </div>
+          )}
           <button
             className="primary-action"
             type="button"
-            onClick={() => dispatch({ type: 'NAVIGATE', screen: encounter.id === 'enc_tutorial' ? 'loadout' : 'cabin' })}
+            onClick={() => {
+              if (stage && postStoryUnread) {
+                dispatch({ type: 'START_STORY', storyId: stage.postStoryId, returnScreen: 'expedition-map' });
+                return;
+              }
+              dispatch({ type: 'NAVIGATE', screen: stageResult ? 'expedition-map' : 'cabin' });
+            }}
           >
-            {encounter.id === 'enc_tutorial' ? '前往潮汐戰線' : '返回私人艙室'}
+            {stageResult ? (postStoryUnread ? '繼續戰後劇情' : '返回地表地圖') : '返回私人艙室'}
           </button>
         </>
       ) : (
         <>
           <p className="enemy-hp-remaining">敵方剩餘生命：{(state.lastEnemyHp ?? 0).toLocaleString()}</p>
+          {stageResult && <p className="ap-refund">已退還 AP {stageResult.refundedAp}</p>}
           <ul className="defeat-advice">
             <li>留意敵方預告，面對全體攻擊時改用全隊防禦。</li>
             <li>累積至 100% 後選取多名角色，可發動奧義連鎖。</li>
@@ -36,8 +56,10 @@ export function ResultsScreen() {
           <button
             className="primary-action"
             type="button"
-            onClick={() => dispatch({ type: 'START_ENCOUNTER', encounterId: encounter.id })}
-          >以原編成重試</button>
+            onClick={() => dispatch(stageResult
+              ? { type: 'NAVIGATE', screen: 'loadout' }
+              : { type: 'START_ENCOUNTER', encounterId: encounter.id })}
+          >{stageResult ? '調整艦裝後重試' : '以原編成重試'}</button>
         </>
       )}
     </section>
