@@ -3,10 +3,12 @@ import { contentRegistrySchema } from '../domain/schemas';
 import { characters } from './characters';
 import { encounters } from './encounters';
 import { events } from './events';
+import { stages } from './stages';
+import { stories } from './stories';
 import { summons } from './summons';
 import { weapons } from './weapons';
 
-const parsed = contentRegistrySchema.parse({ characters, weapons, summons, encounters, events });
+const parsed = contentRegistrySchema.parse({ characters, weapons, summons, encounters, events, stages, stories });
 
 export const content: ContentRegistry = Object.freeze({
   characters: Object.freeze(parsed.characters),
@@ -14,6 +16,8 @@ export const content: ContentRegistry = Object.freeze({
   summons: Object.freeze(parsed.summons),
   encounters: Object.freeze(parsed.encounters),
   events: Object.freeze(parsed.events),
+  stages: Object.freeze(parsed.stages),
+  stories: Object.freeze(parsed.stories),
 });
 
 const advantage: Readonly<Record<Element, Element>> = {

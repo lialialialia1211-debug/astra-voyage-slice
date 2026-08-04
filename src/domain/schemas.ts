@@ -17,8 +17,30 @@ export const weaponIdSchema = z.enum([
   'wpn_12_void_prism',
 ]);
 export const summonIdSchema = z.enum(['smn_01_solar_leviathan', 'smn_02_abyssal_oracle']);
-export const encounterIdSchema = z.enum(['enc_tutorial', 'enc_tidal_boss']);
+export const encounterIdSchema = z.enum([
+  'enc_tutorial',
+  'enc_surface_ruins',
+  'enc_orbital_outpost',
+  'enc_leyline_core',
+  'enc_tidal_boss',
+]);
 export const eventIdSchema = z.enum(['evt_chr02_bond03', 'evt_chr02_status', 'evt_chr02_defeat']);
+export const stageIdSchema = z.enum([
+  'land_01_port_defense',
+  'land_02_surface_ruins',
+  'land_03_orbital_outpost',
+  'land_04_leyline_core',
+]);
+export const storySceneIdSchema = z.enum([
+  'story_land_01_pre',
+  'story_land_01_post',
+  'story_land_02_pre',
+  'story_land_02_post',
+  'story_land_03_pre',
+  'story_land_03_post',
+  'story_land_04_pre',
+  'story_land_04_post',
+]);
 
 export const skillSchema = z.object({
   id: z.string().min(1),
@@ -85,9 +107,43 @@ const enemySchema = z.object({
 export const encounterSchema = z.object({
   id: encounterIdSchema,
   name: z.string().min(1),
-  kind: z.enum(['tutorial', 'boss']),
+  kind: z.enum(['tutorial', 'normal', 'boss']),
   enemies: z.array(enemySchema).min(1),
   victoryFlag: z.string().min(1),
+});
+
+export const rewardBundleSchema = z.object({
+  expeditionPoints: z.number().int().nonnegative(),
+  surfaceAlloy: z.number().int().nonnegative(),
+  ruinChip: z.number().int().nonnegative(),
+  leylineCore: z.number().int().nonnegative(),
+  fieldRation: z.number().int().nonnegative(),
+});
+
+export const stageSchema = z.object({
+  id: stageIdSchema,
+  name: z.string().min(1),
+  summary: z.string().min(1),
+  encounterId: encounterIdSchema,
+  apCost: z.union([z.literal(5), z.literal(10)]),
+  prerequisite: stageIdSchema.nullable(),
+  preStoryId: storySceneIdSchema,
+  postStoryId: storySceneIdSchema,
+  clearRewards: rewardBundleSchema,
+  firstClearRewards: rewardBundleSchema,
+});
+
+export const storySceneSchema = z.object({
+  id: storySceneIdSchema,
+  title: z.string().min(1),
+  location: z.string().min(1),
+  background: z.enum(['port', 'ruins', 'outpost', 'core']),
+  lines: z.array(z.object({
+    speakerId: z.union([z.literal('captain'), characterIdSchema, z.literal('narration')]),
+    text: z.string().min(1),
+    expression: z.enum(['neutral', 'happy', 'tense', 'angry', 'hurt']).optional(),
+    side: z.enum(['left', 'right']).optional(),
+  })).min(3),
 });
 
 export const eventSchema = z.object({
@@ -109,8 +165,10 @@ export const contentRegistrySchema = z
     characters: z.array(characterSchema).length(4),
     weapons: z.array(weaponSchema).length(12),
     summons: z.array(summonSchema).length(2),
-    encounters: z.array(encounterSchema).length(2),
+    encounters: z.array(encounterSchema).length(5),
     events: z.array(eventSchema).length(3),
+    stages: z.array(stageSchema).length(4),
+    stories: z.array(storySceneSchema).length(8),
   })
   .superRefine((registry, context) => {
     for (const [key, items] of Object.entries(registry)) {

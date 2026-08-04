@@ -15,8 +15,29 @@ export type WeaponId =
   | 'wpn_11_depth_anchor'
   | 'wpn_12_void_prism';
 export type SummonId = 'smn_01_solar_leviathan' | 'smn_02_abyssal_oracle';
-export type EncounterId = 'enc_tutorial' | 'enc_tidal_boss';
+export type EncounterId =
+  | 'enc_tutorial'
+  | 'enc_surface_ruins'
+  | 'enc_orbital_outpost'
+  | 'enc_leyline_core'
+  | 'enc_tidal_boss';
 export type EventId = 'evt_chr02_bond03' | 'evt_chr02_status' | 'evt_chr02_defeat';
+export type StageId =
+  | 'land_01_port_defense'
+  | 'land_02_surface_ruins'
+  | 'land_03_orbital_outpost'
+  | 'land_04_leyline_core';
+export type StorySceneId =
+  | 'story_land_01_pre'
+  | 'story_land_01_post'
+  | 'story_land_02_pre'
+  | 'story_land_02_post'
+  | 'story_land_03_pre'
+  | 'story_land_03_post'
+  | 'story_land_04_pre'
+  | 'story_land_04_post';
+export type StorySpeakerId = 'captain' | CharacterId | 'narration';
+export type StoryExpression = 'neutral' | 'happy' | 'tense' | 'angry' | 'hurt';
 
 export type SkillTarget = 'self' | 'ally' | 'enemy' | 'all-allies' | 'all-enemies';
 export type SkillEffect = 'shield' | 'break' | 'charge' | 'heal' | 'cleanse' | 'guard';
@@ -83,9 +104,45 @@ export interface EnemyDefinition {
 export interface EncounterDefinition {
   id: EncounterId;
   name: string;
-  kind: 'tutorial' | 'boss';
+  kind: 'tutorial' | 'normal' | 'boss';
   enemies: readonly EnemyDefinition[];
   victoryFlag: string;
+}
+
+export interface RewardBundle {
+  expeditionPoints: number;
+  surfaceAlloy: number;
+  ruinChip: number;
+  leylineCore: number;
+  fieldRation: number;
+}
+
+export interface StageDefinition {
+  id: StageId;
+  name: string;
+  summary: string;
+  encounterId: EncounterId;
+  apCost: 5 | 10;
+  prerequisite: StageId | null;
+  preStoryId: StorySceneId;
+  postStoryId: StorySceneId;
+  clearRewards: RewardBundle;
+  firstClearRewards: RewardBundle;
+}
+
+export interface StoryLineDefinition {
+  speakerId: StorySpeakerId;
+  text: string;
+  expression?: StoryExpression | undefined;
+  side?: 'left' | 'right' | undefined;
+}
+
+export interface StorySceneDefinition {
+  id: StorySceneId;
+  title: string;
+  location: string;
+  background: 'port' | 'ruins' | 'outpost' | 'core';
+  lines: readonly StoryLineDefinition[];
 }
 
 export interface EventDefinition {
@@ -104,4 +161,6 @@ export interface ContentRegistry {
   summons: readonly SummonDefinition[];
   encounters: readonly EncounterDefinition[];
   events: readonly EventDefinition[];
+  stages: readonly StageDefinition[];
+  stories: readonly StorySceneDefinition[];
 }

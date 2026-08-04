@@ -6,9 +6,14 @@ it('loads the complete deterministic slice registry', () => {
   expect(content.summons).toHaveLength(2);
   expect(content.encounters.map((encounter) => encounter.id)).toEqual([
     'enc_tutorial',
+    'enc_surface_ruins',
+    'enc_orbital_outpost',
+    'enc_leyline_core',
     'enc_tidal_boss',
   ]);
   expect(content.events).toHaveLength(3);
+  expect(content.stages).toHaveLength(4);
+  expect(content.stories).toHaveLength(8);
 });
 
 it.each([

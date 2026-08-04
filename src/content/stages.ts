@@ -1,0 +1,60 @@
+import type { RewardBundle, StageDefinition } from '../domain/types';
+
+const reward = (
+  expeditionPoints: number,
+  surfaceAlloy = 0,
+  ruinChip = 0,
+  leylineCore = 0,
+  fieldRation = 0,
+): RewardBundle => ({ expeditionPoints, surfaceAlloy, ruinChip, leylineCore, fieldRation });
+
+export const stages = [
+  {
+    id: 'land_01_port_defense',
+    name: '港都防衛演習',
+    summary: '守住遠征港，從襲擊者與無人機殘骸追查未知訊號。',
+    encounterId: 'enc_tutorial',
+    apCost: 5,
+    prerequisite: null,
+    preStoryId: 'story_land_01_pre',
+    postStoryId: 'story_land_01_post',
+    clearRewards: reward(80, 3),
+    firstClearRewards: reward(100, 0, 0, 0, 1),
+  },
+  {
+    id: 'land_02_surface_ruins',
+    name: '地表遺跡勘查',
+    summary: '深入遭文明放棄的地表設施，回收遺跡訊號與可用構件。',
+    encounterId: 'enc_surface_ruins',
+    apCost: 5,
+    prerequisite: 'land_01_port_defense',
+    preStoryId: 'story_land_02_pre',
+    postStoryId: 'story_land_02_post',
+    clearRewards: reward(120, 4, 1),
+    firstClearRewards: reward(200, 4, 0, 0, 1),
+  },
+  {
+    id: 'land_03_orbital_outpost',
+    name: '軌道升降機前哨',
+    summary: '重啟升降機前哨，確認地表訊號與宇宙航路的關係。',
+    encounterId: 'enc_orbital_outpost',
+    apCost: 5,
+    prerequisite: 'land_02_surface_ruins',
+    preStoryId: 'story_land_03_pre',
+    postStoryId: 'story_land_03_post',
+    clearRewards: reward(180, 3, 2),
+    firstClearRewards: reward(300, 0, 3),
+  },
+  {
+    id: 'land_04_leyline_core',
+    name: '沉睡地脈核心',
+    summary: '突破古代守衛，取得連接地表、深海與星空的座標核心。',
+    encounterId: 'enc_leyline_core',
+    apCost: 10,
+    prerequisite: 'land_03_orbital_outpost',
+    preStoryId: 'story_land_04_pre',
+    postStoryId: 'story_land_04_post',
+    clearRewards: reward(350, 4, 3, 1),
+    firstClearRewards: reward(700, 0, 0, 2, 2),
+  },
+] as const satisfies readonly StageDefinition[];
