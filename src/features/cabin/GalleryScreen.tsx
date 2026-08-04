@@ -13,12 +13,21 @@ export function GalleryScreen() {
   const markViewed = useCallback(() => {
     if (activeEvent) dispatch({ type: 'MARK_EVENT_VIEWED', eventId: activeEvent.id });
   }, [activeEvent, dispatch]);
+  const allAdultEventsUnlocked = content.events.every((event) => isEventUnlocked(event, state));
+  const unlockAllAdultEvents = useCallback(() => {
+    for (const event of content.events) {
+      dispatch({ type: 'UNLOCK_EVENT', eventId: event.id });
+    }
+  }, [dispatch]);
 
   return (
     <section className="gallery-screen" aria-labelledby="gallery-title">
       <header className="gallery-header">
         <div><p className="eyebrow">PRIVATE ARCHIVE // OPTIONAL</p><h1 id="gallery-title">事件收藏</h1></div>
         <div className="gallery-nav">
+          <button disabled={allAdultEventsUnlocked} type="button" onClick={unlockAllAdultEvents}>
+            {allAdultEventsUnlocked ? 'QA：CG 已全解鎖' : 'QA：解鎖全部 CG'}
+          </button>
           <button type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'cabin' })}>返回艙室</button>
           <button type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'settings' })}>顯示設定</button>
         </div>

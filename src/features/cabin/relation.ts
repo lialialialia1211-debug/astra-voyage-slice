@@ -16,6 +16,7 @@ export function nextRelationTarget(level: 1 | 2 | 3 | 4): number | null {
 }
 
 export function isEventUnlocked(event: EventDefinition, state: GameState): boolean {
+  if (state.flags.includes(`unlocked:${event.id}`)) return true;
   return event.requiredFlags.every((flag) => state.flags.includes(flag))
     && state.relation[event.characterId].level >= event.requiredRelationLevel;
 }
@@ -27,6 +28,7 @@ const flagLabels: Readonly<Record<string, string>> = {
 };
 
 export function eventConditionLabel(event: EventDefinition, state: GameState): string {
+  if (state.flags.includes(`unlocked:${event.id}`)) return 'QA 已解鎖';
   const requirements = [`${event.characterId.toUpperCase()} 關係 Lv.${event.requiredRelationLevel}`];
   requirements.push(...event.requiredFlags.map((flag) => flagLabels[flag] ?? flag));
   if (isEventUnlocked(event, state)) return '已符合：' + requirements.join('＋');
