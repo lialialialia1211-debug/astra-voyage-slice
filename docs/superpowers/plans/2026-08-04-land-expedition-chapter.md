@@ -37,7 +37,7 @@
 - Produces `content.stages` with four nodes and `content.stories` with eight scenes.
 - Expands `EncounterId` with `enc_surface_ruins`, `enc_orbital_outpost`, and `enc_leyline_core`.
 
-- [ ] **Step 1: Write the failing content tests**
+- [x] **Step 1: Write the failing content tests**
 
 ```ts
 it('defines the approved linear land route and deterministic rewards', () => {
@@ -57,13 +57,13 @@ it('validates every authored registry entry', () => {
 });
 ```
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 Run: `pnpm test -- src/content/expedition-content.test.ts`
 
 Expected: FAIL because `content.stages`, `content.stories`, and the new encounter IDs do not exist.
 
-- [ ] **Step 3: Add exact content types and records**
+- [x] **Step 3: Add exact content types and records**
 
 ```ts
 export type StageId =
@@ -102,13 +102,13 @@ export interface StageDefinition {
 
 Populate the four stage records with the exact reward table in the approved design. Add the three encounter definitions using the existing enemy asset IDs. Add eight authored story scenes with complete Traditional Chinese dialogue, captain portrait tokens, role positions, and character expression asset IDs.
 
-- [ ] **Step 4: Run content tests and verify GREEN**
+- [x] **Step 4: Run content tests and verify GREEN**
 
 Run: `pnpm test -- src/content/expedition-content.test.ts src/content/index.test.ts`
 
 Expected: PASS with five Encounter records, four Stage records, and eight Story records accepted by Zod.
 
-- [ ] **Step 5: Commit the content layer**
+- [x] **Step 5: Commit the content layer**
 
 ```powershell
 git add src/domain src/content
@@ -127,7 +127,7 @@ git commit -m "feat: define land expedition content"
 - Consumes `StageDefinition`, `StageId`, and `RewardBundle` from Task 1.
 - Produces `syncAp(ap, now)`, `isStageUnlocked(stage, firstClears)`, `addRewards(inventory, rewards)`, and `emptyRewards()`.
 
-- [ ] **Step 1: Write failing progression tests**
+- [x] **Step 1: Write failing progression tests**
 
 ```ts
 it('restores one AP per five minutes while preserving partial elapsed time', () => {
@@ -153,13 +153,13 @@ it('unlocks only the first stage or a stage whose prerequisite is cleared', () =
 });
 ```
 
-- [ ] **Step 2: Run focused tests and verify RED**
+- [x] **Step 2: Run focused tests and verify RED**
 
 Run: `pnpm test -- src/features/expedition/progression.test.ts`
 
 Expected: FAIL because the expedition progression module does not exist.
 
-- [ ] **Step 3: Implement pure progression helpers**
+- [x] **Step 3: Implement pure progression helpers**
 
 ```ts
 export const AP_MAX = 30;
@@ -180,13 +180,13 @@ export function syncAp(ap: ApState, now: number): ApState {
 
 Implement reward addition with safe nonnegative integers and a route helper based only on prerequisites and first-clear IDs.
 
-- [ ] **Step 4: Run focused tests and verify GREEN**
+- [x] **Step 4: Run focused tests and verify GREEN**
 
 Run: `pnpm test -- src/features/expedition/progression.test.ts`
 
 Expected: PASS for AP recovery, cap, clock rollback, reward addition, and route unlocking.
 
-- [ ] **Step 5: Commit progression rules**
+- [x] **Step 5: Commit progression rules**
 
 ```powershell
 git add src/features/expedition
@@ -210,7 +210,7 @@ git commit -m "feat: add expedition AP and route rules"
 - Extends `calculateLoadout(grid, weapons, weaponLevels?)` without breaking callers that omit levels.
 - Extends `CreateBattleInput` with `characterLevels` and applies effective character stats.
 
-- [ ] **Step 1: Write failing growth tests**
+- [x] **Step 1: Write failing growth tests**
 
 ```ts
 it('applies the approved Lv.10 multipliers', () => {
@@ -227,13 +227,13 @@ it('returns exact high-level costs and no cost beyond Lv.10', () => {
 
 Add focused assertions showing an equipped Lv.10 weapon and a Lv.10 party member increase loadout and battle stats.
 
-- [ ] **Step 2: Run focused tests and verify RED**
+- [x] **Step 2: Run focused tests and verify RED**
 
 Run: `pnpm test -- src/features/growth/growth.test.ts src/features/loadout/calculate-loadout.test.ts src/features/battle/engine.test.ts`
 
 Expected: FAIL because growth helpers and level-aware calculations are absent.
 
-- [ ] **Step 3: Implement the growth tables and effective stats**
+- [x] **Step 3: Implement the growth tables and effective stats**
 
 ```ts
 export function effectiveCharacter(definition: CharacterDefinition, level: number): CharacterDefinition {
@@ -249,13 +249,13 @@ export function effectiveWeapon(definition: WeaponDefinition, level: number): We
 
 Encode the two approved nine-row cost tables. Require integer levels from 1 through 10. Keep weapon skill percentages and main-hand power unchanged.
 
-- [ ] **Step 4: Run focused tests and verify GREEN**
+- [x] **Step 4: Run focused tests and verify GREEN**
 
 Run: `pnpm test -- src/features/growth/growth.test.ts src/features/loadout/calculate-loadout.test.ts src/features/battle/engine.test.ts`
 
 Expected: PASS with exact Lv.1 and Lv.10 stat calculations.
 
-- [ ] **Step 5: Commit growth rules**
+- [x] **Step 5: Commit growth rules**
 
 ```powershell
 git add src/features/growth src/features/loadout src/features/battle
@@ -279,7 +279,7 @@ git commit -m "feat: add level-based combat growth"
 - Produces `migrateV1State(input, now): GameState`.
 - Preserves the local-storage key `astra-save-v1` so installed saves are found and rewritten as v2.
 
-- [ ] **Step 1: Write failing migration tests**
+- [x] **Step 1: Write failing migration tests**
 
 ```ts
 it('migrates a tutorial-cleared v1 save into the land route', () => {
@@ -297,13 +297,13 @@ it('preserves a tidal-victory adult collection and marks all land content read',
 });
 ```
 
-- [ ] **Step 2: Run storage tests and verify RED**
+- [x] **Step 2: Run storage tests and verify RED**
 
 Run: `pnpm test -- src/game/storage.test.ts`
 
 Expected: FAIL because the persisted schema only accepts version 1.
 
-- [ ] **Step 3: Implement v2 schema, initial state, and migration**
+- [x] **Step 3: Implement v2 schema, initial state, and migration**
 
 ```ts
 export interface ApState { current: number; lastRecoveredAt: number }
@@ -333,13 +333,13 @@ export function createInitialState(now = Date.now()): GameState {
 
 Accept exact v1 input, migrate it, then parse the v2 output. Inject `now` into the repository for deterministic tests. Add a `focus` listener in GameProvider that dispatches AP synchronization.
 
-- [ ] **Step 4: Run storage and provider tests and verify GREEN**
+- [x] **Step 4: Run storage and provider tests and verify GREEN**
 
 Run: `pnpm test -- src/game/storage.test.ts src/app/App.test.tsx`
 
 Expected: PASS for new saves, both migration paths, corrupt-save recovery, and focus synchronization.
 
-- [ ] **Step 5: Commit state migration**
+- [x] **Step 5: Commit state migration**
 
 ```powershell
 git add src/game src/domain/schemas.ts e2e/helpers.ts
@@ -358,7 +358,7 @@ git commit -m "feat: migrate saves to expedition state v2"
 - Adds `SYNC_AP`, `USE_FIELD_RATION`, `SELECT_STAGE`, `START_STORY`, `COMPLETE_STORY`, `START_STAGE`, `SAVE_BATTLE_SNAPSHOT`, `FINISH_STAGE`, `UPGRADE_CHARACTER`, and `UPGRADE_WEAPON`.
 - Removes direct new-flow use of `START_ENCOUNTER` and `FINISH_ENCOUNTER` while retaining migration compatibility where required.
 
-- [ ] **Step 1: Write failing transaction tests**
+- [x] **Step 1: Write failing transaction tests**
 
 ```ts
 it('deducts AP once and creates an active challenge atomically', () => {
@@ -388,23 +388,23 @@ it('grants first-clear rewards only once', () => {
 
 Add tests for insufficient AP, locked stages, ration cap, story read idempotence, upgrade affordability, ownership, and max level.
 
-- [ ] **Step 2: Run reducer tests and verify RED**
+- [x] **Step 2: Run reducer tests and verify RED**
 
 Run: `pnpm test -- src/game/reducer.test.ts`
 
 Expected: FAIL because expedition transaction actions are not defined.
 
-- [ ] **Step 3: Implement reducer transactions with pure helpers**
+- [x] **Step 3: Implement reducer transactions with pure helpers**
 
 `START_STAGE` synchronizes AP with `now`, validates route and complete party, deducts the stage cost, and creates `activeChallenge`. `FINISH_STAGE` uses the active stage as the sole reward source; victory grants rewards and relation XP, defeat refunds AP, and both clear the battle snapshot. Upgrade actions retrieve the exact next-level cost, validate all inventory fields, subtract once, and increment one level.
 
-- [ ] **Step 4: Run reducer tests and verify GREEN**
+- [x] **Step 4: Run reducer tests and verify GREEN**
 
 Run: `pnpm test -- src/game/reducer.test.ts src/features/expedition/progression.test.ts src/features/growth/growth.test.ts`
 
 Expected: PASS for all atomic transactions and invalid-action guards.
 
-- [ ] **Step 5: Commit transactions**
+- [x] **Step 5: Commit transactions**
 
 ```powershell
 git add src/game/reducer.ts src/game/reducer.test.ts
@@ -434,7 +434,7 @@ git commit -m "feat: add atomic expedition transactions"
 - `StoryScreen` renders the active pre/post scene and dispatches `MARK_STORY_VIEWED` plus the next destination.
 - `GrowthScreen` dispatches character and weapon upgrade actions and renders effective stats.
 
-- [ ] **Step 1: Write failing component tests**
+- [x] **Step 1: Write failing component tests**
 
 ```tsx
 it('shows only the first land node as initially available', () => {
@@ -457,25 +457,25 @@ it('disables an upgrade and lists missing materials', () => {
 });
 ```
 
-- [ ] **Step 2: Run component tests and verify RED**
+- [x] **Step 2: Run component tests and verify RED**
 
 Run: `pnpm test -- src/features/expedition/ExpeditionMapScreen.test.tsx src/features/story/StoryScreen.test.tsx src/features/growth/GrowthScreen.test.tsx`
 
 Expected: FAIL because the three screens do not exist.
 
-- [ ] **Step 3: Implement accessible screens and routing**
+- [x] **Step 3: Implement accessible screens and routing**
 
 Add `expedition-map`, `story`, and `growth` router cases. Render map nodes as semantic buttons with a selected detail panel. Use `userAssetUrl` for portrait expressions and keep text controls in HTML. Growth tabs render every owned character and weapon with current level, effective stats, next cost, and exact missing items.
 
 Update existing navigation so onboarding reaches the map after Formation and Cabin, Gallery, and Settings can return to it. Add responsive CSS using the existing brass/deep-blue design tokens.
 
-- [ ] **Step 4: Run component tests and verify GREEN**
+- [x] **Step 4: Run component tests and verify GREEN**
 
 Run: `pnpm test -- src/features/expedition/ExpeditionMapScreen.test.tsx src/features/story/StoryScreen.test.tsx src/features/growth/GrowthScreen.test.tsx src/app/App.test.tsx`
 
 Expected: PASS with accessible buttons, correct portrait assets, route states, and no React warnings.
 
-- [ ] **Step 5: Commit chapter hub screens**
+- [x] **Step 5: Commit chapter hub screens**
 
 ```powershell
 git add src/app src/features/expedition src/features/story src/features/growth src/features/formation src/features/cabin src/features/settings
@@ -499,7 +499,7 @@ git commit -m "feat: add land chapter hub and story screens"
 - Battle initializes from `state.battleSnapshot` or creates a level-aware battle once, then dispatches `SAVE_BATTLE_SNAPSHOT` after every command.
 - Results reads `lastStageRewards`, exposes story/map continuation, and retries through Loadout so AP is checked again.
 
-- [ ] **Step 1: Write failing integration component tests**
+- [x] **Step 1: Write failing integration component tests**
 
 ```tsx
 it('starts the selected land stage instead of guessing from flags', async () => {
@@ -522,25 +522,25 @@ it('shows refunded AP after defeat and routes retry through loadout', async () =
 });
 ```
 
-- [ ] **Step 2: Run focused integration tests and verify RED**
+- [x] **Step 2: Run focused integration tests and verify RED**
 
 Run: `pnpm test -- src/features/loadout/LoadoutScreen.test.tsx src/features/battle/BattleScreen.test.tsx src/features/battle/ResultsScreen.test.tsx`
 
 Expected: FAIL because loadout is flag-driven, battle snapshots are local-only, and results have no expedition rewards.
 
-- [ ] **Step 3: Implement stage-aware battle flow**
+- [x] **Step 3: Implement stage-aware battle flow**
 
 Build effective loadout and character stats from saved levels. Dispatch snapshots from the BattleStage commit function before completion. On victory or defeat, dispatch only `FINISH_STAGE` with result, flags, and remaining enemy HP; the reducer determines rewards or refunds from `activeChallenge`.
 
 Results displays fixed rewards, first-clear rewards, relation XP, sea-route unlock, or refunded AP. First-clear victory continues to post-story; repeats and defeats return to the map or Loadout.
 
-- [ ] **Step 4: Run integration and engine tests and verify GREEN**
+- [x] **Step 4: Run integration and engine tests and verify GREEN**
 
 Run: `pnpm test -- src/features/loadout/LoadoutScreen.test.tsx src/features/battle/BattleScreen.test.tsx src/features/battle/ResultsScreen.test.tsx src/features/battle/engine.test.ts`
 
 Expected: PASS for selected stages, level-aware stats, persistent snapshots, victory rewards, defeat refund, and retry routing.
 
-- [ ] **Step 5: Commit the playable loop**
+- [x] **Step 5: Commit the playable loop**
 
 ```powershell
 git add src/features/loadout src/features/battle
@@ -563,7 +563,7 @@ git commit -m "feat: connect expedition stages to battle results"
 - Produces complete Playwright coverage for new-player route, farming and growth, defeat refund, challenge reload, and v1 migration.
 - Leaves the plan checkboxes accurate and delivery documentation synchronized.
 
-- [ ] **Step 1: Write failing end-to-end scenarios**
+- [x] **Step 1: Write failing end-to-end scenarios**
 
 ```ts
 test('clears the land route, farms materials, and unlocks the sea route', async ({ page }) => {
@@ -585,17 +585,17 @@ test('refunds AP after defeat and charges again on retry', async ({ page }) => {
 });
 ```
 
-- [ ] **Step 2: Run the new E2E file and verify RED**
+- [x] **Step 2: Run the new E2E file and verify RED**
 
 Run: `pnpm exec playwright test e2e/land-expedition.spec.ts --project=desktop-720`
 
 Expected: FAIL because the new map, growth, AP, and sea-route flow are absent.
 
-- [ ] **Step 3: Update helpers, prior flows, and documentation**
+- [x] **Step 3: Update helpers, prior flows, and documentation**
 
 Adapt the existing full-slice tests to the new land route. Add v1 migration fixtures and an active challenge reload fixture. Update README and delivery summary with AP, deterministic drops, v2 migration, character/weapon Lv.10, and the land-to-sea route.
 
-- [ ] **Step 4: Run every verification command**
+- [x] **Step 4: Run every verification command**
 
 Run:
 
@@ -608,11 +608,11 @@ git diff --check
 
 Expected: all Vitest files pass, all three Playwright desktop projects pass, TypeScript and Vite build successfully, and `git diff --check` returns no errors.
 
-- [ ] **Step 5: Perform browser visual QA**
+- [x] **Step 5: Perform browser visual QA**
 
 Inspect onboarding → map → story → loadout → all four stages → growth → sea unlock at 1440×810 and 1280×720. Confirm no horizontal overflow, no clipped primary action, correct portrait and enemy art, and no browser errors or warnings.
 
-- [ ] **Step 6: Commit and push the completed phase**
+- [x] **Step 6: Commit and push the completed phase**
 
 ```powershell
 git add -A

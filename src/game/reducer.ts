@@ -104,7 +104,15 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     case 'START_ENCOUNTER':
       if (state.party.some((member) => member === null)) throw new Error('開始戰鬥前必須編滿四名角色');
-      return { ...state, currentEncounterId: action.encounterId, lastResult: null, lastEnemyHp: null, screen: 'battle' };
+      return {
+        ...state,
+        currentEncounterId: action.encounterId,
+        lastResult: null,
+        lastEnemyHp: null,
+        lastStageRewards: null,
+        battleSnapshot: null,
+        screen: 'battle',
+      };
     case 'FINISH_ENCOUNTER':
       return {
         ...state,

@@ -1804,6 +1804,11 @@ h1 {
 .growth-boundary-note { margin: 14px 0 0; border-left: 3px solid #79d5e6; padding: 9px 12px; color: #a9c1ca; background: rgb(24 70 88 / 22%); }
 
 @media (max-height: 760px) and (min-width: 1001px) {
+  .loadout-screen { padding-block: 14px; }
+  .loadout-tabs img { width: 40px; height: 40px; }
+  .weapon-slot { padding: 6px; }
+  .weapon-slot:not(.weapon-slot--main) .weapon-art { height: 42px; }
+  .skill-summary span { padding-block: 6px; }
   .expedition-map-screen,
   .growth-screen { padding: 16px 22px; }
   .expedition-map-header,

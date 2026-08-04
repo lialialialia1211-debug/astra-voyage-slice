@@ -45,6 +45,24 @@ it('grants relation experience only after victory', () => {
   expect(defeat.relation.chr_02).toEqual({ xp: 0, level: 1 });
 });
 
+it('clears land-stage rewards before starting the unlocked sea encounter', () => {
+  const reward = {
+    stageId: 'land_04_leyline_core' as const,
+    clear: { expeditionPoints: 350, surfaceAlloy: 4, ruinChip: 3, leylineCore: 1, fieldRation: 0 },
+    firstClear: { expeditionPoints: 700, surfaceAlloy: 0, ruinChip: 0, leylineCore: 2, fieldRation: 2 },
+    relationXp: 40,
+    refundedAp: 0,
+    seaUnlocked: true,
+  };
+  const next = gameReducer(expeditionReady({ lastStageRewards: reward }), {
+    type: 'START_ENCOUNTER',
+    encounterId: 'enc_tidal_boss',
+  });
+
+  expect(next.lastStageRewards).toBeNull();
+  expect(next.currentEncounterId).toBe('enc_tidal_boss');
+});
+
 it('keeps party and loadout unchanged when adult collection state changes', () => {
   const initial = createInitialState();
   const relation = gameReducer(initial, { type: 'ADD_RELATION_XP', characterId: 'chr_02', xp: 100 });
