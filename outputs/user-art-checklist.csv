@@ -1,64 +1,64 @@
-﻿"category","asset_id","expected_path","source_size","alpha","safe_zone","status","notes"
-"captain","cap_m_portrait_neutral","art-drop/captains/cap_m/cap_m_portrait_neutral.png","2048x3072","yes","L/R 164; T 164; B 80","needed","anchor 1024,2960"
-"captain","cap_m_portrait_happy","art-drop/captains/cap_m/cap_m_portrait_happy.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"captain","cap_m_portrait_tense","art-drop/captains/cap_m/cap_m_portrait_tense.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"captain","cap_m_portrait_hurt","art-drop/captains/cap_m/cap_m_portrait_hurt.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"captain","cap_m_battle_idle","art-drop/captains/cap_m/cap_m_battle_idle.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"captain","cap_m_card","art-drop/captains/cap_m/cap_m_card.png","1024x1536","no","face X15-85% Y12-58%; bottom 20% clear","needed","no baked text"
-"captain","cap_f_portrait_neutral","art-drop/captains/cap_f/cap_f_portrait_neutral.png","2048x3072","yes","L/R 164; T 164; B 80","needed","anchor 1024,2960"
-"captain","cap_f_portrait_happy","art-drop/captains/cap_f/cap_f_portrait_happy.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"captain","cap_f_portrait_tense","art-drop/captains/cap_f/cap_f_portrait_tense.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"captain","cap_f_portrait_hurt","art-drop/captains/cap_f/cap_f_portrait_hurt.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"captain","cap_f_battle_idle","art-drop/captains/cap_f/cap_f_battle_idle.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"captain","cap_f_card","art-drop/captains/cap_f/cap_f_card.png","1024x1536","no","face X15-85% Y12-58%; bottom 20% clear","needed","no baked text"
-"character","chr_01_portrait_neutral","art-drop/characters/chr_01/chr_01_portrait_neutral.png","2048x3072","yes","L/R 164; T 164; B 80","needed","anchor 1024,2960"
-"character","chr_01_portrait_happy","art-drop/characters/chr_01/chr_01_portrait_happy.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_01_portrait_angry","art-drop/characters/chr_01/chr_01_portrait_angry.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_01_portrait_hurt","art-drop/characters/chr_01/chr_01_portrait_hurt.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_01_battle_idle","art-drop/characters/chr_01/chr_01_battle_idle.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"character","chr_01_card","art-drop/characters/chr_01/chr_01_card.png","1024x1536","no","face X15-85% Y12-58%; bottom 20% clear","needed","no baked text"
-"character","chr_01_cabin_base","art-drop/characters/chr_01/chr_01_cabin_base.png","2048x3072","yes","rightmost 32% clear of face","needed","anchor 1024,2960"
-"character","chr_02_portrait_neutral","art-drop/characters/chr_02/chr_02_portrait_neutral.png","2048x3072","yes","L/R 164; T 164; B 80","needed","anchor 1024,2960"
-"character","chr_02_portrait_happy","art-drop/characters/chr_02/chr_02_portrait_happy.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_02_portrait_angry","art-drop/characters/chr_02/chr_02_portrait_angry.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_02_portrait_hurt","art-drop/characters/chr_02/chr_02_portrait_hurt.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_02_battle_idle","art-drop/characters/chr_02/chr_02_battle_idle.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"character","chr_02_card","art-drop/characters/chr_02/chr_02_card.png","1024x1536","no","face X15-85% Y12-58%; bottom 20% clear","needed","no baked text"
-"character","chr_02_cabin_base","art-drop/characters/chr_02/chr_02_cabin_base.png","2048x3072","yes","rightmost 32% clear of face","needed","anchor 1024,2960"
-"character","chr_02_cabin_outfit_02","art-drop/characters/chr_02/chr_02_cabin_outfit_02.png","2048x3072","yes","rightmost 32% clear of face","needed","align with cabin_base"
-"character","chr_03_portrait_neutral","art-drop/characters/chr_03/chr_03_portrait_neutral.png","2048x3072","yes","L/R 164; T 164; B 80","needed","anchor 1024,2960"
-"character","chr_03_portrait_happy","art-drop/characters/chr_03/chr_03_portrait_happy.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_03_portrait_angry","art-drop/characters/chr_03/chr_03_portrait_angry.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_03_portrait_hurt","art-drop/characters/chr_03/chr_03_portrait_hurt.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_03_battle_idle","art-drop/characters/chr_03/chr_03_battle_idle.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"character","chr_03_card","art-drop/characters/chr_03/chr_03_card.png","1024x1536","no","face X15-85% Y12-58%; bottom 20% clear","needed","no baked text"
-"character","chr_03_cabin_base","art-drop/characters/chr_03/chr_03_cabin_base.png","2048x3072","yes","rightmost 32% clear of face","needed","anchor 1024,2960"
-"character","chr_04_portrait_neutral","art-drop/characters/chr_04/chr_04_portrait_neutral.png","2048x3072","yes","L/R 164; T 164; B 80","needed","anchor 1024,2960"
-"character","chr_04_portrait_happy","art-drop/characters/chr_04/chr_04_portrait_happy.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_04_portrait_angry","art-drop/characters/chr_04/chr_04_portrait_angry.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_04_portrait_hurt","art-drop/characters/chr_04/chr_04_portrait_hurt.png","2048x3072","yes","L/R 164; T 164; B 80","needed","align with neutral"
-"character","chr_04_battle_idle","art-drop/characters/chr_04/chr_04_battle_idle.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"character","chr_04_card","art-drop/characters/chr_04/chr_04_card.png","1024x1536","no","face X15-85% Y12-58%; bottom 20% clear","needed","no baked text"
-"character","chr_04_cabin_base","art-drop/characters/chr_04/chr_04_cabin_base.png","2048x3072","yes","rightmost 32% clear of face","needed","anchor 1024,2960"
-"event_cg","evt_chr02_bond03_cg01","art-drop/events/chr_02/evt_chr02_bond03_cg01.png","2560x1440","no","important X6-94% Y6-78%; bottom 22% clear","needed","adult event; no baked UI"
-"event_cg","evt_chr02_status_cg01","art-drop/events/chr_02/evt_chr02_status_cg01.png","2560x1440","no","important X6-94% Y6-78%; bottom 22% clear","needed","adult event; no baked UI"
-"event_cg","evt_chr02_defeat_cg01","art-drop/events/chr_02/evt_chr02_defeat_cg01.png","2560x1440","no","important X6-94% Y6-78%; bottom 22% clear","needed","adult event; no baked UI"
-"weapon","wpn_01_sunblade","art-drop/weapons/wpn_01_sunblade.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_02_molten_lance","art-drop/weapons/wpn_02_molten_lance.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_03_tidemark_axe","art-drop/weapons/wpn_03_tidemark_axe.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_04_resonance_staff","art-drop/weapons/wpn_04_resonance_staff.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_05_fireline_dagger","art-drop/weapons/wpn_05_fireline_dagger.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_06_route_bow","art-drop/weapons/wpn_06_route_bow.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_07_expedition_rifle","art-drop/weapons/wpn_07_expedition_rifle.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_08_shoreguard_shield","art-drop/weapons/wpn_08_shoreguard_shield.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_09_astrolabe","art-drop/weapons/wpn_09_astrolabe.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_10_dawn_greatblade","art-drop/weapons/wpn_10_dawn_greatblade.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_11_depth_anchor","art-drop/weapons/wpn_11_depth_anchor.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"weapon","wpn_12_void_prism","art-drop/weapons/wpn_12_void_prism.png","1024x1024","yes","92 all sides","needed","axis 55-70 degrees"
-"summon","smn_01_solar_leviathan","art-drop/summons/smn_01_solar_leviathan.png","1600x1600","yes","128 all sides","needed","single clear silhouette"
-"summon","smn_02_abyssal_oracle","art-drop/summons/smn_02_abyssal_oracle.png","1600x1600","yes","128 all sides","needed","single clear silhouette"
-"enemy","enm_01_port_raider","art-drop/enemies/enm_01_port_raider.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"enemy","enm_02_tide_drone","art-drop/enemies/enm_02_tide_drone.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"enemy","enm_03_ruin_guardian","art-drop/enemies/enm_03_ruin_guardian.png","1600x1600","yes","96 all sides","needed","anchor 800,1504"
-"boss","boss_01_tidal_watchkeeper_idle","art-drop/bosses/boss_01_tidal_watchkeeper_idle.png","3072x2048","yes","L/R 180; T 128; B 80","needed","anchor 1536,1940"
-"boss","boss_01_tidal_watchkeeper_break","art-drop/bosses/boss_01_tidal_watchkeeper_break.png","3072x2048","yes","L/R 180; T 128; B 80","needed","align with idle"
+﻿category,asset_id,expected_path,source_size,alpha,safe_zone,status,notes
+captain,cap_m_portrait_neutral,art-drop/captains/cap_m/cap_m_portrait_neutral.png,2048x3072,yes,L/R 164; T 164; B 80,ready,"anchor 1024,2960"
+captain,cap_m_portrait_happy,art-drop/captains/cap_m/cap_m_portrait_happy.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+captain,cap_m_portrait_tense,art-drop/captains/cap_m/cap_m_portrait_tense.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+captain,cap_m_portrait_hurt,art-drop/captains/cap_m/cap_m_portrait_hurt.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+captain,cap_m_battle_idle,art-drop/captains/cap_m/cap_m_battle_idle.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+captain,cap_m_card,art-drop/captains/cap_m/cap_m_card.png,1024x1536,no,face X15-85% Y12-58%; bottom 20% clear,ready,no baked text
+captain,cap_f_portrait_neutral,art-drop/captains/cap_f/cap_f_portrait_neutral.png,2048x3072,yes,L/R 164; T 164; B 80,ready,"anchor 1024,2960"
+captain,cap_f_portrait_happy,art-drop/captains/cap_f/cap_f_portrait_happy.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+captain,cap_f_portrait_tense,art-drop/captains/cap_f/cap_f_portrait_tense.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+captain,cap_f_portrait_hurt,art-drop/captains/cap_f/cap_f_portrait_hurt.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+captain,cap_f_battle_idle,art-drop/captains/cap_f/cap_f_battle_idle.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+captain,cap_f_card,art-drop/captains/cap_f/cap_f_card.png,1024x1536,no,face X15-85% Y12-58%; bottom 20% clear,ready,no baked text
+character,chr_01_portrait_neutral,art-drop/characters/chr_01/chr_01_portrait_neutral.png,2048x3072,yes,L/R 164; T 164; B 80,ready,"anchor 1024,2960"
+character,chr_01_portrait_happy,art-drop/characters/chr_01/chr_01_portrait_happy.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_01_portrait_angry,art-drop/characters/chr_01/chr_01_portrait_angry.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_01_portrait_hurt,art-drop/characters/chr_01/chr_01_portrait_hurt.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_01_battle_idle,art-drop/characters/chr_01/chr_01_battle_idle.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+character,chr_01_card,art-drop/characters/chr_01/chr_01_card.png,1024x1536,no,face X15-85% Y12-58%; bottom 20% clear,ready,no baked text
+character,chr_01_cabin_base,art-drop/characters/chr_01/chr_01_cabin_base.png,2048x3072,yes,rightmost 32% clear of face,ready,"anchor 1024,2960"
+character,chr_02_portrait_neutral,art-drop/characters/chr_02/chr_02_portrait_neutral.png,2048x3072,yes,L/R 164; T 164; B 80,ready,"anchor 1024,2960"
+character,chr_02_portrait_happy,art-drop/characters/chr_02/chr_02_portrait_happy.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_02_portrait_angry,art-drop/characters/chr_02/chr_02_portrait_angry.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_02_portrait_hurt,art-drop/characters/chr_02/chr_02_portrait_hurt.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_02_battle_idle,art-drop/characters/chr_02/chr_02_battle_idle.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+character,chr_02_card,art-drop/characters/chr_02/chr_02_card.png,1024x1536,no,face X15-85% Y12-58%; bottom 20% clear,ready,no baked text
+character,chr_02_cabin_base,art-drop/characters/chr_02/chr_02_cabin_base.png,2048x3072,yes,rightmost 32% clear of face,ready,"anchor 1024,2960"
+character,chr_02_cabin_outfit_02,art-drop/characters/chr_02/chr_02_cabin_outfit_02.png,2048x3072,yes,rightmost 32% clear of face,ready,align with cabin_base
+character,chr_03_portrait_neutral,art-drop/characters/chr_03/chr_03_portrait_neutral.png,2048x3072,yes,L/R 164; T 164; B 80,ready,"anchor 1024,2960"
+character,chr_03_portrait_happy,art-drop/characters/chr_03/chr_03_portrait_happy.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_03_portrait_angry,art-drop/characters/chr_03/chr_03_portrait_angry.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_03_portrait_hurt,art-drop/characters/chr_03/chr_03_portrait_hurt.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_03_battle_idle,art-drop/characters/chr_03/chr_03_battle_idle.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+character,chr_03_card,art-drop/characters/chr_03/chr_03_card.png,1024x1536,no,face X15-85% Y12-58%; bottom 20% clear,ready,no baked text
+character,chr_03_cabin_base,art-drop/characters/chr_03/chr_03_cabin_base.png,2048x3072,yes,rightmost 32% clear of face,ready,"anchor 1024,2960"
+character,chr_04_portrait_neutral,art-drop/characters/chr_04/chr_04_portrait_neutral.png,2048x3072,yes,L/R 164; T 164; B 80,ready,"anchor 1024,2960"
+character,chr_04_portrait_happy,art-drop/characters/chr_04/chr_04_portrait_happy.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_04_portrait_angry,art-drop/characters/chr_04/chr_04_portrait_angry.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_04_portrait_hurt,art-drop/characters/chr_04/chr_04_portrait_hurt.png,2048x3072,yes,L/R 164; T 164; B 80,ready,align with neutral
+character,chr_04_battle_idle,art-drop/characters/chr_04/chr_04_battle_idle.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+character,chr_04_card,art-drop/characters/chr_04/chr_04_card.png,1024x1536,no,face X15-85% Y12-58%; bottom 20% clear,ready,no baked text
+character,chr_04_cabin_base,art-drop/characters/chr_04/chr_04_cabin_base.png,2048x3072,yes,rightmost 32% clear of face,ready,"anchor 1024,2960"
+event_cg,evt_chr02_bond03_cg01,art-drop/events/chr_02/evt_chr02_bond03_cg01.png,2560x1440,no,important X6-94% Y6-78%; bottom 22% clear,ready,adult event; no baked UI
+event_cg,evt_chr02_status_cg01,art-drop/events/chr_02/evt_chr02_status_cg01.png,2560x1440,no,important X6-94% Y6-78%; bottom 22% clear,ready,adult event; no baked UI
+event_cg,evt_chr02_defeat_cg01,art-drop/events/chr_02/evt_chr02_defeat_cg01.png,2560x1440,no,important X6-94% Y6-78%; bottom 22% clear,ready,adult event; no baked UI
+weapon,wpn_01_sunblade,art-drop/weapons/wpn_01_sunblade.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_02_molten_lance,art-drop/weapons/wpn_02_molten_lance.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_03_tidemark_axe,art-drop/weapons/wpn_03_tidemark_axe.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_04_resonance_staff,art-drop/weapons/wpn_04_resonance_staff.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_05_fireline_dagger,art-drop/weapons/wpn_05_fireline_dagger.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_06_route_bow,art-drop/weapons/wpn_06_route_bow.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_07_expedition_rifle,art-drop/weapons/wpn_07_expedition_rifle.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_08_shoreguard_shield,art-drop/weapons/wpn_08_shoreguard_shield.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_09_astrolabe,art-drop/weapons/wpn_09_astrolabe.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_10_dawn_greatblade,art-drop/weapons/wpn_10_dawn_greatblade.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_11_depth_anchor,art-drop/weapons/wpn_11_depth_anchor.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+weapon,wpn_12_void_prism,art-drop/weapons/wpn_12_void_prism.png,1024x1024,yes,92 all sides,ready,axis 55-70 degrees
+summon,smn_01_solar_leviathan,art-drop/summons/smn_01_solar_leviathan.png,1600x1600,yes,128 all sides,ready,single clear silhouette
+summon,smn_02_abyssal_oracle,art-drop/summons/smn_02_abyssal_oracle.png,1600x1600,yes,128 all sides,ready,single clear silhouette
+enemy,enm_01_port_raider,art-drop/enemies/enm_01_port_raider.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+enemy,enm_02_tide_drone,art-drop/enemies/enm_02_tide_drone.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+enemy,enm_03_ruin_guardian,art-drop/enemies/enm_03_ruin_guardian.png,1600x1600,yes,96 all sides,ready,"anchor 800,1504"
+boss,boss_01_tidal_watchkeeper_idle,art-drop/bosses/boss_01_tidal_watchkeeper_idle.png,3072x2048,yes,L/R 180; T 128; B 80,ready,"anchor 1536,1940"
+boss,boss_01_tidal_watchkeeper_break,art-drop/bosses/boss_01_tidal_watchkeeper_break.png,3072x2048,yes,L/R 180; T 128; B 80,ready,align with idle
