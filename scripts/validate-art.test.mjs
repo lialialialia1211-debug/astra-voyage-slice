@@ -18,6 +18,7 @@ it('validates ready PNG art and writes its WebP manifest entry', async () => {
   temporaryDirectories.push(root);
   const dropRoot = path.join(root, 'art-drop');
   const outputRoot = path.join(root, 'public', 'assets', 'user');
+  const runtimeManifestPath = path.join(root, 'src', 'generated', 'user-art-manifest.json');
   const source = path.join(dropRoot, 'characters', 'sample.png');
   await mkdir(path.dirname(source), { recursive: true });
   await sharp({ create: { width: 2, height: 2, channels: 4, background: { r: 10, g: 20, b: 30, alpha: 0.5 } } }).png().toFile(source);
@@ -29,11 +30,12 @@ it('validates ready PNG art and writes its WebP manifest entry', async () => {
     sourceSize: '2x2',
     alpha: 'yes',
     status: 'ready',
-  }], dropRoot, outputRoot);
+  }], dropRoot, outputRoot, runtimeManifestPath);
 
   expect(result.errors).toEqual([]);
   expect(result.manifest).toEqual({ sample_asset: '/assets/user/sample_asset.webp' });
   expect(JSON.parse(await readFile(path.join(outputRoot, 'manifest.json'), 'utf8'))).toEqual(result.manifest);
+  expect(JSON.parse(await readFile(runtimeManifestPath, 'utf8'))).toEqual(result.manifest);
   expect((await sharp(path.join(outputRoot, 'sample_asset.webp')).metadata()).format).toBe('webp');
 });
 

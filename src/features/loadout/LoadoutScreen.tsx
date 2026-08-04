@@ -3,6 +3,7 @@ import { content } from '../../content';
 import type { WeaponId } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
 import type { WeaponGrid } from '../../game/initial-state';
+import { userAssetUrl } from '../../lib/user-assets';
 import { calculateLoadout, recommendLoadout } from './calculate-loadout';
 import { WeaponSlot } from './WeaponSlot';
 
@@ -20,6 +21,7 @@ export function LoadoutScreen() {
   const totals = useMemo(() => calculateLoadout(grid, content.weapons), [grid]);
   const equipped = new Set([grid.main, ...grid.sub].filter((id) => id !== null));
   const encounterId = state.flags.includes('flag_tutorial_victory') ? 'enc_tidal_boss' : 'enc_tutorial';
+  const selectedSummon = content.summons.find((summon) => summon.id === summonId);
 
   function equipWeapon(weaponId: WeaponId) {
     if (activeSlot === 'main') setGrid({ ...grid, main: weaponId });
@@ -43,11 +45,16 @@ export function LoadoutScreen() {
       </header>
       <div className="loadout-tabs" role="tablist" aria-label="艦裝分類">
         <button aria-selected="true" role="tab" type="button">武器盤</button>
-        <label>召喚核心
-          <select value={summonId} onChange={(event) => setSummonId(event.target.value as typeof summonId)}>
-            {content.summons.map((summon) => <option key={summon.id} value={summon.id}>{summon.name}</option>)}
-          </select>
-        </label>
+        <div className="summon-picker">
+          {selectedSummon && userAssetUrl(selectedSummon.id) && (
+            <img alt={`${selectedSummon.name}召喚圖`} src={userAssetUrl(selectedSummon.id) ?? undefined} />
+          )}
+          <label>召喚核心
+            <select value={summonId} onChange={(event) => setSummonId(event.target.value as typeof summonId)}>
+              {content.summons.map((summon) => <option key={summon.id} value={summon.id}>{summon.name}</option>)}
+            </select>
+          </label>
+        </div>
       </div>
       <div className="loadout-body">
         <aside className="main-hand-panel">
@@ -84,6 +91,7 @@ export function LoadoutScreen() {
                 type="button"
                 onClick={() => equipWeapon(weapon.id)}
               >
+                {userAssetUrl(weapon.id) && <img alt="" src={userAssetUrl(weapon.id) ?? undefined} />}
                 <strong>{weapon.name}</strong><small>{weapon.element}・ATK {weapon.attack}</small>
               </button>
             ))}

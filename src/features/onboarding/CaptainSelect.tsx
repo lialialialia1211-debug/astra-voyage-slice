@@ -1,5 +1,6 @@
 import type { CaptainId } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
+import { userAssetUrl } from '../../lib/user-assets';
 
 const captains: { id: CaptainId; label: string; description: string }[] = [
   { id: 'cap_m', label: '男性艦長', description: '25 歲・遠征航路指揮官' },
@@ -23,7 +24,13 @@ export function CaptainSelect() {
             type="button"
             onClick={() => dispatch({ type: 'SELECT_CAPTAIN', captainId: captain.id })}
           >
-            <span className="captain-silhouette" aria-hidden="true" />
+            {userAssetUrl(`${captain.id}_card`) && (
+              <img
+                alt={`${captain.label}立繪`}
+                className="captain-art"
+                src={userAssetUrl(`${captain.id}_card`) ?? undefined}
+              />
+            )}
             <strong>{captain.label}</strong>
             <small>{captain.description}</small>
           </button>

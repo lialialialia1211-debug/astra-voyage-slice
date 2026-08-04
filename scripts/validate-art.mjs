@@ -74,7 +74,7 @@ async function exists(filePath) {
   }
 }
 
-export async function validateAndConvert(rows, dropRoot, outputRoot) {
+export async function validateAndConvert(rows, dropRoot, outputRoot, runtimeManifestPath) {
   const readyRows = rows.filter((row) => row.status === 'ready');
   const errors = [];
   const valid = [];
@@ -114,6 +114,10 @@ export async function validateAndConvert(rows, dropRoot, outputRoot) {
     manifest[row.assetId] = `/assets/user/${row.assetId}.webp`;
   }
   await writeFile(path.join(outputRoot, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  if (runtimeManifestPath) {
+    await mkdir(path.dirname(runtimeManifestPath), { recursive: true });
+    await writeFile(runtimeManifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  }
   return { errors, manifest };
 }
 
@@ -123,8 +127,9 @@ async function main() {
   const dropArgument = process.argv.slice(2).find((argument) => argument !== '--');
   const dropRoot = path.resolve(dropArgument ?? path.join(projectRoot, 'art-drop'));
   const outputRoot = path.join(projectRoot, 'public', 'assets', 'user');
+  const runtimeManifestPath = path.join(projectRoot, 'src', 'generated', 'user-art-manifest.json');
   const rows = parseChecklist(await readFile(checklistPath, 'utf8'));
-  const result = await validateAndConvert(rows, dropRoot, outputRoot);
+  const result = await validateAndConvert(rows, dropRoot, outputRoot, runtimeManifestPath);
   if (result.errors.length > 0) {
     for (const error of result.errors) console.error(`ERROR ${error}`);
     console.error(`驗證失敗：${result.errors.length} 個問題，未轉換任何資產。`);

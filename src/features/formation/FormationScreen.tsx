@@ -3,6 +3,7 @@ import { content } from '../../content';
 import type { CharacterId } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
 import type { GameState } from '../../game/initial-state';
+import { userAssetUrl } from '../../lib/user-assets';
 
 const roleNames = {
   vanguard: '先鋒',
@@ -58,6 +59,13 @@ export function FormationScreen() {
             type="button"
             onClick={() => toggleMember(character.id)}
           >
+            {userAssetUrl(`${character.id}_card`) && (
+              <img
+                alt={`${character.name}角色卡`}
+                className="roster-art"
+                src={userAssetUrl(`${character.id}_card`) ?? undefined}
+              />
+            )}
             <span className={`element-dot element-${character.element}`} aria-hidden="true" />
             <strong>{character.name}</strong>
             <small>{roleNames[character.role]}・{character.age} 歲</small>

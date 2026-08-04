@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { content } from '../../content';
 import type { CharacterId } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
+import { userAssetUrl } from '../../lib/user-assets';
 import { calculateLoadout } from '../loadout/calculate-loadout';
 import { BattleHud } from './BattleHud';
 import { createBattle, resolveTurn, useSkill } from './engine';
@@ -21,6 +22,7 @@ export function BattleStage({ initialBattle, onComplete }: BattleStageProps) {
   const [message, setMessage] = useState('技能階段：可先施放技能，再發動全隊攻擊。');
   const [ougiActors, setOugiActors] = useState<Set<CharacterId>>(() => new Set());
   const [motion, setMotion] = useState('');
+  const encounter = content.encounters.find((entry) => entry.id === battle.encounterId);
 
   function commit(next: BattleState, nextMessage: string, nextMotion: string) {
     setBattle(next);
@@ -63,8 +65,21 @@ export function BattleStage({ initialBattle, onComplete }: BattleStageProps) {
     <section className={`battle-screen battle-screen--${battle.encounterId} ${motion}`} aria-labelledby="battle-title">
       <BattleHud battle={battle} />
       <div className="battle-stage" aria-label="戰鬥區域">
-        <div className="enemy-silhouettes" aria-hidden="true">
-          {battle.enemies.map((enemy) => <span className={enemy.hp <= 0 ? 'is-defeated' : ''} key={enemy.id} />)}
+        <div className="enemy-silhouettes">
+          {battle.enemies.map((enemy) => {
+            const definition = encounter?.enemies.find((entry) => entry.id === enemy.id);
+            const assetId = enemy.id.startsWith('boss_')
+              ? `${enemy.id}_${battle.bossMode === 'break' ? 'break' : 'idle'}`
+              : enemy.id;
+            return (
+              <img
+                alt={`${definition?.name ?? enemy.id}敵人立繪`}
+                className={enemy.hp <= 0 ? 'is-defeated' : ''}
+                key={enemy.id}
+                src={userAssetUrl(assetId) ?? undefined}
+              />
+            );
+          })}
         </div>
         <p className="battle-message" aria-live="polite">{message}</p>
       </div>
@@ -75,6 +90,13 @@ export function BattleStage({ initialBattle, onComplete }: BattleStageProps) {
           const ougiSelected = ougiActors.has(definition.id);
           return (
             <article className="battle-party-card" key={actor.id}>
+              {userAssetUrl(`${definition.id}_battle_idle`) && (
+                <img
+                  alt={`${definition.name}戰鬥立繪`}
+                  className="battle-party-art"
+                  src={userAssetUrl(`${definition.id}_battle_idle`) ?? undefined}
+                />
+              )}
               <div className="party-card-heading">
                 <strong>{definition.name}</strong><span>{definition.element}</span>
               </div>

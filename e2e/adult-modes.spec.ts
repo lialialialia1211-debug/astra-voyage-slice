@@ -31,5 +31,5 @@ test('hidden-thumbnail mode keeps the gallery cover neutral', async ({ page }) =
   await page.goto('/');
   await expect(page.locator('.event-thumbnail').filter({ hasText: 'PRIVATE' })).toHaveCount(3);
   await page.getByRole('button', { name: '開啟事件' }).click();
-  await expect(page.getByRole('img', { name: '深潛後的約定 CG 待匯入' })).toBeVisible();
+  await expect(page.getByRole('img', { name: '深潛後的約定 CG' })).toBeVisible();
 });

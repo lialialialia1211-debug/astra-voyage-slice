@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { content } from '../../content';
 import type { CharacterId } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
+import { userAssetUrl } from '../../lib/user-assets';
 import { nextRelationTarget } from './relation';
 
 const roleLabels = {
@@ -19,6 +20,8 @@ export function CabinScreen() {
   const relation = state.relation[selectedId];
   const nextTarget = nextRelationTarget(relation.level);
   const progressMax = nextTarget ?? Math.max(220, relation.xp);
+  const cabinAssetId = `${character.id}_cabin_${outfit === 1 ? 'base' : 'outfit_02'}`;
+  const cabinArtUrl = userAssetUrl(cabinAssetId) ?? userAssetUrl(`${character.id}_cabin_base`);
 
   return (
     <section className="cabin-screen" aria-labelledby="cabin-title">
@@ -42,9 +45,12 @@ export function CabinScreen() {
         ))}
       </div>
       <div className="cabin-body">
-        <div className="cabin-character-placeholder" aria-label={`${character.name} 艙室立繪待匯入`} role="img">
-          <span aria-hidden="true" />
-          <small>{character.id}_cabin_{outfit === 1 ? 'base' : 'outfit_02'}</small>
+        <div className="cabin-character-stage">
+          {cabinArtUrl ? (
+            <img alt={`${character.name}艙室立繪`} className="cabin-character-art" src={cabinArtUrl} />
+          ) : (
+            <div className="cabin-character-placeholder" aria-label={`${character.name}艙室立繪待匯入`} role="img" />
+          )}
         </div>
         <aside className="relation-panel">
           <p className={`element-label element-${character.element}`}>{character.element.toUpperCase()}</p>

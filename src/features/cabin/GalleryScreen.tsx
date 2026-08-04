@@ -1,28 +1,18 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { content } from '../../content';
 import type { EventDefinition } from '../../domain/types';
 import { useGame } from '../../game/GameProvider';
-import { resolveAsset, type AssetManifest } from '../../lib/assets';
+import { userAssetUrl } from '../../lib/user-assets';
 import { EventViewer } from './EventViewer';
 import { eventConditionLabel, isEventUnlocked } from './relation';
 
 export function GalleryScreen() {
   const { state, dispatch } = useGame();
   const [activeEvent, setActiveEvent] = useState<EventDefinition | null>(null);
-  const [assetManifest, setAssetManifest] = useState<AssetManifest>({});
   const closeViewer = useCallback(() => setActiveEvent(null), []);
   const markViewed = useCallback(() => {
     if (activeEvent) dispatch({ type: 'MARK_EVENT_VIEWED', eventId: activeEvent.id });
   }, [activeEvent, dispatch]);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch('/assets/user/manifest.json')
-      .then((response) => response.ok ? response.json() as Promise<Record<string, string>> : {})
-      .then((manifest) => { if (!cancelled) setAssetManifest(manifest); })
-      .catch(() => { if (!cancelled) setAssetManifest({}); });
-    return () => { cancelled = true; };
-  }, []);
 
   return (
     <section className="gallery-screen" aria-labelledby="gallery-title">
@@ -38,10 +28,15 @@ export function GalleryScreen() {
         {content.events.map((event) => {
           const unlocked = isEventUnlocked(event, state);
           const viewed = state.viewedEvents.includes(event.id);
+          const assetUrl = userAssetUrl(event.assetId);
           return (
             <article className={`event-card ${unlocked ? 'is-unlocked' : 'is-locked'}`} key={event.id}>
-              <div className="event-thumbnail" aria-hidden="true">
-                {state.adultMode === 'hidden-thumbnails' || !unlocked ? 'PRIVATE' : '18+'}
+              <div className="event-thumbnail">
+                {state.adultMode === 'full' && unlocked && assetUrl ? (
+                  <img alt={`${event.title}預覽`} src={assetUrl} />
+                ) : (
+                  <span aria-hidden="true">PRIVATE</span>
+                )}
               </div>
               <p>{viewed ? '已讀' : unlocked ? '可閱覽' : '未解鎖'}</p>
               <h2>{event.title}</h2>
@@ -57,7 +52,7 @@ export function GalleryScreen() {
         <EventViewer
           event={activeEvent}
           mode={state.adultMode}
-          assetUrl={resolveAsset(activeEvent.assetId, assetManifest).url}
+          assetUrl={userAssetUrl(activeEvent.assetId)}
           onClose={closeViewer}
           onViewed={markViewed}
         />

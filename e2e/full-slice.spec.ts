@@ -27,6 +27,7 @@ for (const captain of ['男性艦長', '女性艦長']) {
     await page.getByRole('button', { name: '開啟事件' }).click();
     const eventDialog = page.getByRole('dialog', { name: '深潛後的約定' });
     await expect(eventDialog.getByRole('heading', { name: '深潛後的約定' })).toBeVisible();
-    await expect(eventDialog.getByRole('img', { name: '深潛後的約定 CG 待匯入' })).toBeVisible();
+    await expect(eventDialog.getByRole('img', { name: '深潛後的約定 CG' })).toBeVisible();
+    await expect(eventDialog.getByText('這段私人紀錄已加入收藏，可隨時從事件收藏再次閱覽。')).toBeVisible();
   });
 }

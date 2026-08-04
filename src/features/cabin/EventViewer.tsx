@@ -35,7 +35,7 @@ export function EventViewer({ event, mode, assetUrl, onClose, onViewed }: EventV
         </div>
       )}
       <div className="event-dialogue-plate">
-        <p>這段私人紀錄已加入收藏。完整畫面將在對應美術資產匯入後顯示。</p>
+        <p>這段私人紀錄已加入收藏，可隨時從事件收藏再次閱覽。</p>
       </div>
     </section>
   );

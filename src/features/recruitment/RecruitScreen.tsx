@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { content } from '../../content';
 import { useGame } from '../../game/GameProvider';
-import { fixedTenDraw } from './recruit';
+import { userAssetUrl } from '../../lib/user-assets';
+import { fixedTenDraw, type RecruitResult } from './recruit';
 
 const resultNames: Record<string, string> = {
   wpn_01_sunblade: '旭日裂潮劍',
@@ -14,6 +16,17 @@ const resultNames: Record<string, string> = {
   wpn_06_route_bow: '航路弓',
   chr_04: '光醫・外星生物研究醫師',
 };
+
+function rewardArt(result: RecruitResult) {
+  if (result.kind === 'weapon') {
+    return { assetId: result.id, alt: `${resultNames[result.id]}武器圖` };
+  }
+  if (result.kind === 'character') {
+    const name = content.characters.find((character) => character.id === result.id)?.name ?? result.id;
+    return { assetId: `${result.id}_card`, alt: `${name}角色卡` };
+  }
+  return null;
+}
 
 export function RecruitScreen() {
   const { dispatch } = useGame();
@@ -29,7 +42,17 @@ export function RecruitScreen() {
         {results.map((result, index) => (
           <article className={`recruit-card rarity-${result.rarity}`} key={`${result.id}-${index}`}>
             {index < revealed ? (
-              <><span>{result.rarity.toUpperCase()}</span><strong>{resultNames[result.id]}</strong></>
+              <>
+                {rewardArt(result) && userAssetUrl(rewardArt(result)!.assetId) && (
+                  <img
+                    alt={rewardArt(result)!.alt}
+                    className="recruit-art"
+                    src={userAssetUrl(rewardArt(result)!.assetId) ?? undefined}
+                  />
+                )}
+                <span>{result.rarity.toUpperCase()}</span>
+                <strong>{resultNames[result.id]}</strong>
+              </>
             ) : (
               <span className="card-back">ASTRA</span>
             )}

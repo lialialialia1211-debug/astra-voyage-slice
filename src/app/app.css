@@ -125,7 +125,9 @@ button {
 
 .captain-choice {
   display: grid;
-  min-height: 230px;
+  min-height: 310px;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  overflow: hidden;
   padding: 18px;
   border: 1px solid rgb(121 213 230 / 32%);
   border-radius: 16px;
@@ -147,12 +149,12 @@ button {
   outline-offset: 3px;
 }
 
-.captain-silhouette {
-  width: 74px;
-  height: 118px;
-  border-radius: 50% 50% 18% 18%;
-  background: linear-gradient(180deg, #647f8d 0 24%, #203b4a 25%);
-  box-shadow: 0 0 30px rgb(103 232 249 / 14%);
+.captain-art {
+  width: 100%;
+  height: 210px;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 38%));
 }
 
 .captain-choice strong {
@@ -177,7 +179,9 @@ button {
 
 .recruit-card {
   display: grid;
-  min-height: 132px;
+  min-height: 150px;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  overflow: hidden;
   padding: 12px;
   border: 1px solid #50677a;
   border-radius: 12px;
@@ -188,6 +192,13 @@ button {
   background-position: center;
   background-size: 100% 100%, cover;
   place-items: center;
+}
+
+.recruit-art {
+  width: 100%;
+  height: 82px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 7px rgb(0 0 0 / 38%));
 }
 
 .recruit-card strong {
@@ -258,6 +269,20 @@ button {
   color: #dceaf0;
   background: #101f31;
   place-items: center;
+}
+
+.roster-card {
+  min-height: 170px;
+  grid-template-rows: minmax(0, 1fr) auto auto auto;
+  overflow: hidden;
+}
+
+.roster-art {
+  width: 100%;
+  height: 92px;
+  object-fit: contain;
+  object-position: center 24%;
+  filter: drop-shadow(0 7px 8px rgb(0 0 0 / 35%));
 }
 
 .party-slot span,
@@ -367,6 +392,19 @@ button:disabled {
   background: #12263a;
 }
 
+.summon-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summon-picker > img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 35%));
+}
+
 .loadout-tabs button {
   background-image: url("/assets/generated-ui/controls/tab_plate.webp");
   background-size: 100% 100%;
@@ -422,9 +460,20 @@ button:disabled {
   transform: rotate(-14deg);
 }
 
+.weapon-art {
+  width: 100%;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 6px rgb(0 0 0 / 42%));
+}
+
 .weapon-slot--main .weapon-art-placeholder {
   width: 50px;
   height: 125px;
+}
+
+.weapon-slot--main .weapon-art {
+  height: 154px;
 }
 
 .weapon-slot-label,
@@ -491,13 +540,21 @@ button:disabled {
 }
 
 .inventory-list button {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  align-items: center;
+  gap: 9px;
   padding: 10px;
   border: 1px solid #355267;
   border-radius: 8px;
   color: #dce9ef;
   background: #12273a;
+}
+
+.inventory-list img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
 }
 
 .sr-only {
@@ -624,22 +681,22 @@ progress {
 .enemy-silhouettes {
   display: flex;
   align-items: end;
+  justify-content: center;
   gap: 36px;
+  width: 100%;
+  height: 100%;
 }
 
-.enemy-silhouettes span {
-  display: block;
-  width: 92px;
-  height: 138px;
-  border: 1px solid rgb(114 223 231 / 38%);
-  border-radius: 48% 48% 24% 24%;
-  background: linear-gradient(145deg, #214d5b, #08131f 72%);
-  box-shadow: 0 0 38px rgb(71 209 218 / 18%);
+.enemy-silhouettes img {
+  width: min(34%, 340px);
+  height: clamp(150px, 27vh, 310px);
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 16px 16px rgb(0 0 0 / 48%));
 }
 
-.enemy-silhouettes span:nth-child(2) {
-  width: 74px;
-  height: 98px;
+.battle-screen--enc_tutorial .enemy-silhouettes img:nth-child(2) {
+  height: clamp(120px, 22vh, 240px);
 }
 
 .enemy-silhouettes .is-defeated {
@@ -676,6 +733,14 @@ progress {
   border: 1px solid #314c60;
   border-radius: 10px;
   background: linear-gradient(145deg, #122d40, #091522);
+}
+
+.battle-party-art {
+  width: 100%;
+  height: 72px;
+  object-fit: contain;
+  object-position: center 18%;
+  filter: drop-shadow(0 5px 6px rgb(0 0 0 / 36%));
 }
 
 .party-card-heading,
@@ -838,6 +903,7 @@ progress {
   min-height: 510px;
 }
 
+.cabin-character-stage,
 .cabin-character-placeholder {
   position: relative;
   display: grid;
@@ -850,20 +916,18 @@ progress {
   place-items: center;
 }
 
-.cabin-character-placeholder span {
-  width: 180px;
-  height: 390px;
-  border: 1px solid rgb(124 224 231 / 30%);
-  border-radius: 46% 46% 20% 20%;
-  background: linear-gradient(160deg, #2c6271, #0a1723 72%);
-  box-shadow: 0 0 70px rgb(73 208 218 / 18%);
+.cabin-character-art {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 22px 20px rgb(0 0 0 / 46%));
 }
 
-.cabin-character-placeholder small {
-  position: absolute;
-  bottom: 15px;
-  color: #8da9b9;
-  font-family: monospace;
+.cabin-character-placeholder {
+  width: 100%;
+  height: 100%;
 }
 
 .relation-panel {
@@ -972,6 +1036,14 @@ progress {
   font-weight: 900;
   letter-spacing: 0.2em;
   place-items: center;
+  overflow: hidden;
+}
+
+.event-thumbnail img {
+  width: 100%;
+  height: 185px;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
 .event-card p {
@@ -1178,6 +1250,18 @@ progress {
 
   .weapon-slot--main .weapon-art-placeholder {
     height: 104px;
+  }
+
+  .weapon-slot--main .weapon-art {
+    height: 124px;
+  }
+
+  .battle-party-art {
+    height: 58px;
+  }
+
+  .enemy-silhouettes img {
+    height: clamp(130px, 23vh, 235px);
   }
 
   .main-hand-panel p {
