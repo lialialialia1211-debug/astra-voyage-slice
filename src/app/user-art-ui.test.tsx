@@ -101,3 +101,14 @@ it('shows an unlocked event thumbnail from the completed collection art', () => 
 
   expect(screen.getByRole('img', { name: '深潛後的約定預覽' })).toBeVisible();
 });
+
+it('unlocks all three adult CG events from the QA control', async () => {
+  const user = userEvent.setup();
+  renderAt({ screen: 'gallery', captainId: 'cap_f', roster: [...fullParty] });
+
+  await user.click(screen.getByRole('button', { name: 'QA：解鎖全部 CG' }));
+
+  expect(screen.getByRole('button', { name: 'QA：CG 已全解鎖' })).toBeDisabled();
+  expect(screen.getAllByRole('button', { name: '開啟事件' })).toHaveLength(3);
+  expect(screen.getAllByRole('img', { name: /預覽$/ })).toHaveLength(3);
+});
