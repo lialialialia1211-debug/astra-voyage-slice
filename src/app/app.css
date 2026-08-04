@@ -1379,3 +1379,446 @@ h1 {
     transition-duration: 0.01ms !important;
   }
 }
+
+.app-shell--expedition-map,
+.app-shell--growth {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_hub_harbor.webp");
+}
+
+.app-shell--story {
+  --screen-background: url("/assets/generated-ui/backgrounds/bg_battle_land.webp");
+}
+
+.expedition-map-screen,
+.growth-screen,
+.story-screen {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1240px);
+  border: 1px solid rgb(121 213 230 / 34%);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgb(7 25 39 / 96%), rgb(4 13 23 / 94%));
+  box-shadow: 0 28px 80px rgb(0 0 0 / 52%);
+  backdrop-filter: blur(14px);
+}
+
+.expedition-map-screen,
+.growth-screen {
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: clamp(20px, 3vw, 36px);
+}
+
+.expedition-map-header,
+.growth-header,
+.story-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid rgb(196 154 75 / 30%);
+  padding-bottom: 18px;
+}
+
+.expedition-map-header h1,
+.growth-header h1,
+.story-header h1 {
+  font-size: clamp(2rem, 4vw, 3.15rem);
+}
+
+.expedition-resource-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 650px;
+}
+
+.expedition-resource-bar > * {
+  border: 1px solid rgb(121 213 230 / 24%);
+  border-radius: 9px;
+  padding: 8px 11px;
+  color: #c9d9e3;
+  background: rgb(7 28 43 / 78%);
+  font-size: 0.82rem;
+}
+
+.expedition-resource-bar strong {
+  border-color: rgb(196 154 75 / 55%);
+  color: #fff1c4;
+}
+
+.expedition-resource-bar button,
+.expedition-utility-nav button,
+.story-replay-actions button,
+.growth-header button,
+.story-controls button,
+.story-log button {
+  cursor: pointer;
+}
+
+.expedition-resource-bar button:disabled,
+.route-node:disabled,
+.sea-route-node:disabled,
+.stage-detail-panel button:disabled,
+.growth-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+
+.expedition-utility-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.expedition-utility-nav button,
+.growth-header button,
+.story-replay-actions button,
+.story-controls button,
+.story-log button {
+  border: 1px solid rgb(121 213 230 / 32%);
+  border-radius: 9px;
+  padding: 9px 13px;
+  color: #dbeaf0;
+  background: #102d40;
+}
+
+.expedition-map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(300px, 0.8fr);
+  gap: 18px;
+}
+
+.land-route {
+  position: relative;
+  min-height: 430px;
+  overflow: hidden;
+  border: 1px solid rgb(121 213 230 / 22%);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 16% 74%, rgb(196 154 75 / 18%), transparent 23%),
+    radial-gradient(circle at 75% 28%, rgb(77 200 221 / 14%), transparent 24%),
+    linear-gradient(155deg, rgb(8 43 58 / 76%), rgb(5 18 30 / 92%));
+}
+
+.route-line {
+  position: absolute;
+  top: 52%;
+  left: 10%;
+  width: 72%;
+  height: 4px;
+  transform: rotate(-13deg);
+  transform-origin: left center;
+  background: linear-gradient(90deg, #c49a4b, #79d5e6);
+  box-shadow: 0 0 18px rgb(121 213 230 / 55%);
+}
+
+.route-node {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  width: min(190px, 24%);
+  min-height: 100px;
+  gap: 4px;
+  border: 1px solid rgb(121 213 230 / 52%);
+  border-radius: 14px;
+  padding: 12px;
+  color: #e8f4f6;
+  background: linear-gradient(145deg, #153d51, #091a29);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 38%);
+  text-align: left;
+}
+
+.route-node:nth-of-type(1) { left: 5%; top: 64%; }
+.route-node:nth-of-type(2) { left: 28%; top: 50%; }
+.route-node:nth-of-type(3) { left: 51%; top: 34%; }
+.route-node:nth-of-type(4) { left: 74%; top: 17%; }
+
+.route-node[aria-current="step"] {
+  border-color: #f0bd59;
+  box-shadow: 0 0 0 2px rgb(240 189 89 / 25%), 0 14px 34px rgb(0 0 0 / 48%);
+}
+
+.route-node.is-cleared::after {
+  position: absolute;
+  top: -9px;
+  right: -7px;
+  content: "CLEAR";
+  border-radius: 20px;
+  padding: 4px 7px;
+  color: #082331;
+  background: #79d5e6;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.route-node > span {
+  color: #79d5e6;
+  font-weight: 900;
+}
+
+.route-node small {
+  color: #a9c3cf;
+}
+
+.sea-route-node {
+  position: absolute;
+  right: 4%;
+  bottom: 5%;
+  min-width: 250px;
+  border: 1px solid rgb(196 154 75 / 55%);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: #fff1c4;
+  background: linear-gradient(135deg, #0f485a, #102536);
+  font-weight: 800;
+}
+
+.stage-detail-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 430px;
+  border: 1px solid rgb(196 154 75 / 32%);
+  border-radius: 18px;
+  padding: 22px;
+  background: rgb(4 15 25 / 88%);
+}
+
+.stage-detail-panel h2 {
+  margin: 0;
+  color: #fff1c4;
+  font-family: Georgia, "Noto Serif TC", serif;
+  font-size: 1.85rem;
+}
+
+.stage-detail-panel > p:not(.eyebrow) {
+  color: #b9cbd4;
+  line-height: 1.7;
+}
+
+.stage-detail-panel dl {
+  margin: 0 0 18px;
+}
+
+.stage-detail-panel dl div {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 12px;
+  border-top: 1px solid rgb(121 213 230 / 14%);
+  padding: 10px 0;
+}
+
+.stage-detail-panel dt { color: #79d5e6; }
+.stage-detail-panel dd { margin: 0; color: #d8e2e7; }
+.stage-detail-panel .primary-action { width: 100%; min-width: 0; margin-top: auto; }
+
+.story-replay-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.story-screen {
+  display: grid;
+  height: calc(100vh - 32px);
+  max-height: 820px;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+.story-header {
+  padding: 18px 28px;
+  background: rgb(4 15 25 / 87%);
+}
+
+.story-header > span {
+  color: #9fc4cf;
+}
+
+.story-stage {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(to top, rgb(3 10 17 / 70%), transparent 48%),
+    url("/assets/generated-ui/backgrounds/bg_battle_land.webp") center / cover;
+}
+
+.story-screen--port .story-stage { background-image: linear-gradient(to top, rgb(3 10 17 / 72%), transparent 50%), url("/assets/generated-ui/backgrounds/bg_title_harbor.webp"); }
+.story-screen--ruins .story-stage { background-image: linear-gradient(to top, rgb(3 10 17 / 72%), transparent 50%), url("/assets/generated-ui/backgrounds/bg_battle_land.webp"); }
+.story-screen--outpost .story-stage { background-image: linear-gradient(to top, rgb(3 10 17 / 72%), transparent 50%), url("/assets/generated-ui/backgrounds/bg_ending_star_signal.webp"); }
+.story-screen--core .story-stage { background-image: linear-gradient(to top, rgb(3 10 17 / 72%), transparent 50%), url("/assets/generated-ui/backgrounds/bg_battle_land.webp"); }
+
+.story-portrait {
+  position: absolute;
+  bottom: -10%;
+  height: 116%;
+  max-width: 58%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 28px rgb(0 0 0 / 58%));
+}
+
+.story-portrait--left { left: 6%; }
+.story-portrait--right { right: 6%; transform: scaleX(-1); }
+
+.story-progress {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  border-radius: 20px;
+  padding: 6px 10px;
+  background: rgb(4 15 25 / 76%);
+  color: #9fdde5;
+  font-size: 0.78rem;
+}
+
+.story-dialogue {
+  padding: 18px 28px 22px;
+  background: linear-gradient(145deg, rgb(7 26 40 / 98%), rgb(3 11 20 / 98%));
+}
+
+.story-dialogue > strong {
+  color: #f2c86d;
+  font-size: 1.15rem;
+}
+
+.story-dialogue > p {
+  min-height: 48px;
+  margin: 8px 0 12px;
+  color: #e5eef1;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.story-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.story-controls .primary-action {
+  min-width: 150px;
+}
+
+.story-log {
+  position: absolute;
+  z-index: 5;
+  inset: 5%;
+  overflow: auto;
+  border: 1px solid rgb(196 154 75 / 55%);
+  border-radius: 18px;
+  padding: 24px;
+  background: rgb(3 12 21 / 98%);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 65%);
+}
+
+.story-log > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.story-log h2 { margin: 0; color: #fff1c4; }
+.story-log li { color: #cbdbe1; }
+.story-log li strong { color: #79d5e6; }
+
+.growth-inventory,
+.growth-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 0;
+}
+
+.growth-inventory span,
+.growth-tabs button {
+  border: 1px solid rgb(121 213 230 / 26%);
+  border-radius: 9px;
+  padding: 9px 13px;
+  color: #d7e6eb;
+  background: #0d293a;
+}
+
+.growth-tabs button[aria-selected="true"] {
+  border-color: #f0bd59;
+  color: #fff1c4;
+  background: #45351f;
+}
+
+.growth-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.growth-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid rgb(121 213 230 / 24%);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgb(8 31 46 / 84%);
+}
+
+.growth-card > img {
+  width: 100%;
+  height: 120px;
+  border-radius: 9px;
+  object-fit: contain;
+  background: linear-gradient(#163a4a, #081823);
+}
+
+.growth-card--weapon > img {
+  height: 92px;
+}
+
+.growth-card > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.growth-card h2 {
+  overflow: hidden;
+  margin: 0;
+  color: #fff1c4;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.growth-level { color: #79d5e6; white-space: nowrap; }
+.growth-card p { margin: 0; color: #c2d5dc; font-size: 0.83rem; }
+.growth-card small { min-height: 30px; color: #a8bec7; line-height: 1.35; }
+.growth-card .is-missing { color: #ef9a88; }
+.growth-card .is-ready { color: #87dfc2; }
+.growth-card button { margin-top: auto; border: 1px solid #80622f; border-radius: 9px; padding: 9px; color: #fff1c4; background: #4b371d; }
+.growth-boundary-note { margin: 14px 0 0; border-left: 3px solid #79d5e6; padding: 9px 12px; color: #a9c1ca; background: rgb(24 70 88 / 22%); }
+
+@media (max-height: 760px) and (min-width: 1001px) {
+  .expedition-map-screen,
+  .growth-screen { padding: 16px 22px; }
+  .expedition-map-header,
+  .growth-header { padding-bottom: 10px; }
+  .land-route,
+  .stage-detail-panel { min-height: 400px; }
+  .growth-card > img { height: 88px; }
+  .growth-card--weapon > img { height: 68px; }
+}
+
+@media (max-width: 1000px) {
+  .expedition-map-layout { grid-template-columns: 1fr; }
+  .growth-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .expedition-map-header,
+  .growth-header,
+  .story-header { align-items: flex-start; flex-direction: column; }
+  .expedition-resource-bar { justify-content: flex-start; }
+}

@@ -80,7 +80,7 @@ export function FormationScreen() {
           type="button"
           onClick={() => {
             dispatch({ type: 'SET_PARTY', party });
-            dispatch({ type: 'NAVIGATE', screen: 'loadout' });
+            dispatch({ type: 'NAVIGATE', screen: 'expedition-map' });
           }}
         >
           確認編隊

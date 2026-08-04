@@ -10,6 +10,9 @@ import { ResultsScreen } from '../features/battle/ResultsScreen';
 import { CabinScreen } from '../features/cabin/CabinScreen';
 import { GalleryScreen } from '../features/cabin/GalleryScreen';
 import { SettingsScreen } from '../features/settings/SettingsScreen';
+import { ExpeditionMapScreen } from '../features/expedition/ExpeditionMapScreen';
+import { StoryScreen } from '../features/story/StoryScreen';
+import { GrowthScreen } from '../features/growth/GrowthScreen';
 import './app.css';
 
 function GameRouter() {
@@ -27,6 +30,12 @@ function GameRouter() {
         return <RecruitScreen />;
       case 'formation':
         return <FormationScreen />;
+      case 'expedition-map':
+        return <ExpeditionMapScreen />;
+      case 'story':
+        return <StoryScreen />;
+      case 'growth':
+        return <GrowthScreen />;
       case 'loadout':
         return <LoadoutScreen />;
       case 'battle':

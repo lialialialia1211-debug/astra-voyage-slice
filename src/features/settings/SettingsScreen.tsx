@@ -67,7 +67,7 @@ export function SettingsScreen() {
         </label>
         {saveMessage && <p aria-live="polite">{saveMessage}</p>}
       </div>
-      <button className="primary-action" type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'gallery' })}>返回事件收藏</button>
+      <button className="primary-action" type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'expedition-map' })}>返回地表地圖</button>
     </section>
   );
 }

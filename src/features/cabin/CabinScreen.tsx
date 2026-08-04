@@ -30,7 +30,7 @@ export function CabinScreen() {
         <nav aria-label="艙室功能">
           <button type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'gallery' })}>事件收藏</button>
           <button type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'settings' })}>顯示設定</button>
-          <button type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'loadout' })}>返回艦裝</button>
+          <button type="button" onClick={() => dispatch({ type: 'NAVIGATE', screen: 'expedition-map' })}>返回地表地圖</button>
         </nav>
       </header>
       <div className="cabin-tabs" role="tablist" aria-label="隊員">
