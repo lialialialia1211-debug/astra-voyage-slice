@@ -1,5 +1,16 @@
-import { createInitialState } from './initial-state';
+import { createInitialState, type GameState } from './initial-state';
 import { gameReducer } from './reducer';
+
+function expeditionReady(overrides: Partial<GameState> = {}): GameState {
+  return {
+    ...createInitialState(0),
+    adultConfirmed: true,
+    captainId: 'cap_f' as const,
+    roster: ['chr_01', 'chr_02', 'chr_03', 'chr_04'],
+    party: ['chr_01', 'chr_02', 'chr_03', 'chr_04'],
+    ...overrides,
+  };
+}
 
 it('moves confirmed adults to captain selection', () => {
   const state = gameReducer(createInitialState(), { type: 'CONFIRM_ADULT' });
@@ -43,4 +54,150 @@ it('keeps party and loadout unchanged when adult collection state changes', () =
   expect(hidden.party).toEqual(initial.party);
   expect(hidden.weaponGrid).toEqual(initial.weaponGrid);
   expect(hidden.relation.chr_02).toEqual({ xp: 100, level: 3 });
+});
+
+it('deducts AP once and creates an active challenge atomically', () => {
+  const next = gameReducer(expeditionReady(), {
+    type: 'START_STAGE',
+    stageId: 'land_01_port_defense',
+    now: 0,
+  });
+
+  expect(next.ap.current).toBe(25);
+  expect(next.activeChallenge).toEqual({
+    stageId: 'land_01_port_defense',
+    encounterId: 'enc_tutorial',
+    apCost: 5,
+  });
+  expect(next.currentEncounterId).toBe('enc_tutorial');
+  expect(next.screen).toBe('battle');
+});
+
+it('rejects locked stages and insufficient AP without changing the state', () => {
+  const initial = expeditionReady({ ap: { current: 4, lastRecoveredAt: 0 } });
+  expect(() => gameReducer(initial, {
+    type: 'START_STAGE',
+    stageId: 'land_01_port_defense',
+    now: 0,
+  })).toThrow('AP 不足');
+  expect(() => gameReducer(expeditionReady(), {
+    type: 'START_STAGE',
+    stageId: 'land_02_surface_ruins',
+    now: 0,
+  })).toThrow('關卡尚未解鎖');
+  expect(initial.ap.current).toBe(4);
+});
+
+it('refunds all paid AP on defeat and grants nothing', () => {
+  const active = gameReducer(expeditionReady(), {
+    type: 'START_STAGE',
+    stageId: 'land_01_port_defense',
+    now: 0,
+  });
+  const next = gameReducer(active, {
+    type: 'FINISH_STAGE',
+    result: 'defeat',
+    flags: [],
+    enemyHp: 800,
+  });
+
+  expect(next.ap.current).toBe(30);
+  expect(next.inventory).toEqual(expeditionReady().inventory);
+  expect(next.activeChallenge).toBeNull();
+  expect(next.lastStageRewards?.refundedAp).toBe(5);
+  expect(next.relation.chr_02).toEqual({ xp: 0, level: 1 });
+});
+
+it('grants deterministic and first-clear rewards only once', () => {
+  const active = gameReducer(expeditionReady(), {
+    type: 'START_STAGE',
+    stageId: 'land_01_port_defense',
+    now: 0,
+  });
+  const first = gameReducer(active, {
+    type: 'FINISH_STAGE',
+    result: 'victory',
+    flags: [],
+    enemyHp: 0,
+  });
+  const repeatedActive = gameReducer({
+    ...first,
+    screen: 'expedition-map',
+    ap: { current: 30, lastRecoveredAt: 0 },
+  }, {
+    type: 'START_STAGE',
+    stageId: 'land_01_port_defense',
+    now: 0,
+  });
+  const repeated = gameReducer(repeatedActive, {
+    type: 'FINISH_STAGE',
+    result: 'victory',
+    flags: [],
+    enemyHp: 0,
+  });
+
+  expect(first.inventory).toEqual({
+    expeditionPoints: 180,
+    surfaceAlloy: 3,
+    ruinChip: 0,
+    leylineCore: 0,
+    fieldRation: 2,
+  });
+  expect(first.firstClears).toEqual(['land_01_port_defense']);
+  expect(repeated.lastStageRewards?.firstClear).toEqual({
+    expeditionPoints: 0,
+    surfaceAlloy: 0,
+    ruinChip: 0,
+    leylineCore: 0,
+    fieldRation: 0,
+  });
+  expect(repeated.inventory.expeditionPoints).toBe(260);
+});
+
+it('uses a field ration after synchronizing AP and never exceeds the cap', () => {
+  const initial = expeditionReady({
+    ap: { current: 10, lastRecoveredAt: 0 },
+    inventory: { ...createInitialState(0).inventory, fieldRation: 2 },
+  });
+  const next = gameReducer(initial, { type: 'USE_FIELD_RATION', now: 300_000 });
+
+  expect(next.ap).toEqual({ current: 26, lastRecoveredAt: 300_000 });
+  expect(next.inventory.fieldRation).toBe(1);
+});
+
+it('upgrades a character and weapon by exactly one level', () => {
+  const inventory = {
+    expeditionPoints: 1000,
+    surfaceAlloy: 20,
+    ruinChip: 10,
+    leylineCore: 2,
+    fieldRation: 1,
+  };
+  const character = gameReducer(expeditionReady({ inventory }), {
+    type: 'UPGRADE_CHARACTER',
+    characterId: 'chr_01',
+  });
+  const weapon = gameReducer(character, {
+    type: 'UPGRADE_WEAPON',
+    weaponId: 'wpn_01_sunblade',
+  });
+
+  expect(character.characterLevels.chr_01).toBe(2);
+  expect(weapon.weaponLevels.wpn_01_sunblade).toBe(2);
+  expect(weapon.inventory.expeditionPoints).toBe(820);
+  expect(weapon.inventory.surfaceAlloy).toBe(16);
+});
+
+it('completes and records a story before returning to its destination', () => {
+  const opened = gameReducer(expeditionReady(), {
+    type: 'START_STORY',
+    storyId: 'story_land_01_pre',
+    returnScreen: 'loadout',
+  });
+  const completed = gameReducer(opened, { type: 'COMPLETE_STORY' });
+
+  expect(opened.screen).toBe('story');
+  expect(completed.viewedStories).toEqual(['story_land_01_pre']);
+  expect(completed.activeStoryId).toBeNull();
+  expect(completed.screen).toBe('loadout');
 });

@@ -29,6 +29,12 @@ export function GameProvider({ children }: PropsWithChildren) {
     repository.save(state);
   }, [repository, state]);
 
+  useEffect(() => {
+    const synchronizeAp = () => dispatch({ type: 'SYNC_AP', now: Date.now() });
+    window.addEventListener('focus', synchronizeAp);
+    return () => window.removeEventListener('focus', synchronizeAp);
+  }, []);
+
   return (
     <GameContext.Provider value={{ state, dispatch, corruptBackup: loaded.corruptBackup }}>
       {children}
