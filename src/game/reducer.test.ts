@@ -27,6 +27,40 @@ it('moves confirmed adults directly to the first canonical scene', () => {
   });
 });
 
+it('stores chapter line navigation and clamps at the first line', () => {
+  const opened = gameReducer(createInitialState(0), { type: 'CONFIRM_ADULT' });
+  const advanced = gameReducer(opened, { type: 'ADVANCE_CHAPTER_LINE' } as unknown as GameAction);
+  const retreated = gameReducer(advanced, { type: 'RETREAT_CHAPTER_LINE' } as unknown as GameAction);
+  const clamped = gameReducer(retreated, { type: 'RETREAT_CHAPTER_LINE' } as unknown as GameAction);
+
+  expect(advanced.chapterOne.activeLineIndex).toBe(1);
+  expect(retreated.chapterOne.activeLineIndex).toBe(0);
+  expect(clamped.chapterOne.activeLineIndex).toBe(0);
+});
+
+it('moves scene one to scene two and scene two to battle preparation', () => {
+  const sceneOne = gameReducer(createInitialState(0), { type: 'CONFIRM_ADULT' });
+  const sceneTwo = gameReducer(sceneOne, { type: 'COMPLETE_CHAPTER_SCENE' } as unknown as GameAction);
+  const preparation = gameReducer(sceneTwo, { type: 'COMPLETE_CHAPTER_SCENE' } as unknown as GameAction);
+
+  expect(sceneTwo).toMatchObject({
+    screen: 'story',
+    chapterOne: {
+      currentNode: 'scene-2',
+      activeSceneId: 'ch01_scene_02_black_ship',
+      activeLineIndex: 0,
+      completedScenes: ['ch01_scene_01_port_bell'],
+    },
+  });
+  expect(preparation).toMatchObject({
+    screen: 'chapter-prep',
+    chapterOne: {
+      currentNode: 'battle-1-prep',
+      completedScenes: ['ch01_scene_01_port_bell', 'ch01_scene_02_black_ship'],
+    },
+  });
+});
+
 function chapterPrepState(completedBattles: string[] = []) {
   return {
     ...createInitialState(0),
