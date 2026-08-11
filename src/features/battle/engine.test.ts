@@ -24,6 +24,23 @@ function tidalBossBattle() {
 }
 
 describe('battle engine', () => {
+  it('creates the first chapter battle with two fixed actors and a weapon element override', () => {
+    const battle = createBattle({
+      contentSet: 'chapter-one',
+      encounterId: 'ch01_b01_outer_bay_rescue',
+      partyIds: ['zhaoli', 'luoen'],
+      elementOverrides: { zhaoli: 'fire' },
+      loadoutAttack: 0,
+      loadoutHp: 0,
+      summonId: null,
+    });
+
+    expect(battle.contentSet).toBe('chapter-one');
+    expect(battle.party).toHaveLength(2);
+    expect(battle.party[0]).toMatchObject({ id: 'zhaoli', element: 'fire' });
+    expect(battle.party[1]).toMatchObject({ id: 'luoen', element: 'water' });
+  });
+
   it('applies elemental advantage and starts skill cooldown', () => {
     const battle = tutorialBattle();
     const next = useSkill(battle, 'chr_01', 'armor-break', 'enm_01_port_raider');

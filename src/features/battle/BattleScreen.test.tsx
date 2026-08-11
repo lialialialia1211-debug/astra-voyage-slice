@@ -38,6 +38,31 @@ it('telegraphs the tidal strike and allows all-party guard', async () => {
   expect(onSnapshot).toHaveBeenCalledWith(expect.objectContaining({ turn: 2 }));
 });
 
+it('shows only the attack command for the two-person first chapter tutorial', () => {
+  const initial = createInitialState(0);
+  const state = {
+    ...initial,
+    adultConfirmed: true,
+    screen: 'battle' as const,
+    chapterOne: {
+      ...initial.chapterOne,
+      currentNode: 'battle-1' as const,
+      activeEncounterId: 'ch01_b01_outer_bay_rescue' as const,
+      selectedStarterWeaponId: 'wpn_fire_01' as const,
+    },
+  } satisfies GameState;
+  createSaveRepository(window.localStorage).save(state);
+
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: '外灣救難線' })).toBeVisible();
+  expect(screen.getByText('昭黎')).toBeVisible();
+  expect(screen.getByText('洛恩')).toBeVisible();
+  expect(screen.getByRole('button', { name: '全隊攻擊' })).toBeVisible();
+  expect(screen.queryByRole('button', { name: '全隊防禦' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: '召喚' })).not.toBeInTheDocument();
+});
+
 it('keeps the selected loadout when retrying a defeat', async () => {
   const user = userEvent.setup();
   const weaponGrid = recommendLoadout('fire', content.weapons);

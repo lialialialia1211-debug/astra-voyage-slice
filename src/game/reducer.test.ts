@@ -105,6 +105,48 @@ it('starts the first chapter battle for free and charges five AP for a replay', 
   });
 });
 
+it('selects a starter weapon, refunds replay AP on defeat, and records victory', () => {
+  const selected = gameReducer(chapterPrepState(), {
+    type: 'SELECT_STARTER_WEAPON',
+    weaponId: 'wpn_fire_01',
+  } as unknown as GameAction);
+  const replay = gameReducer(chapterPrepState(['ch01_b01_outer_bay_rescue']), {
+    type: 'START_CHAPTER_BATTLE',
+    now: 0,
+  } as unknown as GameAction);
+  const defeated = gameReducer(replay, {
+    type: 'FINISH_CHAPTER_BATTLE',
+    result: 'defeat',
+    flags: [],
+    enemyHp: 800,
+  } as unknown as GameAction);
+  const first = gameReducer(chapterPrepState(), {
+    type: 'START_CHAPTER_BATTLE',
+    now: 0,
+  } as unknown as GameAction);
+  const victorious = gameReducer(first, {
+    type: 'FINISH_CHAPTER_BATTLE',
+    result: 'victory',
+    flags: [],
+    enemyHp: 0,
+  } as unknown as GameAction);
+
+  expect(selected.chapterOne.selectedStarterWeaponId).toBe('wpn_fire_01');
+  expect(defeated).toMatchObject({
+    screen: 'results',
+    ap: { current: 30 },
+    chapterOne: { currentNode: 'battle-1-prep', lastResult: 'defeat' },
+  });
+  expect(victorious).toMatchObject({
+    screen: 'results',
+    chapterOne: {
+      currentNode: 'milestone-complete',
+      completedBattles: ['ch01_b01_outer_bay_rescue'],
+      lastResult: 'victory',
+    },
+  });
+});
+
 it('selects a captain and opens the prologue', () => {
   const confirmed = gameReducer(createInitialState(), { type: 'CONFIRM_ADULT' });
   const state = gameReducer(confirmed, { type: 'SELECT_CAPTAIN', captainId: 'cap_f' });
