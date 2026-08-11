@@ -594,6 +594,10 @@ button:disabled {
   --battle-background: url("/assets/generated-ui/backgrounds/bg_battle_ocean.webp");
 }
 
+.battle-screen--ch01_b01_outer_bay_rescue {
+  --battle-background: url("/assets/generated-ui/backgrounds/bg_battle_ocean.webp");
+}
+
 .battle-hud {
   position: relative;
   display: grid;
@@ -687,7 +691,8 @@ progress {
   height: 100%;
 }
 
-.enemy-silhouettes img {
+.enemy-silhouettes img,
+.enemy-silhouettes .battle-enemy-art {
   width: min(34%, 340px);
   height: clamp(150px, 27vh, 310px);
   object-fit: contain;
@@ -1739,6 +1744,13 @@ h1 {
   text-align: center;
 }
 
+.party-command-row--tutorial {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 760px;
+  width: 100%;
+  justify-self: center;
+}
+
 .asset-fallback span { font-weight: 800; }
 .asset-fallback small { color: #88aeb9; font-size: 0.68rem; }
 
@@ -1833,6 +1845,103 @@ h1 {
 .chapter-story--warning .chapter-story-background { filter: saturate(0.82) contrast(1.08); }
 .chapter-story--black-tide .chapter-story-background { filter: saturate(0.55) brightness(0.68); }
 .story-controls button:disabled { cursor: not-allowed; opacity: 0.42; }
+
+.chapter-prep-screen {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1180px);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  border: 1px solid rgb(121 213 230 / 34%);
+  border-radius: 24px;
+  padding: clamp(20px, 3vw, 34px);
+  background: linear-gradient(145deg, rgb(7 25 39 / 97%), rgb(4 13 23 / 96%));
+  box-shadow: 0 28px 80px rgb(0 0 0 / 52%);
+}
+
+.chapter-prep-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid rgb(196 154 75 / 30%);
+  padding-bottom: 18px;
+}
+
+.chapter-prep-header h1 { font-size: clamp(2rem, 4vw, 3.15rem); }
+.chapter-prep-header p { max-width: 700px; color: #b9cbd4; }
+
+.chapter-prep-cost {
+  display: grid;
+  min-width: 150px;
+  gap: 5px;
+  border: 1px solid rgb(196 154 75 / 44%);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #9fc4cf;
+  background: rgb(4 15 25 / 78%);
+}
+
+.chapter-prep-cost strong { color: #fff1c4; font-size: 1.05rem; }
+
+.starter-weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px 0;
+}
+
+.starter-weapon-card {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  border: 1px solid rgb(121 213 230 / 28%);
+  border-radius: 14px;
+  padding: 11px;
+  color: #dcebf0;
+  background: #0d293a;
+  cursor: pointer;
+  text-align: left;
+}
+
+.starter-weapon-card[aria-pressed="true"] {
+  border-color: #f0bd59;
+  box-shadow: 0 0 0 2px rgb(240 189 89 / 24%);
+  background: #45351f;
+}
+
+.starter-weapon-art { width: 100%; height: 118px; border-radius: 9px; object-fit: contain; }
+.starter-weapon-card > span { color: #79d5e6; font-size: 0.72rem; }
+.starter-weapon-card > strong { color: #fff1c4; }
+.starter-weapon-card > small { color: #abc0c9; line-height: 1.45; }
+
+.starter-weapon-card--fire { --element-accent: #ef806e; }
+.starter-weapon-card--water { --element-accent: #65bde8; }
+.starter-weapon-card--earth { --element-accent: #c6a06c; }
+.starter-weapon-card--wind { --element-accent: #77d5b0; }
+.starter-weapon-card--light { --element-accent: #efd77e; }
+.starter-weapon-card--dark { --element-accent: #aa83d7; }
+.starter-weapon-card .asset-fallback { border-color: var(--element-accent); }
+
+.chapter-prep-actions,
+.chapter-milestone-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.chapter-prep-actions p { color: #a9c1ca; }
+.chapter-milestone-screen { width: min(100%, 680px); }
+.chapter-milestone-actions { justify-content: flex-end; margin-top: 22px; }
+.chapter-milestone-actions button:not(.primary-action) {
+  border: 1px solid rgb(121 213 230 / 32%);
+  border-radius: 9px;
+  padding: 12px 18px;
+  color: #dbeaf0;
+  background: #102d40;
+  cursor: pointer;
+}
 
 .growth-inventory,
 .growth-tabs {
@@ -1935,4 +2044,6 @@ h1 {
   .expedition-resource-bar { justify-content: flex-start; }
   .chapter-story-meta { justify-items: start; }
   .chapter-story-actor { width: min(43%, 310px); }
+  .starter-weapon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chapter-prep-header { align-items: flex-start; flex-direction: column; }
 }

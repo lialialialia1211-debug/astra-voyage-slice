@@ -46,6 +46,8 @@ const screenSchema = z.enum([
   'expedition-map', 'story', 'chapter-prep', 'chapter-milestone',
   'growth', 'loadout', 'battle', 'results', 'cabin', 'gallery', 'settings',
 ]);
+const chapterEncounterIdSchema = z.literal('ch01_b01_outer_bay_rescue');
+const battleEncounterIdSchema = z.union([encounterIdSchema, chapterEncounterIdSchema]);
 
 const battleStatusSchema = z.object({
   id: z.string().min(1),
@@ -63,7 +65,8 @@ const battleActorSchema = z.object({
   statuses: z.array(battleStatusSchema),
 });
 const battleStateSchema = z.object({
-  encounterId: encounterIdSchema,
+  contentSet: z.enum(['legacy', 'chapter-one']).default('legacy'),
+  encounterId: battleEncounterIdSchema,
   turn: z.number().int().positive(),
   phase: z.enum(['player-skills', 'player-attack', 'enemy', 'complete']),
   party: z.array(battleActorSchema).min(1),
@@ -149,7 +152,6 @@ const chapterSceneIdSchema = z.enum([
   'ch01_scene_01_port_bell',
   'ch01_scene_02_black_ship',
 ]);
-const chapterEncounterIdSchema = z.literal('ch01_b01_outer_bay_rescue');
 const chapterNodeIdSchema = z.enum([
   'scene-1',
   'scene-2',

@@ -3,11 +3,43 @@ import { useGame } from '../../game/GameProvider';
 
 export function ResultsScreen() {
   const { state, dispatch } = useGame();
+  const chapterResult = state.chapterOne.lastResult;
   const encounter = content.encounters.find((entry) => entry.id === state.currentEncounterId);
   const victory = state.lastResult === 'victory';
   const stageResult = state.lastStageRewards;
   const stage = content.stages.find((entry) => entry.id === stageResult?.stageId);
   const postStoryUnread = Boolean(stage && !state.viewedStories.includes(stage.postStoryId));
+
+  if (chapterResult) {
+    const victory = chapterResult === 'victory';
+    return (
+      <section className={`screen-card result-screen result-screen--${chapterResult}`}>
+        <p className="eyebrow">CHAPTER 01 // RESCUE REPORT</p>
+        <h1>{victory ? '救援完成' : '作戰失敗'}</h1>
+        <p className="result-encounter">外灣救難線</p>
+        {victory ? (
+          <>
+            <p className="intro-copy">昭黎與洛恩已清除外灣救難路徑，正史將繼續前往第 3 幕。</p>
+            <button
+              className="primary-action"
+              onClick={() => dispatch({ type: 'NAVIGATE', screen: 'chapter-milestone' })}
+              type="button"
+            >查看切片進度</button>
+          </>
+        ) : (
+          <>
+            <p className="ap-refund">已退還 AP {state.chapterOne.paidAp}</p>
+            <p className="intro-copy">戰敗不改變正史。回到戰前準備後，可更換昭黎的主手再試一次。</p>
+            <button
+              className="primary-action"
+              onClick={() => dispatch({ type: 'NAVIGATE', screen: 'chapter-prep' })}
+              type="button"
+            >返回戰前準備</button>
+          </>
+        )}
+      </section>
+    );
+  }
 
   if (!encounter || !state.lastResult) {
     return <section className="screen-card"><h1>沒有可顯示的戰果</h1></section>;

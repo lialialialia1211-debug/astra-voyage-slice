@@ -4,6 +4,11 @@ import type {
   EncounterId,
   SummonId,
 } from '../../domain/types';
+import type { ChapterActorId, ChapterEncounterId } from '../../chapter-one/types';
+
+export type BattleContentSet = 'legacy' | 'chapter-one';
+export type BattleActorId = CharacterId | ChapterActorId;
+export type BattleEncounterId = EncounterId | ChapterEncounterId;
 
 export interface BattleStatus {
   id: string;
@@ -23,7 +28,8 @@ export interface BattleActor {
 }
 
 export interface BattleState {
-  encounterId: EncounterId;
+  contentSet: BattleContentSet;
+  encounterId: BattleEncounterId;
   turn: number;
   phase: 'player-skills' | 'player-attack' | 'enemy' | 'complete';
   party: BattleActor[];
@@ -38,16 +44,18 @@ export interface BattleState {
 }
 
 export interface CreateBattleInput {
-  encounterId: EncounterId;
-  partyIds: readonly CharacterId[];
+  contentSet?: BattleContentSet;
+  encounterId: BattleEncounterId;
+  partyIds: readonly BattleActorId[];
   loadoutAttack: number;
   loadoutHp: number;
   summonId: SummonId | null;
   characterLevels?: Partial<Record<CharacterId, number>> | undefined;
+  elementOverrides?: Partial<Record<BattleActorId, Element>> | undefined;
 }
 
 export type BattleCommand =
-  | { kind: 'attack'; useOugi?: boolean; ougiActorIds?: readonly CharacterId[]; guard?: boolean }
+  | { kind: 'attack'; useOugi?: boolean; ougiActorIds?: readonly BattleActorId[]; guard?: boolean }
   | { kind: 'summon' };
 
 export type BattleLogEntry =

@@ -1,13 +1,19 @@
 import { content, elementMultiplier } from '../../content';
+import { chapterOneContent } from '../../chapter-one/content';
+import type { ChapterActorId, ChapterEncounterId } from '../../chapter-one/types';
 import type {
   CharacterDefinition,
   CharacterId,
   EnemyActionDefinition,
+  EncounterDefinition,
   SkillDefinition,
 } from '../../domain/types';
 import type {
+  BattleActorId,
   BattleActor,
   BattleCommand,
+  BattleContentSet,
+  BattleEncounterId,
   BattleLogEntry,
   BattleState,
   BattleStatus,
@@ -16,8 +22,66 @@ import type {
 } from './types';
 import { effectiveCharacter } from '../growth/growth';
 
-function findCharacter(id: string): CharacterDefinition {
-  const character = content.characters.find((entry) => entry.id === id);
+type BattleCharacterDefinition = CharacterDefinition<BattleActorId>;
+type BattleEncounterDefinition = EncounterDefinition<BattleEncounterId>;
+
+const chapterCharacters: readonly CharacterDefinition<ChapterActorId>[] = chapterOneContent.battleActors.map((actor) => ({
+  id: actor.id,
+  name: actor.name,
+  age: chapterOneContent.actors.find((entry) => entry.id === actor.id)?.age ?? 18,
+  element: actor.element,
+  role: 'vanguard',
+  maxHp: actor.maxHp,
+  attack: actor.attack,
+  skills: [
+    { ...actor.skills[0], target: 'enemy' },
+    { ...actor.skills[1], target: 'all-allies', effect: 'guard' },
+  ],
+  passive: '第一章客座戰鬥角色',
+  ougi: { ...actor.ougi },
+} satisfies CharacterDefinition<ChapterActorId>));
+
+const chapterEncounters: readonly EncounterDefinition<ChapterEncounterId>[] = chapterOneContent.encounters.map((encounter) => ({
+  id: encounter.id,
+  name: encounter.name,
+  kind: encounter.kind,
+  enemies: [{
+    id: encounter.enemy.id,
+    name: encounter.enemy.name,
+    element: encounter.enemy.element,
+    maxHp: encounter.enemy.maxHp,
+    attack: encounter.enemy.attack,
+    modeGauge: 0,
+    actions: [{
+      id: 'wreckage-impact',
+      name: '漂骸撞擊',
+      power: 100,
+      target: 'single',
+      telegraphed: false,
+    }],
+  }],
+  victoryFlag: 'flag_ch01_b01_victory',
+} satisfies EncounterDefinition<ChapterEncounterId>));
+
+export function battleContentFor(contentSet: BattleContentSet): {
+  characters: readonly BattleCharacterDefinition[];
+  encounters: readonly BattleEncounterDefinition[];
+} {
+  return contentSet === 'chapter-one'
+    ? { characters: chapterCharacters, encounters: chapterEncounters }
+    : { characters: content.characters, encounters: content.encounters };
+}
+
+export function battleCharacterFor(contentSet: BattleContentSet, id: string): BattleCharacterDefinition | undefined {
+  return battleContentFor(contentSet).characters.find((entry) => entry.id === id);
+}
+
+export function battleEncounterFor(contentSet: BattleContentSet, id: string): BattleEncounterDefinition | undefined {
+  return battleContentFor(contentSet).encounters.find((entry) => entry.id === id);
+}
+
+function findCharacter(contentSet: BattleContentSet, id: string): BattleCharacterDefinition {
+  const character = battleCharacterFor(contentSet, id);
   if (!character) throw new Error(`找不到角色：${id}`);
   return character;
 }
@@ -54,25 +118,29 @@ function receiveDamage(actor: BattleActor, amount: number): BattleActor {
   return { ...actor, hp: Math.max(0, actor.hp - (amount - absorbed)), statuses };
 }
 
-function initialTelegraph(encounterId: CreateBattleInput['encounterId']) {
-  const encounter = content.encounters.find((entry) => entry.id === encounterId);
+function initialTelegraph(contentSet: BattleContentSet, encounterId: CreateBattleInput['encounterId']) {
+  const encounter = battleEncounterFor(contentSet, encounterId);
   const action = encounter?.enemies[0]?.actions.find((entry) => entry.telegraphed);
   return action ? { name: action.name, target: action.target } : null;
 }
 
 export function createBattle(input: CreateBattleInput): BattleState {
-  const encounter = content.encounters.find((entry) => entry.id === input.encounterId);
+  const contentSet = input.contentSet ?? 'legacy';
+  const encounter = battleEncounterFor(contentSet, input.encounterId);
   if (!encounter) throw new Error(`找不到戰鬥：${input.encounterId}`);
   if (input.partyIds.length === 0) throw new Error('隊伍至少需要一名角色');
 
   const partyAttackBonus = Math.round(input.loadoutAttack / 40);
   const partyHpBonus = Math.round(input.loadoutHp / input.partyIds.length);
   const party = input.partyIds.map((id) => {
-    const character = effectiveCharacter(findCharacter(id), input.characterLevels?.[id] ?? 1);
+    const level = contentSet === 'legacy'
+      ? input.characterLevels?.[id as CharacterId] ?? 1
+      : 1;
+    const character = effectiveCharacter(findCharacter(contentSet, id), level);
     const maxHp = character.maxHp + partyHpBonus;
     return {
       id: character.id,
-      element: character.element,
+      element: input.elementOverrides?.[id] ?? character.element,
       hp: maxHp,
       maxHp,
       attack: character.attack + partyAttackBonus,
@@ -94,6 +162,7 @@ export function createBattle(input: CreateBattleInput): BattleState {
   } satisfies BattleActor));
 
   return {
+    contentSet,
     encounterId: input.encounterId,
     turn: 1,
     phase: 'player-skills',
@@ -103,7 +172,7 @@ export function createBattle(input: CreateBattleInput): BattleState {
     modeGauge: Math.max(0, ...encounter.enemies.map((enemy) => enemy.modeGauge)),
     summonId: input.summonId,
     summonUsed: false,
-    telegraph: initialTelegraph(input.encounterId),
+    telegraph: initialTelegraph(contentSet, input.encounterId),
     result: null,
     flags: [],
   };
@@ -149,14 +218,14 @@ function applySkillToParty(state: BattleState, actor: BattleActor, skill: SkillD
 
 export function useSkill(
   state: BattleState,
-  actorId: CharacterId,
+  actorId: BattleActorId,
   skillId: string,
   targetId: string,
   randomBand = 1,
 ): BattleState {
   if (state.phase !== 'player-skills') throw new Error('目前無法使用技能');
   const actor = livingActor(state.party, actorId);
-  const character = findCharacter(actorId);
+  const character = findCharacter(state.contentSet, actorId);
   const skill = character.skills.find((entry) => entry.id === skillId);
   if (!skill) throw new Error(`找不到技能：${skillId}`);
   if ((actor.cooldowns[skill.id] ?? 0) > 0) throw new Error('技能仍在冷卻中');
@@ -172,7 +241,7 @@ export function useSkill(
 }
 
 function updateBossMode(state: BattleState, damage: number): Pick<BattleState, 'bossMode' | 'modeGauge'> {
-  const encounter = content.encounters.find((entry) => entry.id === state.encounterId);
+  const encounter = battleEncounterFor(state.contentSet, state.encounterId);
   if (encounter?.kind !== 'boss') return { bossMode: state.bossMode, modeGauge: state.modeGauge };
   const boss = state.enemies[0];
   if (!boss) return { bossMode: state.bossMode, modeGauge: state.modeGauge };
@@ -191,7 +260,7 @@ function updateBossMode(state: BattleState, damage: number): Pick<BattleState, '
 function resolvePartyAttack(
   state: BattleState,
   useOugi: boolean,
-  ougiActorIds: readonly CharacterId[] | undefined,
+  ougiActorIds: readonly BattleActorId[] | undefined,
   randomBand: number,
 ): { party: BattleActor[]; enemies: BattleActor[]; damage: number; log: BattleLogEntry[] } {
   let enemies = state.enemies;
@@ -203,10 +272,10 @@ function resolvePartyAttack(
     if (actor.hp <= 0) return actor;
     const target = enemies.find((enemy) => enemy.hp > 0);
     if (!target) return actor;
-    const character = findCharacter(actor.id);
+    const character = findCharacter(state.contentSet, actor.id);
     const isOugi = useOugi
       && actor.charge >= 100
-      && (ougiActorIds === undefined || ougiActorIds.includes(actor.id as CharacterId));
+      && (ougiActorIds === undefined || ougiActorIds.includes(actor.id as BattleActorId));
     const power = isOugi ? character.ougi.power : 100;
     const amount = damageAmount(actor.attack, power, actor.element, target.element, randomBand);
     enemies = enemies.map((enemy) => enemy.id === target.id ? receiveDamage(enemy, amount) : enemy);
@@ -225,7 +294,7 @@ function resolvePartyAttack(
 }
 
 function enemyDefinition(state: BattleState, enemyId: string) {
-  const encounter = content.encounters.find((entry) => entry.id === state.encounterId);
+  const encounter = battleEncounterFor(state.contentSet, state.encounterId);
   return encounter?.enemies.find((enemy) => enemy.id === enemyId);
 }
 

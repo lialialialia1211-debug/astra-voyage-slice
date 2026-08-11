@@ -1,6 +1,7 @@
 import { content } from '../content';
 import { chapterOneContent } from '../chapter-one/content';
 import { chapterBattleApCost } from '../chapter-one/flow';
+import type { ChapterSceneId, StarterWeaponId } from '../chapter-one/types';
 import type {
   CaptainId,
   CharacterId,
@@ -48,7 +49,12 @@ export type GameAction =
   | { type: 'ADVANCE_CHAPTER_LINE' }
   | { type: 'RETREAT_CHAPTER_LINE' }
   | { type: 'COMPLETE_CHAPTER_SCENE' }
+  | { type: 'REPLAY_CHAPTER_SCENE'; sceneId: ChapterSceneId }
+  | { type: 'SELECT_STARTER_WEAPON'; weaponId: StarterWeaponId }
   | { type: 'START_CHAPTER_BATTLE'; now: number }
+  | { type: 'SAVE_CHAPTER_BATTLE_SNAPSHOT'; battle: BattleState }
+  | { type: 'FINISH_CHAPTER_BATTLE'; result: 'victory' | 'defeat'; flags: string[]; enemyHp?: number }
+  | { type: 'REPLAY_CHAPTER_BATTLE' }
   | { type: 'SYNC_AP'; now: number }
   | { type: 'USE_FIELD_RATION'; now: number }
   | { type: 'SELECT_STAGE'; stageId: StageId }
@@ -205,6 +211,23 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         },
       };
     }
+    case 'REPLAY_CHAPTER_SCENE':
+      return {
+        ...state,
+        screen: 'story',
+        activeStoryId: null,
+        chapterOne: {
+          ...state.chapterOne,
+          currentNode: action.sceneId === 'ch01_scene_01_port_bell' ? 'scene-1' : 'scene-2',
+          activeSceneId: action.sceneId,
+          activeLineIndex: 0,
+        },
+      };
+    case 'SELECT_STARTER_WEAPON':
+      return {
+        ...state,
+        chapterOne: { ...state.chapterOne, selectedStarterWeaponId: action.weaponId },
+      };
     case 'START_CHAPTER_BATTLE': {
       if (state.screen !== 'chapter-prep' || state.chapterOne.currentNode !== 'battle-1-prep') {
         throw new Error('第一章戰鬥尚未開放');
@@ -226,6 +249,68 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         },
       };
     }
+    case 'SAVE_CHAPTER_BATTLE_SNAPSHOT':
+      if (action.battle.contentSet !== 'chapter-one'
+        || action.battle.encounterId !== state.chapterOne.activeEncounterId) {
+        throw new Error('戰鬥快照不屬於目前第一章遭遇');
+      }
+      return {
+        ...state,
+        chapterOne: {
+          ...state.chapterOne,
+          battleSnapshot: action.battle,
+          tutorialStep: action.battle.result
+            ? 'victory-defeat'
+            : action.battle.turn > 1
+              ? 'hp'
+              : 'enemy-turn',
+        },
+      };
+    case 'FINISH_CHAPTER_BATTLE': {
+      if (!state.chapterOne.activeEncounterId) throw new Error('沒有進行中的第一章戰鬥');
+      const shared = {
+        ...state.chapterOne,
+        battleSnapshot: null,
+        lastResult: action.result,
+        tutorialStep: 'victory-defeat' as const,
+      };
+      if (action.result === 'defeat') {
+        return {
+          ...state,
+          screen: 'results',
+          flags: unique([...state.flags, ...action.flags]),
+          ap: { ...state.ap, current: Math.min(AP_MAX, state.ap.current + state.chapterOne.paidAp) },
+          chapterOne: { ...shared, currentNode: 'battle-1-prep' },
+        };
+      }
+      return {
+        ...state,
+        screen: 'results',
+        flags: unique([...state.flags, ...action.flags, 'flag_ch01_b01_victory']),
+        chapterOne: {
+          ...shared,
+          currentNode: 'milestone-complete',
+          completedBattles: unique([
+            ...state.chapterOne.completedBattles,
+            state.chapterOne.activeEncounterId,
+          ]),
+        },
+      };
+    }
+    case 'REPLAY_CHAPTER_BATTLE':
+      return {
+        ...state,
+        screen: 'chapter-prep',
+        chapterOne: {
+          ...state.chapterOne,
+          currentNode: 'battle-1-prep',
+          activeEncounterId: null,
+          paidAp: 0,
+          tutorialStep: 'attack',
+          battleSnapshot: null,
+          lastResult: null,
+        },
+      };
     case 'SYNC_AP':
       return { ...state, ap: syncAp(state.ap, action.now) };
     case 'USE_FIELD_RATION': {
