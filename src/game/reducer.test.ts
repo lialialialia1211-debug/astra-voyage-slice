@@ -1,5 +1,5 @@
 import { createInitialState, type GameState } from './initial-state';
-import { gameReducer } from './reducer';
+import { gameReducer, type GameAction } from './reducer';
 
 function expeditionReady(overrides: Partial<GameState> = {}): GameState {
   return {
@@ -12,11 +12,63 @@ function expeditionReady(overrides: Partial<GameState> = {}): GameState {
   };
 }
 
-it('moves confirmed adults to captain selection', () => {
+it('moves confirmed adults directly to the first canonical scene', () => {
   const state = gameReducer(createInitialState(), { type: 'CONFIRM_ADULT' });
 
   expect(state.adultConfirmed).toBe(true);
-  expect(state.screen).toBe('captain-select');
+  expect(state).toMatchObject({
+    version: 3,
+    screen: 'story',
+    chapterOne: {
+      currentNode: 'scene-1',
+      activeSceneId: 'ch01_scene_01_port_bell',
+      activeLineIndex: 0,
+    },
+  });
+});
+
+function chapterPrepState(completedBattles: string[] = []) {
+  return {
+    ...createInitialState(0),
+    version: 3,
+    adultConfirmed: true,
+    screen: 'chapter-prep',
+    chapterOne: {
+      currentNode: 'battle-1-prep',
+      activeSceneId: 'ch01_scene_02_black_ship',
+      activeLineIndex: 0,
+      completedScenes: ['ch01_scene_01_port_bell', 'ch01_scene_02_black_ship'],
+      completedBattles,
+      selectedStarterWeaponId: 'wpn_water_01',
+      activeEncounterId: null,
+      paidAp: 0,
+      tutorialStep: 'attack',
+      battleSnapshot: null,
+      lastResult: null,
+    },
+  } as unknown as GameState;
+}
+
+it('starts the first chapter battle for free and charges five AP for a replay', () => {
+  const first = gameReducer(chapterPrepState(), {
+    type: 'START_CHAPTER_BATTLE',
+    now: 0,
+  } as unknown as GameAction);
+  const replay = gameReducer(chapterPrepState(['ch01_b01_outer_bay_rescue']), {
+    type: 'START_CHAPTER_BATTLE',
+    now: 0,
+  } as unknown as GameAction);
+
+  expect(first).toMatchObject({
+    screen: 'battle',
+    ap: { current: 30 },
+    chapterOne: { paidAp: 0, activeEncounterId: 'ch01_b01_outer_bay_rescue' },
+  });
+  expect(replay).toMatchObject({
+    screen: 'battle',
+    ap: { current: 25 },
+    chapterOne: { paidAp: 5, activeEncounterId: 'ch01_b01_outer_bay_rescue' },
+  });
 });
 
 it('selects a captain and opens the prologue', () => {
