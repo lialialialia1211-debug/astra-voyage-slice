@@ -1,4 +1,5 @@
 import { content } from '../content';
+import { chapterOneContent } from '../chapter-one/content';
 import { chapterBattleApCost } from '../chapter-one/flow';
 import type {
   CaptainId,
@@ -44,6 +45,9 @@ export type GameAction =
   | { type: 'SET_ADULT_MODE'; mode: AdultDisplayMode }
   | { type: 'IMPORT_SAVE'; state: GameState }
   | { type: 'NAVIGATE'; screen: ScreenId }
+  | { type: 'ADVANCE_CHAPTER_LINE' }
+  | { type: 'RETREAT_CHAPTER_LINE' }
+  | { type: 'COMPLETE_CHAPTER_SCENE' }
   | { type: 'START_CHAPTER_BATTLE'; now: number }
   | { type: 'SYNC_AP'; now: number }
   | { type: 'USE_FIELD_RATION'; now: number }
@@ -155,6 +159,52 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return action.state;
     case 'NAVIGATE':
       return { ...state, screen: action.screen };
+    case 'ADVANCE_CHAPTER_LINE': {
+      const scene = chapterOneContent.scenes.find((entry) => entry.id === state.chapterOne.activeSceneId);
+      if (!scene) throw new Error('找不到目前的第一章場景');
+      return {
+        ...state,
+        chapterOne: {
+          ...state.chapterOne,
+          activeLineIndex: Math.min(state.chapterOne.activeLineIndex + 1, scene.lines.length - 1),
+        },
+      };
+    }
+    case 'RETREAT_CHAPTER_LINE':
+      return {
+        ...state,
+        chapterOne: {
+          ...state.chapterOne,
+          activeLineIndex: Math.max(0, state.chapterOne.activeLineIndex - 1),
+        },
+      };
+    case 'COMPLETE_CHAPTER_SCENE': {
+      const sceneId = state.chapterOne.activeSceneId;
+      const completedScenes = unique([...state.chapterOne.completedScenes, sceneId]);
+      if (sceneId === 'ch01_scene_01_port_bell') {
+        return {
+          ...state,
+          screen: 'story',
+          chapterOne: {
+            ...state.chapterOne,
+            currentNode: 'scene-2',
+            activeSceneId: 'ch01_scene_02_black_ship',
+            activeLineIndex: 0,
+            completedScenes,
+          },
+        };
+      }
+      return {
+        ...state,
+        screen: 'chapter-prep',
+        chapterOne: {
+          ...state.chapterOne,
+          currentNode: 'battle-1-prep',
+          activeLineIndex: 0,
+          completedScenes,
+        },
+      };
+    }
     case 'START_CHAPTER_BATTLE': {
       if (state.screen !== 'chapter-prep' || state.chapterOne.currentNode !== 'battle-1-prep') {
         throw new Error('第一章戰鬥尚未開放');
