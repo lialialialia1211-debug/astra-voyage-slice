@@ -6,73 +6,54 @@
 
 ## 版本聲明
 
-`first-major-arc-novel-v0.2` 是獨立的 R18 劇情重寫目錄。**v0.2 不覆寫 v0.1**；不得刪除、改名或直接編輯 `first-major-arc-novel-v0.1` 內的小說與驗證報告。舊稿只供連續性參照，新稿正史以 v0.2 細綱及人物卡為準。
+`first-major-arc-novel-v0.2` 是獨立的 R18 劇情重寫目錄。**v0.2 不覆寫 v0.1**；不得刪除、改名或直接編輯 `first-major-arc-novel-v0.1` 內的小說與驗證報告。舊稿只供版本比較，不作事件、人物或尺度的正史依據；新稿正史以本目錄、v0.2 細綱及人物卡為準。
 
-## 六階段與三十個固定檔名
+後續 AVG 拆分、分鏡、演出腳本、視覺設計與語音規格只能以 v0.2 為共同母稿。若拆分稿與 v0.2 衝突，須先回到本母稿修訂並同步細綱，不得以 v0.1 或拆分階段的臨時改寫反向覆蓋正史。
 
-### 第一階段：黑船帶回舊情與新人（01–05）
+## 三十幕導覽
 
-1. `scene-01-port-bell-old-flame.md`
-2. `scene-02-black-ship-returns.md`
-3. `scene-03-hand-that-would-not-let-go.md`
-4. `scene-04-quarantine-line.md`
-5. `scene-05-first-answering-anchor.md`
+全章採多角色第三人稱限知，每幕只使用一名指定視點人物。固定分配為昭黎十七幕、晏泠六幕、賽芙拉四幕、彌菈·森三幕；三段完整 R18 均採當事女主視點，使女性慾望、界線與選擇成為敘事主體。
 
-### 第二階段：船底的第二顆心（06–10）
+| 幕 | 標題與檔案 | 視點 | 階段 |
+| ---: | --- | --- | --- |
+| 01 | [港鐘與舊情](scene-01-port-bell-old-flame.md) | 昭黎 | 一、黑船帶回舊情與新人 |
+| 02 | [黑船返航](scene-02-black-ship-returns.md) | 晏泠 | 一、黑船帶回舊情與新人 |
+| 03 | [不肯鬆開的手](scene-03-hand-that-would-not-let-go.md) | 昭黎 | 一、黑船帶回舊情與新人 |
+| 04 | [檢疫線](scene-04-quarantine-line.md) | 彌菈·森 | 一、黑船帶回舊情與新人 |
+| 05 | [第一座回答的錨](scene-05-first-answering-anchor.md) | 晏泠 | 一、黑船帶回舊情與新人 |
+| 06 | [沉默的權利](scene-06-the-right-to-stay-silent.md) | 賽芙拉 | 二、船底的第二顆心 |
+| 07 | [第二顆心](scene-07-second-heart.md) | 昭黎 | 二、船底的第二顆心 |
+| 08 | [排水渠裡的訊標](scene-08-signal-in-the-drain.md) | 昭黎 | 二、船底的第二顆心 |
+| 09 | [她簽下的航行令](scene-09-order-she-signed.md) | 昭黎 | 二、船底的第二顆心 |
+| 10 | [四十七息](scene-10-forty-seven-breaths.md) | 昭黎 | 二、船底的第二顆心 |
+| 11 | [她的第一個問題](scene-11-her-first-question.md) | 晏泠 | 三、舊愛復燃 |
+| 12 | [舊訊息成為證物](scene-12-old-messages-as-evidence.md) | 昭黎 | 三、舊愛復燃 |
+| 13 | [困在舊港](scene-13-trapped-in-old-port.md) | 昭黎 | 三、舊愛復燃 |
+| 14 | [她交還的印](scene-14-the-seal-she-returned.md) | 晏泠 | 三、舊愛復燃 |
+| 15 | [身體記得](scene-15-body-remembers.md) | 晏泠 | 三、舊愛復燃（R18） |
+| 16 | [第七份航誌](scene-16-seventh-log.md) | 昭黎 | 四、倖存者不願再次被留下 |
+| 17 | [她留下的訊號](scene-17-signal-she-kept.md) | 賽芙拉 | 四、倖存者不願再次被留下 |
+| 18 | [北岸白痕](scene-18-white-scars-north-shore.md) | 昭黎 | 四、倖存者不願再次被留下 |
+| 19 | [沉默的代價](scene-19-price-of-silence.md) | 昭黎 | 四、倖存者不願再次被留下 |
+| 20 | [在她可以離開時](scene-20-when-she-could-leave.md) | 賽芙拉 | 四、倖存者不願再次被留下（R18） |
+| 21 | [被選中的假證據](scene-21-false-chosen-one.md) | 昭黎 | 五、醫官也會失去界線 |
+| 22 | [不再中立的醫官](scene-22-doctor-who-was-not-neutral.md) | 彌菈·森 | 五、醫官也會失去界線 |
+| 23 | [三種救他的方式](scene-23-three-ways-to-save-him.md) | 昭黎 | 五、醫官也會失去界線 |
+| 24 | [沒有國旗的船](scene-24-ship-without-a-flag.md) | 昭黎 | 五、醫官也會失去界線 |
+| 25 | [不停止的理由](scene-25-reason-not-to-stop.md) | 彌菈·森 | 五、醫官也會失去界線（R18） |
+| 26 | [三座熄滅的錨](scene-26-three-dark-anchors.md) | 晏泠 | 六、共同走向最後一盞燈外 |
+| 27 | [每個人都能停止的航線](scene-27-route-everyone-can-stop.md) | 昭黎 | 六、共同走向最後一盞燈外 |
+| 28 | [最後一盞燈之外](scene-28-beyond-last-light.md) | 賽芙拉 | 六、共同走向最後一盞燈外 |
+| 29 | [向深洋提問](scene-29-question-for-deep-ocean.md) | 昭黎 | 六、共同走向最後一盞燈外 |
+| 30 | [第一張深海航照](scene-30-first-deep-sea-license.md) | 昭黎 | 六、共同走向最後一盞燈外 |
 
-6. `scene-06-the-right-to-stay-silent.md`
-7. `scene-07-second-heart.md`
-8. `scene-08-signal-in-the-drain.md`
-9. `scene-09-order-she-signed.md`
-10. `scene-10-forty-seven-breaths.md`
+## 人物與關係索引
 
-### 第三階段：舊愛復燃（11–15）
-
-11. `scene-11-her-first-question.md`
-12. `scene-12-old-messages-as-evidence.md`
-13. `scene-13-trapped-in-old-port.md`
-14. `scene-14-the-seal-she-returned.md`
-15. `scene-15-body-remembers.md`
-
-### 第四階段：倖存者不願再次被留下（16–20）
-
-16. `scene-16-seventh-log.md`
-17. `scene-17-signal-she-kept.md`
-18. `scene-18-white-scars-north-shore.md`
-19. `scene-19-price-of-silence.md`
-20. `scene-20-when-she-could-leave.md`
-
-### 第五階段：醫官也會失去界線（21–25）
-
-21. `scene-21-false-chosen-one.md`
-22. `scene-22-doctor-who-was-not-neutral.md`
-23. `scene-23-three-ways-to-save-him.md`
-24. `scene-24-ship-without-a-flag.md`
-25. `scene-25-reason-not-to-stop.md`
-
-### 第六階段：共同走向最後一盞燈外（26–30）
-
-26. `scene-26-three-dark-anchors.md`
-27. `scene-27-route-everyone-can-stop.md`
-28. `scene-28-beyond-last-light.md`
-29. `scene-29-question-for-deep-ocean.md`
-30. `scene-30-first-deep-sea-license.md`
-
-## 視點規則
-
-- 全章採多角色第三人稱限知；每篇只使用一名視點人物，不任意切換內心。
-- 固定分配：昭黎十七幕、晏泠六幕、賽芙拉四幕、彌菈·森三幕。
-
-```text
-01 昭黎  02 晏泠  03 昭黎  04 彌菈  05 晏泠
-06 賽芙拉  07 昭黎  08 昭黎  09 昭黎  10 昭黎
-11 晏泠  12 昭黎  13 昭黎  14 晏泠  15 晏泠
-16 昭黎  17 賽芙拉  18 昭黎  19 昭黎  20 賽芙拉
-21 昭黎  22 彌菈  23 昭黎  24 昭黎  25 彌菈
-26 晏泠  27 昭黎  28 賽芙拉  29 昭黎  30 昭黎
-```
-
-三段完整 R18 場景固定採當事女主視點，使女性慾望、界線與選擇成為敘事主體，不寫成昭黎完成攻略。
+- [人物身分卡總覽](../characters/first-major-arc-v0.2/README.md)
+- [昭黎](../characters/first-major-arc-v0.2/zhaoli.md)、[晏泠](../characters/first-major-arc-v0.2/yanling.md)、[賽芙拉](../characters/first-major-arc-v0.2/saifula.md)、[彌菈·森](../characters/first-major-arc-v0.2/mila-sen.md)
+- [洛恩](../characters/first-major-arc-v0.2/luoen.md)、[伊嵐·拓衡](../characters/first-major-arc-v0.2/yilan-tuoheng.md)、[晦岑](../characters/first-major-arc-v0.2/huicen.md)
+- [人物關係圖與職務權限](../characters/first-major-arc-v0.2/relationship-map.md)
+- [三十幕劇情細綱](../first-major-arc-thirty-scenes-outline-v0.2.md)
 
 ## 篇幅與內容規格
 
@@ -90,6 +71,23 @@
 | 25 | 彌菈·森 | 自制與失守：承認自己的需要 | 日常醫療已轉交；不在病床、診療間或事故處置途中 | 她不稱為一次例外，主動申報關係並告知另外兩人 |
 
 所有參與者均為成年人、意識清楚並明確同意；不含脅迫、藥物、監禁交換、權力交換、多人性愛、懷孕或生育結果。成人內容不提供戰鬥增幅，也不直接解決觀潮巨影。
+
+## 章末最後定案
+
+| 狀態軸 | 正式結果 |
+| --- | --- |
+| 船與核心 | 遠溟三號船體歸昭黎；次級核心仍隨船共同監管，不認主，不因愛情或親密增幅。 |
+| 船長與航照 | 昭黎到第 30 幕才取得正式船長資格；此前只有逐次、逐段失效的臨時操船權。第一張航照限期二十一日、三次越線窗口與指定北弧。 |
+| 指定航線 | 由潮生港北側臨時航道沿新測北弧前往空鐘礁外側觀測點；南七分、失蹤主船、軍事測試、核心打撈與主動喚醒固定錨均不在許可內。 |
+| 船況 | 左外板以可觀測抱箍暫固；右尾永久缺少第二層隔片；中央次級核心亮度七成；後部航誌架與七枚晶片毀損；潮生港西口因第二錨報廢而停用。 |
+| 船員與制衡 | 晏泠、賽芙拉、彌菈、伊嵐與韓澤按個人職責加入；洛恩留岸校驗，晦岑不常駐。航務、醫療、情報、模型、船況與第二操作者都保有實際中止能力。 |
+| 三段關係 | 三段關係均公開存在，不排序、不平均分配，也不取消嫉妒。三名女性各有職務、住處或艙室、退出權與彼此反對的能力，不構成和諧附屬。 |
+| 後續威脅 | 近海追跡暫時切斷；失蹤主船、無旗艦、偽造密印、南七分訊號、封界目的與觀潮巨影本質仍未知。 |
+
+## 本章功能性名詞
+
+- **拍賣燈：**南泊商船用於競價泊位的人工舉燈工具；因各船手動、無固定順序，終局用來把移動舟域的相位承受權逐搏交給不同舟點。這是本章現場既有工具，不擴張為新的世界級技術體系。
+- **空鐘礁：**第一張限制深海航照指定的北弧終點與外側觀測點；功能是給第一航次一個可停止、可返航、遠離南七分未知訊號的許可邊界。本章不追加其歷史、居民或上層祕密。
 
 ## 繁體中文規則
 
