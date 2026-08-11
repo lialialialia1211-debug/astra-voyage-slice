@@ -3,6 +3,38 @@ import userEvent from '@testing-library/user-event';
 import { App } from '../../app/App';
 import { createInitialState } from '../../game/initial-state';
 
+function chapterSceneState(activeLineIndex = 0) {
+  const initial = createInitialState(0);
+  return {
+    ...initial,
+    adultConfirmed: true,
+    screen: 'story' as const,
+    chapterOne: {
+      ...initial.chapterOne,
+      activeLineIndex,
+    },
+  };
+}
+
+it('shows the fixed protagonist in the first canonical scene', () => {
+  window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState()));
+
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: '港鐘與舊情' })).toBeVisible();
+  expect(screen.getByText('昭黎')).toBeVisible();
+  expect(screen.queryByText('選擇遠征艦長')).not.toBeInTheDocument();
+});
+
+it('renders three actor slots and highlights the current speaker', () => {
+  window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState(22)));
+
+  render(<App />);
+
+  expect(screen.getAllByTestId('story-actor')).toHaveLength(3);
+  expect(screen.getByTestId('story-actor-current')).toHaveTextContent('晏泠');
+});
+
 it('uses the selected captain portrait and can skip an unread scene', async () => {
   const user = userEvent.setup();
   window.localStorage.setItem('astra-save-v1', JSON.stringify({
