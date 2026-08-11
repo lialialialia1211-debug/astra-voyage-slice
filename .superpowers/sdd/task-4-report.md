@@ -13,7 +13,7 @@
 
 | 檔案 | 中文字數 | 要求範圍 |
 | --- | ---: | ---: |
-| `scene-11-her-first-question.md` | 4,078 | 4,000–7,000 |
+| `scene-11-her-first-question.md` | 4,176 | 4,000–7,000 |
 | `scene-12-old-messages-as-evidence.md` | 4,050 | 4,000–7,000 |
 | `scene-13-trapped-in-old-port.md` | 4,096 | 4,000–7,000 |
 | `scene-14-the-seal-she-returned.md` | 4,000 | 4,000–7,000 |
@@ -28,13 +28,21 @@
 - 外部幕號只出現在各檔標題，未進入世界內正文。
 - scene 14 的迴避生效、權限終止與案件印接收，均早於 scene 15 的私人接近與親密行為。
 - scene 15 明列私人空間、雙方各自離開能力、清楚且可撤回的同意，以及事後政治代價。
+- scene 11 已逐段掃描他人內心動詞；旁聽者與昭黎的反應均改由紙頁、目光、停頓、外顯回答呈現，無法直接觀察的理解則明確標為晏泠的猜測或既往主觀判讀。
 - `git diff --cached --check` 於實作提交前通過。
 - 依任務與 repository QA 規則，本次僅做純文字靜態檢查；未執行測試、建置、伺服器、本機 QA 或 Remote QA。
 
 ## 提交
 
-- 實作 commit：`e363fbb56d317d2907b326bfe57470151b6c15d3`
-- Conventional Commit：`docs: rewrite first arc phase three`
+- 初始實作 commit：`e363fbb56d317d2907b326bfe57470151b6c15d3`
+- 最新修正 commit：`4340d6b33297ebc62716eab43e93156b4dc3a33c`
+- 最新 Conventional Commit：`docs: keep scene 11 in yanling viewpoint`
+
+## 修正紀錄
+
+- 依獨立審閱修正 scene 11 的晏泠限知視點：移除旁聽者「原想」的直接內心斷言，改為書記移動筆與欄位的可觀察動作。
+- 移除昭黎「聽懂／接受」的直接斷言，改寫為目光、停頓與晏泠明確標示的不確定猜測。
+- 將兩年前昭黎「看懂／不肯接受」的回述改為晏泠當時的主觀理解，並承認她未曾問完昭黎真正理解到哪裡。
 
 ## 已知風險
 
