@@ -1,4 +1,5 @@
 import { content } from '../content';
+import { chapterBattleApCost } from '../chapter-one/flow';
 import type {
   CaptainId,
   CharacterId,
@@ -43,6 +44,7 @@ export type GameAction =
   | { type: 'SET_ADULT_MODE'; mode: AdultDisplayMode }
   | { type: 'IMPORT_SAVE'; state: GameState }
   | { type: 'NAVIGATE'; screen: ScreenId }
+  | { type: 'START_CHAPTER_BATTLE'; now: number }
   | { type: 'SYNC_AP'; now: number }
   | { type: 'USE_FIELD_RATION'; now: number }
   | { type: 'SELECT_STAGE'; stageId: StageId }
@@ -86,7 +88,17 @@ function advance(entry: GameState['relation']['chr_01']) {
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'CONFIRM_ADULT':
-      return { ...state, adultConfirmed: true, screen: 'captain-select' };
+      return {
+        ...state,
+        adultConfirmed: true,
+        screen: 'story',
+        chapterOne: {
+          ...state.chapterOne,
+          currentNode: 'scene-1',
+          activeSceneId: 'ch01_scene_01_port_bell',
+          activeLineIndex: 0,
+        },
+      };
     case 'SELECT_CAPTAIN':
       if (!state.adultConfirmed) throw new Error('必須先完成成年確認');
       return { ...state, captainId: action.captainId, screen: 'prologue' };
@@ -143,6 +155,27 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return action.state;
     case 'NAVIGATE':
       return { ...state, screen: action.screen };
+    case 'START_CHAPTER_BATTLE': {
+      if (state.screen !== 'chapter-prep' || state.chapterOne.currentNode !== 'battle-1-prep') {
+        throw new Error('第一章戰鬥尚未開放');
+      }
+      const ap = syncAp(state.ap, action.now);
+      const cost = chapterBattleApCost(state.chapterOne.completedBattles);
+      if (ap.current < cost) throw new Error('AP 不足');
+      return {
+        ...state,
+        screen: 'battle',
+        ap: { ...ap, current: ap.current - cost },
+        chapterOne: {
+          ...state.chapterOne,
+          currentNode: 'battle-1',
+          activeEncounterId: 'ch01_b01_outer_bay_rescue',
+          paidAp: cost,
+          battleSnapshot: null,
+          lastResult: null,
+        },
+      };
+    }
     case 'SYNC_AP':
       return { ...state, ap: syncAp(state.ap, action.now) };
     case 'USE_FIELD_RATION': {

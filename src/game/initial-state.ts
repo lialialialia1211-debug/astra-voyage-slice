@@ -11,6 +11,12 @@ import type {
 } from '../domain/types';
 import type { BattleState } from '../features/battle/types';
 import type { ApState, Inventory } from '../features/expedition/progression';
+import type {
+  ChapterEncounterId,
+  ChapterNodeId,
+  ChapterSceneId,
+  StarterWeaponId,
+} from '../chapter-one/types';
 
 export type ScreenId =
   | 'adult-gate'
@@ -20,6 +26,8 @@ export type ScreenId =
   | 'formation'
   | 'expedition-map'
   | 'story'
+  | 'chapter-prep'
+  | 'chapter-milestone'
   | 'growth'
   | 'loadout'
   | 'battle'
@@ -47,7 +55,7 @@ export interface WeaponGrid {
 }
 
 export interface GameState {
-  version: 2;
+  version: 3;
   screen: ScreenId;
   adultConfirmed: boolean;
   adultMode: AdultDisplayMode;
@@ -85,6 +93,30 @@ export interface GameState {
     refundedAp: number;
     seaUnlocked: boolean;
   } | null;
+  chapterOne: {
+    currentNode: ChapterNodeId;
+    activeSceneId: ChapterSceneId;
+    activeLineIndex: number;
+    completedScenes: ChapterSceneId[];
+    completedBattles: ChapterEncounterId[];
+    selectedStarterWeaponId: StarterWeaponId;
+    activeEncounterId: ChapterEncounterId | null;
+    paidAp: 0 | 5;
+    tutorialStep: 'attack' | 'enemy-turn' | 'hp' | 'victory-defeat' | null;
+    battleSnapshot: BattleState | null;
+    lastResult: 'victory' | 'defeat' | null;
+  };
+  storySettings: {
+    auto: boolean;
+    allowUnreadFastForward: boolean;
+    textSpeed: 1 | 2 | 3;
+  };
+  audioSettings: {
+    master: number;
+    bgm: number;
+    ambience: number;
+    sfx: number;
+  };
 }
 
 const initialWeaponLevels: Record<WeaponId, GrowthLevel> = {
@@ -104,7 +136,7 @@ const initialWeaponLevels: Record<WeaponId, GrowthLevel> = {
 
 export function createInitialState(now = Date.now()): GameState {
   return {
-    version: 2,
+    version: 3,
     screen: 'adult-gate',
     adultConfirmed: false,
     adultMode: 'full',
@@ -142,5 +174,29 @@ export function createInitialState(now = Date.now()): GameState {
     activeChallenge: null,
     battleSnapshot: null,
     lastStageRewards: null,
+    chapterOne: {
+      currentNode: 'scene-1',
+      activeSceneId: 'ch01_scene_01_port_bell',
+      activeLineIndex: 0,
+      completedScenes: [],
+      completedBattles: [],
+      selectedStarterWeaponId: 'wpn_water_01',
+      activeEncounterId: null,
+      paidAp: 0,
+      tutorialStep: 'attack',
+      battleSnapshot: null,
+      lastResult: null,
+    },
+    storySettings: {
+      auto: false,
+      allowUnreadFastForward: false,
+      textSpeed: 2,
+    },
+    audioSettings: {
+      master: 1,
+      bgm: 1,
+      ambience: 1,
+      sfx: 1,
+    },
   };
 }
