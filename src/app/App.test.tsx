@@ -4,14 +4,15 @@ import { vi } from 'vitest';
 import { createInitialState } from '../game/initial-state';
 import { App } from './App';
 
-it('requires adult confirmation before entering the slice', async () => {
+it('enters the canonical story after adult confirmation', async () => {
   const user = userEvent.setup();
   render(<App />);
 
   expect(screen.getByRole('heading', { name: '成年內容確認' })).toBeVisible();
   await user.click(screen.getByRole('button', { name: '我已年滿 18 歲' }));
 
-  expect(screen.getByRole('heading', { name: '選擇遠征艦長' })).toBeVisible();
+  expect(screen.getByTestId('app-shell')).toHaveClass('app-shell--story');
+  expect(screen.queryByRole('heading', { name: '選擇遠征艦長' })).not.toBeInTheDocument();
 });
 
 it('synchronizes offline AP when the page regains focus', async () => {
