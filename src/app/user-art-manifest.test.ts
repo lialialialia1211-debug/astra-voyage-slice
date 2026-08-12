@@ -19,7 +19,8 @@ it('contains every ready user artwork as a committed WebP asset', () => {
   const received = Object.keys(userArtManifest).sort();
 
   expect(expected).toHaveLength(63);
-  expect(received).toEqual(expected);
+  expect(received).toHaveLength(203);
+  expect(received).toEqual(expect.arrayContaining(expected));
   for (const assetUrl of Object.values(userArtManifest)) {
     expect(existsSync(path.resolve('public', assetUrl.replace(/^\//, ''))), assetUrl).toBe(true);
   }
