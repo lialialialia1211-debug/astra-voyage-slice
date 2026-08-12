@@ -1,4 +1,3 @@
-import { readFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
@@ -7,19 +6,12 @@ import { buildChapterOneStory } from './build-chapter-one-story.mjs'
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const novelRoot = path.join(repositoryRoot, 'docs', 'worldbuilding', 'first-major-arc-novel-v0.2')
 
-const normalize = (value) => value.replace(/\r\n/g, '\n').trim()
-
-async function canonicalBody(sourceFile) {
-  const source = normalize(await readFile(path.join(novelRoot, sourceFile), 'utf8'))
-  return source.replace(/^# .+\n+/, '')
-}
-
 function adultCgs(scene) {
   return [...new Set(scene.lines.map((line) => line.cgAssetId).filter(Boolean))]
 }
 
 describe('Chapter 01 canonical story generator', () => {
-  it('generates all 30 scenes in canonical order without losing prose', async () => {
+  it('generates all 30 scenes in canonical order as readable AVG beats', async () => {
     const scenes = await buildChapterOneStory({ novelRoot })
 
     expect(scenes).toHaveLength(30)
@@ -29,12 +21,26 @@ describe('Chapter 01 canonical story generator', () => {
     expect(new Set(scenes.map((scene) => scene.sourceFile))).toHaveProperty('size', 30)
 
     for (const scene of scenes) {
-      expect(normalize(scene.lines.map((line) => line.text).join('\n\n'))).toBe(
-        normalize(await canonicalBody(scene.sourceFile)),
-      )
-      expect(scene.lines.length).toBeGreaterThanOrEqual(10)
-      expect(scene.lines.length).toBeLessThanOrEqual(24)
+      expect(Math.max(...scene.lines.map((line) => line.text.length))).toBeLessThanOrEqual(120)
+      expect(scene.lines.some((line) => line.speakerId !== 'narrator')).toBe(true)
     }
+  })
+
+  it('labels the opening exchange with the acting characters', async () => {
+    const [opening] = await buildChapterOneStory({ novelRoot })
+
+    expect(opening.lines).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        speakerId: 'luoen',
+        speakerName: '洛恩',
+        text: '你查第二次才看見？',
+      }),
+      expect.objectContaining({
+        speakerId: 'zhaoli',
+        speakerName: '昭黎',
+        text: '第一次確認它在，第二次確認它能用。',
+      }),
+    ]))
   })
 
   it('maps the three adult scenes to three ordered CGs each', async () => {
