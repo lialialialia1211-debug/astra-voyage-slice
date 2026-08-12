@@ -17,7 +17,7 @@ it('moves confirmed adults directly to the first canonical scene', () => {
 
   expect(state.adultConfirmed).toBe(true);
   expect(state).toMatchObject({
-    version: 3,
+    version: 4,
     screen: 'story',
     chapterOne: {
       currentNode: 'scene-1',
@@ -61,15 +61,16 @@ it('moves scene one to scene two and scene two to battle preparation', () => {
   });
 });
 
-function chapterPrepState(completedBattles: string[] = []) {
+function chapterPrepState(completedBattles: string[] = [], battleNumber = 1) {
+  const afterSceneNumber = [2, 5, 8, 10, 12, 13, 16, 17, 19, 23, 24, 26, 27, 28, 29][battleNumber - 1] ?? 2;
   return {
     ...createInitialState(0),
-    version: 3,
+    version: 4,
     adultConfirmed: true,
     screen: 'chapter-prep',
     chapterOne: {
-      currentNode: 'battle-1-prep',
-      activeSceneId: 'ch01_scene_02_black_ship',
+      currentNode: `battle-${battleNumber}-prep`,
+      activeSceneId: `ch01_scene_${String(afterSceneNumber).padStart(2, '0')}_test`,
       activeLineIndex: 0,
       completedScenes: ['ch01_scene_01_port_bell', 'ch01_scene_02_black_ship'],
       completedBattles,
@@ -140,11 +141,55 @@ it('selects a starter weapon, refunds replay AP on defeat, and records victory',
   expect(victorious).toMatchObject({
     screen: 'results',
     chapterOne: {
-      currentNode: 'milestone-complete',
+      currentNode: 'battle-1',
       completedBattles: ['ch01_b01_outer_bay_rescue'],
       lastResult: 'victory',
     },
   });
+});
+
+it('continues from any victorious chapter battle to its next canonical scene', () => {
+  const active = {
+    ...chapterPrepState([], 6),
+    screen: 'battle' as const,
+    chapterOne: {
+      ...chapterPrepState([], 6).chapterOne,
+      currentNode: 'battle-6' as const,
+      activeEncounterId: 'ch01_b06_old_port_ambush' as const,
+      lastResult: null,
+    },
+  } as GameState;
+  const victorious = gameReducer(active, {
+    type: 'FINISH_CHAPTER_BATTLE',
+    result: 'victory',
+    flags: [],
+  } as GameAction);
+  const continued = gameReducer(victorious, { type: 'CONTINUE_CHAPTER' } as GameAction);
+
+  expect(continued.screen).toBe('story');
+  expect(continued.chapterOne.currentNode).toBe('scene-14');
+  expect(continued.chapterOne.activeSceneId).toBe('ch01_scene_14_seal_she_returned');
+});
+
+it('unlocks formal actors at their approved story milestones', () => {
+  const milestones = [
+    ['ch01_scene_04_quarantine_line', 'mila'],
+    ['ch01_scene_05_first_answering_anchor', 'yanling'],
+    ['ch01_scene_07_second_heart', 'yilan'],
+    ['ch01_scene_16_seventh_log', 'saifula'],
+    ['ch01_scene_24_ship_without_a_flag', 'hanze'],
+  ] as const;
+
+  for (const [sceneId, actorId] of milestones) {
+    const initial = createInitialState(0);
+    const atScene = {
+      ...initial,
+      screen: 'story' as const,
+      chapterOne: { ...initial.chapterOne, activeSceneId: sceneId },
+    } as GameState;
+    const completed = gameReducer(atScene, { type: 'COMPLETE_CHAPTER_SCENE' });
+    expect(completed.chapterOne.unlockedActorIds).toContain(actorId);
+  }
 });
 
 it('selects a captain and opens the prologue', () => {

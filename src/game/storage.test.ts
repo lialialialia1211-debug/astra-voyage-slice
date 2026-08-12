@@ -73,7 +73,7 @@ it('migrates a tutorial-cleared v1 save into a fresh canonical chapter', () => {
   const result = repository.load();
 
   expect(result.corruptBackup).toBeNull();
-  expect(result.state.version).toBe(3);
+  expect(result.state.version).toBe(4);
   expect(result.state.firstClears).toEqual([]);
   expect(result.state.screen).toBe('story');
   expect(result.state.chapterOne).toMatchObject({
@@ -120,11 +120,45 @@ it('migrates a v2 save while preserving safe display and AP settings', () => {
 
   const result = repository.load();
 
-  expect(result.state.version).toBe(3);
+  expect(result.state.version).toBe(4);
   expect(result.state.adultMode).toBe('fade');
   expect(result.state.ap).toEqual({ current: 20, lastRecoveredAt: 1_000 });
   expect(result.state.firstClears).toEqual([]);
   expect(result.state.chapterOne.currentNode).toBe('scene-1');
+});
+
+it('migrates the completed v3 vertical slice to scene three', () => {
+  const initial = createInitialState(1_000);
+  const versionThree = {
+    ...initial,
+    version: 3,
+    adultConfirmed: true,
+    screen: 'chapter-milestone',
+    chapterOne: {
+      currentNode: 'milestone-complete',
+      activeSceneId: 'ch01_scene_02_black_ship',
+      activeLineIndex: 0,
+      completedScenes: ['ch01_scene_01_port_bell', 'ch01_scene_02_black_ship'],
+      completedBattles: ['ch01_b01_outer_bay_rescue'],
+      selectedStarterWeaponId: 'wpn_water_01',
+      activeEncounterId: 'ch01_b01_outer_bay_rescue',
+      paidAp: 0,
+      tutorialStep: 'victory-defeat',
+      battleSnapshot: null,
+      lastResult: 'victory',
+    },
+  };
+  const repository = createSaveRepository(memoryStorage({
+    'astra-save-v1': JSON.stringify(versionThree),
+  }), () => 1_000);
+
+  const result = repository.load();
+
+  expect(result.corruptBackup).toBeNull();
+  expect(result.state.version).toBe(4);
+  expect(result.state.screen).toBe('story');
+  expect(result.state.chapterOne.currentNode).toBe('scene-3');
+  expect(result.state.chapterOne.activeSceneId).toBe('ch01_scene_03_hand_that_would_not_let_go');
 });
 
 it('synchronizes offline AP when loading a v2 save', () => {
