@@ -81,7 +81,7 @@ it('hides adult CG thumbnails without gating canonical prose', () => {
 
   expect(screen.getByRole('img', { name: '成人 CG 已依設定隱藏' })).toBeVisible();
   expect(screen.queryByRole('img', { name: '在她可以離開時 劇情 CG' })).not.toBeInTheDocument();
-  expect(screen.getByText(scene.lines[lineIndex]!.text)).toBeVisible();
+  expect(screen.getByText(/賽芙拉交出完整訊號的那天/)).toBeVisible();
 });
 
 it('uses the selected captain portrait and can skip an unread scene', async () => {
