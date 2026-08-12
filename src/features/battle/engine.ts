@@ -35,7 +35,7 @@ const chapterCharacters: readonly CharacterDefinition<ChapterActorId>[] = chapte
   attack: actor.attack,
   skills: [
     { ...actor.skills[0], target: 'enemy' },
-    { ...actor.skills[1], target: 'all-allies', effect: 'guard' },
+    { ...actor.skills[1], target: 'all-allies', effect: actor.skills[1].effect ?? 'guard' },
   ],
   passive: '第一章客座戰鬥角色',
   ougi: { ...actor.ougi },
@@ -45,22 +45,16 @@ const chapterEncounters: readonly EncounterDefinition<ChapterEncounterId>[] = ch
   id: encounter.id,
   name: encounter.name,
   kind: encounter.kind,
-  enemies: [{
-    id: encounter.enemy.id,
-    name: encounter.enemy.name,
-    element: encounter.enemy.element,
-    maxHp: encounter.enemy.maxHp,
-    attack: encounter.enemy.attack,
-    modeGauge: 0,
-    actions: [{
-      id: 'wreckage-impact',
-      name: '漂骸撞擊',
-      power: 100,
-      target: 'single',
-      telegraphed: false,
-    }],
-  }],
-  victoryFlag: 'flag_ch01_b01_victory',
+  enemies: encounter.enemies.map((enemy) => ({
+    id: enemy.id,
+    name: enemy.name,
+    element: enemy.element,
+    maxHp: enemy.maxHp,
+    attack: enemy.attack,
+    modeGauge: enemy.modeGauge,
+    actions: enemy.actions,
+  })),
+  victoryFlag: `flag_${encounter.id}_victory`,
 } satisfies EncounterDefinition<ChapterEncounterId>));
 
 export function battleContentFor(contentSet: BattleContentSet): {

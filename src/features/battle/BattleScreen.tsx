@@ -32,8 +32,12 @@ function partyAssetId(battle: BattleState, actorId: string): string {
 
 function enemyAssetId(battle: BattleState, enemyId: string): string {
   if (battle.contentSet === 'chapter-one') {
-    return chapterOneContent.encounters
-      .find((encounter) => encounter.id === battle.encounterId)?.enemy.assetId ?? enemyId;
+    const assetId = chapterOneContent.encounters
+      .find((encounter) => encounter.id === battle.encounterId)
+      ?.enemies.find((enemy) => enemy.id === enemyId)?.assetId ?? enemyId;
+    return assetId.startsWith('boss_')
+      ? `${assetId}_${battle.bossMode === 'break' ? 'break' : 'idle'}`
+      : assetId;
   }
   return enemyId.startsWith('boss_')
     ? `${enemyId}_${battle.bossMode === 'break' ? 'break' : 'idle'}`
@@ -41,7 +45,8 @@ function enemyAssetId(battle: BattleState, enemyId: string): string {
 }
 
 export function BattleStage({ initialBattle, onComplete, onSnapshot }: BattleStageProps) {
-  const tutorial = initialBattle.contentSet === 'chapter-one';
+  const tutorial = initialBattle.contentSet === 'chapter-one'
+    && initialBattle.encounterId === 'ch01_b01_outer_bay_rescue';
   const [battle, setBattle] = useState(initialBattle);
   const [message, setMessage] = useState(tutorial
     ? '選擇全隊攻擊，昭黎與洛恩會依序行動。'
@@ -234,6 +239,10 @@ function ChapterBattleSession() {
   const weapon = chapterOneContent.starterWeapons.find(
     (entry) => entry.id === state.chapterOne.selectedStarterWeaponId,
   )!;
+  const encounter = chapterOneContent.encounters.find((entry) => entry.id === encounterId)!;
+  const partyIds = encounter.partyMode === 'selectable' && state.chapterOne.selectedPartyIds.length === 4
+    ? state.chapterOne.selectedPartyIds
+    : encounter.defaultPartyIds;
   const [initialBattle] = useState(() => {
     if (state.chapterOne.battleSnapshot?.contentSet === 'chapter-one'
       && state.chapterOne.battleSnapshot.encounterId === encounterId) {
@@ -242,7 +251,7 @@ function ChapterBattleSession() {
     return createBattle({
       contentSet: 'chapter-one',
       encounterId,
-      partyIds: ['zhaoli', 'luoen'],
+      partyIds,
       elementOverrides: { zhaoli: weapon.element },
       loadoutAttack: 0,
       loadoutHp: 0,
