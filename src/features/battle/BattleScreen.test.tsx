@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { App } from '../../app/App';
+import { chapterOneContent } from '../../chapter-one/content';
 import { content } from '../../content';
 import { createInitialState, type GameState } from '../../game/initial-state';
 import { createSaveRepository } from '../../game/storage';
@@ -61,6 +62,25 @@ it('shows only the attack command for the two-person first chapter tutorial', ()
   expect(screen.getByRole('button', { name: '全隊攻擊' })).toBeVisible();
   expect(screen.queryByRole('button', { name: '全隊防禦' })).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: '召喚' })).not.toBeInTheDocument();
+});
+
+it('opens the complete RPG command set from chapter battle two onward', () => {
+  const encounter = chapterOneContent.encounters[1]!;
+  const battle = createBattle({
+    contentSet: 'chapter-one',
+    encounterId: encounter.id,
+    partyIds: encounter.defaultPartyIds,
+    elementOverrides: { zhaoli: 'water' },
+    loadoutAttack: 0,
+    loadoutHp: 0,
+    summonId: null,
+  });
+
+  render(<BattleStage initialBattle={battle} onComplete={vi.fn()} />);
+
+  expect(screen.getByRole('button', { name: '航向修正' })).toBeVisible();
+  expect(screen.getByRole('button', { name: '全隊防禦' })).toBeVisible();
+  expect(screen.getAllByRole('button', { name: '選擇奧義' })).toHaveLength(4);
 });
 
 it('keeps the selected loadout when retrying a defeat', async () => {

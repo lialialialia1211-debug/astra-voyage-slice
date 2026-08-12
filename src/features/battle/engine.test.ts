@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { chapterOneContent } from '../../chapter-one/content';
 import { createBattle, resolveTurn, useSkill } from './engine';
 
 const partyIds = ['chr_01', 'chr_02', 'chr_03', 'chr_04'] as const;
@@ -24,6 +25,26 @@ function tidalBossBattle() {
 }
 
 describe('battle engine', () => {
+  it.each(chapterOneContent.encounters)(
+    'creates $id with its approved party and complete enemy set',
+    (encounter) => {
+      const battle = createBattle({
+        contentSet: 'chapter-one',
+        encounterId: encounter.id,
+        partyIds: encounter.defaultPartyIds,
+        elementOverrides: { zhaoli: 'water' },
+        loadoutAttack: 0,
+        loadoutHp: 0,
+        summonId: null,
+      });
+
+      expect(battle.party.map((actor) => actor.id)).toEqual(encounter.defaultPartyIds);
+      expect(battle.enemies.map((enemy) => enemy.id)).toEqual(
+        encounter.enemies.map((enemy) => enemy.id),
+      );
+    },
+  );
+
   it('creates the first chapter battle with two fixed actors and a weapon element override', () => {
     const battle = createBattle({
       contentSet: 'chapter-one',
