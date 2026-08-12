@@ -47,7 +47,7 @@ it('publishes all Chapter 01 assets in both checked-in manifests', async () => {
   const runtimeManifest = JSON.parse(await readFile(path.join(projectRoot, 'src', 'generated', 'user-art-manifest.json'), 'utf8'));
 
   expect(runtimeManifest).toEqual(publicManifest);
-  expect(Object.keys(runtimeManifest)).toHaveLength(203);
+  expect(Object.keys(runtimeManifest)).toHaveLength(140);
   for (const asset of CHAPTER_ONE_ASSETS) {
     const expectedUrl = `/assets/user/${asset.assetId}.webp`;
     expect(runtimeManifest[asset.assetId]).toBe(expectedUrl);

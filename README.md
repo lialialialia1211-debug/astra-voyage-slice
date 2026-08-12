@@ -30,7 +30,7 @@
 - 淡出、遮罩與隱藏三種成人內容顯示模式
 - 存檔 JSON 匯出／匯入
 - 使用者美術檢查與 WebP 轉換流程
-- 舊原型 63／63 項美術仍保留，第一章 140／140 項背景、人物、CG、敵人、首領、武器與支援物件已完成匯入；目前 manifest 共 203 項
+- 第一章 140／140 項背景、人物、CG、敵人、首領、武器與支援物件已完成匯入；舊「陸海空艦長」原型的 63 項內容美術已退役，系統 UI 美術仍保留
 
 ## 開始使用
 
@@ -61,7 +61,7 @@ pnpm build:ui-art
 
 ## 人物與 CG 美術
 
-舊原型的 63 張 PNG 與第一章的 140 張 PNG 已驗收並轉為 `public/assets/user/` 內的 WebP。第一章素材規格位於 `outputs/chapter-01-art-production-spec-v2.md`，完整目錄、尺寸、透明通道與 WebP 品質由 `scripts/import-chapter-one-art.mjs` 鎖定。
+第一章的 140 張 PNG 已驗收並轉為 `public/assets/user/` 內的 WebP。第一章素材規格位於 `outputs/chapter-01-art-production-spec-v2.md`，完整目錄、尺寸、透明通道與 WebP 品質由 `scripts/import-chapter-one-art.mjs` 鎖定。舊「陸海空艦長」原型的 63 張內容美術已從目前版本退役；`public/assets/generated-ui/` 的系統 UI 素材不在刪除範圍內。
 
 如需重新匯入第一章素材：
 
@@ -69,9 +69,9 @@ pnpm build:ui-art
 pnpm import:chapter-one-art -- C:\path\to\chapter01
 ```
 
-匯入器會先完整驗證 140 張 PNG，並保留舊 manifest 項目；任一素材缺少、尺寸或透明通道不符、或目錄出現未登記 PNG 時都不會更新輸出。
+匯入器會先完整驗證 140 張 PNG，再同步兩份 manifest；任一素材缺少、尺寸或透明通道不符、或目錄出現未登記 PNG 時都不會更新輸出。
 
-如需重新驗收或替換美術：
+舊原型的 `outputs/user-art-work-order.md` 與 `outputs/user-art-checklist.csv` 僅保留作歷史規格參考。若日後需要刻意復原或重製該批舊素材，才使用以下舊流程：
 
 1. 依 `outputs/user-art-work-order.md` 與 `outputs/user-art-checklist.csv` 製作 PNG。
 2. 將完成檔放在任意獨立資料夾。
