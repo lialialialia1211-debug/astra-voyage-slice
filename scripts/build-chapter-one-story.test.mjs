@@ -43,6 +43,15 @@ describe('Chapter 01 canonical story generator', () => {
     ]))
   })
 
+  it('anchors a new dialogue turn to the narrated actor instead of an earlier speaker', async () => {
+    const scenes = await buildChapterOneStory({ novelRoot })
+    const rescueScene = scenes[2]
+    const safetyOrder = rescueScene.lines.find((line) => line.text === '不准跨紅線。長鉤套艇首，我套船尾。')
+
+    expect(safetyOrder).toMatchObject({ speakerId: 'zhaoli', speakerName: '昭黎' })
+    expect(rescueScene.lines.some((line) => line.text === '艇員說。')).toBe(false)
+  })
+
   it('maps the three adult scenes to three ordered CGs each', async () => {
     const scenes = await buildChapterOneStory({ novelRoot })
 
