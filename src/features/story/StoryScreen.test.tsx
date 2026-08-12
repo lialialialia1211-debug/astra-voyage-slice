@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { App } from '../../app/App';
+import { chapterOneContent } from '../../chapter-one/content';
 import { createInitialState } from '../../game/initial-state';
+import { createSaveRepository } from '../../game/storage';
 
 function chapterSceneState(activeLineIndex = 0) {
   const initial = createInitialState(0);
@@ -33,6 +35,53 @@ it('renders three actor slots for the current canonical prose block', () => {
 
   expect(screen.getAllByTestId('story-actor')).toHaveLength(3);
   expect(screen.getByText('旁白')).toBeVisible();
+});
+
+it('renders any generated scene with chapter and line progress', () => {
+  const initial = createInitialState(0);
+  const scene = chapterOneContent.scenes[27]!;
+  createSaveRepository(window.localStorage).save({
+    ...initial,
+    adultConfirmed: true,
+    screen: 'story',
+    chapterOne: {
+      ...initial.chapterOne,
+      currentNode: 'scene-28',
+      activeSceneId: scene.id,
+      activeLineIndex: 0,
+    },
+  });
+
+  render(<App />);
+
+  expect(screen.getByText('第 28 幕 / 30')).toBeVisible();
+  expect(screen.getByText(`1 / ${scene.lines.length} 節`)).toBeVisible();
+  expect(screen.getByRole('img', { name: '最後一盞燈之外 背景' })).toBeVisible();
+  expect(screen.getByText('正史來源：完整章節小說 v0.2')).toBeVisible();
+});
+
+it('hides adult CG thumbnails without gating canonical prose', () => {
+  const initial = createInitialState(0);
+  const scene = chapterOneContent.scenes[19]!;
+  const lineIndex = scene.lines.findIndex((line) => line.cgAssetId);
+  createSaveRepository(window.localStorage).save({
+    ...initial,
+    adultConfirmed: true,
+    adultMode: 'hidden-thumbnails',
+    screen: 'story',
+    chapterOne: {
+      ...initial.chapterOne,
+      currentNode: 'scene-20',
+      activeSceneId: scene.id,
+      activeLineIndex: lineIndex,
+    },
+  });
+
+  render(<App />);
+
+  expect(screen.getByRole('img', { name: '成人 CG 已依設定隱藏' })).toBeVisible();
+  expect(screen.queryByRole('img', { name: '在她可以離開時 劇情 CG' })).not.toBeInTheDocument();
+  expect(screen.getByText(scene.lines[lineIndex]!.text)).toBeVisible();
 });
 
 it('uses the selected captain portrait and can skip an unread scene', async () => {
