@@ -37,4 +37,11 @@ export function elementMultiplier(attacker: Element, defender: Element): number 
 
 export type { ContentRegistry } from '../domain/types';
 export { chapterOneContent } from '../chapter-one/content';
-export { chapterBattleApCost, nextChapterNode } from '../chapter-one/flow';
+export {
+  chapterBattleApCost,
+  encounterForNode,
+  nextChapterNode,
+  nodeAfterBattle,
+  nodeAfterScene,
+  sceneForNode,
+} from '../chapter-one/flow';
