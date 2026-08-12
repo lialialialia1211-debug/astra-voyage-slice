@@ -12,7 +12,7 @@ import type {
   StarterWeaponDefinition,
 } from './types'
 
-const actors = [
+const actors: readonly ChapterActorDefinition[] = [
   { id: 'zhaoli', name: '昭黎', age: 22, element: 'variable', role: 'captain', portraitAssetPrefix: 'chr_zhaoli_story', battleAssetId: 'chr_zhaoli_battle_idle' },
   { id: 'yanling', name: '晏泠', age: 24, element: 'wind', role: 'controller', portraitAssetPrefix: 'chr_yanling_story', battleAssetId: 'chr_yanling_battle_idle' },
   { id: 'saifula', name: '賽芙拉', age: 27, element: 'dark', role: 'caster', portraitAssetPrefix: 'chr_saifula_story', battleAssetId: 'chr_saifula_battle_idle' },
@@ -21,7 +21,7 @@ const actors = [
   { id: 'hanze', name: '韓則', age: 29, element: 'fire', role: 'vanguard', portraitAssetPrefix: 'chr_hanze_story', battleAssetId: 'chr_hanze_battle_idle' },
   { id: 'luoen', name: '洛恩', age: 46, element: 'water', role: 'guest', portraitAssetPrefix: 'chr_luoen_story', battleAssetId: 'chr_luoen_battle_idle' },
   { id: 'huicen', name: '惠岑', age: 38, element: 'light', role: 'npc', portraitAssetPrefix: 'chr_huicen_story' },
-] as const satisfies readonly ChapterActorDefinition[]
+]
 
 const viewpointIds: Readonly<Record<string, ChapterActorId>> = {
   昭黎: 'zhaoli',
@@ -41,7 +41,7 @@ function stagePositions(count: number): readonly ChapterActorPosition[] {
 }
 
 const scenes: readonly ChapterStoryScene[] = generatedScenes.map((scene) => ({
-  id: scene.id,
+  id: scene.id as ChapterStoryScene['id'],
   number: scene.number,
   title: scene.title,
   location: scene.location,
