@@ -13,6 +13,8 @@ import { SettingsScreen } from '../features/settings/SettingsScreen';
 import { ExpeditionMapScreen } from '../features/expedition/ExpeditionMapScreen';
 import { StoryScreen } from '../features/story/StoryScreen';
 import { GrowthScreen } from '../features/growth/GrowthScreen';
+import { ChapterPrepScreen } from '../features/chapter/ChapterPrepScreen';
+import { ChapterMilestoneScreen } from '../features/chapter/ChapterMilestoneScreen';
 import './app.css';
 
 function GameRouter() {
@@ -34,6 +36,10 @@ function GameRouter() {
         return <ExpeditionMapScreen />;
       case 'story':
         return <StoryScreen />;
+      case 'chapter-prep':
+        return <ChapterPrepScreen />;
+      case 'chapter-milestone':
+        return <ChapterMilestoneScreen />;
       case 'growth':
         return <GrowthScreen />;
       case 'loadout':

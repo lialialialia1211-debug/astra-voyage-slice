@@ -49,10 +49,10 @@ export function weaponUpgradeCost(currentLevel: number): RewardBundle | null {
   return currentLevel === 10 ? null : { ...weaponCosts[currentLevel - 1]! };
 }
 
-export function effectiveCharacter(
-  definition: CharacterDefinition,
+export function effectiveCharacter<Id extends string>(
+  definition: CharacterDefinition<Id>,
   level: number,
-): CharacterDefinition {
+): CharacterDefinition<Id> {
   assertLevel(level);
   const multiplier = 1 + 0.04 * (level - 1);
   return {
