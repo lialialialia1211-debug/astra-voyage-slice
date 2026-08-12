@@ -37,3 +37,34 @@ it('shows fixed and first-clear rewards then continues to the post-stage story',
   await user.click(screen.getByRole('button', { name: '繼續戰後劇情' }));
   expect(await screen.findByRole('heading', { name: '海洋航線' })).toBeVisible();
 });
+
+it('continues a victorious chapter battle to the next canonical scene', async () => {
+  const user = userEvent.setup();
+  const initial = createInitialState();
+  createSaveRepository(window.localStorage).save({
+    ...initial,
+    adultConfirmed: true,
+    screen: 'results',
+    chapterOne: {
+      ...initial.chapterOne,
+      currentNode: 'battle-6',
+      activeSceneId: 'ch01_scene_13_trapped_in_old_port',
+      completedBattles: [
+        'ch01_b01_outer_bay_rescue',
+        'ch01_b02_first_answering_anchor',
+        'ch01_b03_signal_in_the_drain',
+        'ch01_b04_forty_seven_breaths',
+        'ch01_b05_old_messages_as_evidence',
+        'ch01_b06_old_port_ambush',
+      ],
+      activeEncounterId: 'ch01_b06_old_port_ambush',
+      lastResult: 'victory',
+    },
+  });
+
+  render(<App />);
+
+  expect(screen.getByText('舊港伏擊')).toBeVisible();
+  await user.click(screen.getByRole('button', { name: '前往第 14 幕' }));
+  expect(await screen.findByRole('heading', { name: '她交還的印' })).toBeVisible();
+});

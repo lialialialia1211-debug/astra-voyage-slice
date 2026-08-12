@@ -1,25 +1,29 @@
-import { render, screen } from '@testing-library/react';
-import { App } from '../../app/App';
-import { createInitialState } from '../../game/initial-state';
-import { createSaveRepository } from '../../game/storage';
+import { render, screen } from '@testing-library/react'
+import { App } from '../../app/App'
+import { chapterOneContent } from '../../chapter-one/content'
+import { createInitialState } from '../../game/initial-state'
+import { createSaveRepository } from '../../game/storage'
 
-it('shows the vertical slice milestone after the first chapter battle', () => {
-  const initial = createInitialState(0);
+it('shows the completed canonical chapter after scene thirty', () => {
+  const initial = createInitialState(0)
   createSaveRepository(window.localStorage).save({
     ...initial,
     adultConfirmed: true,
     screen: 'chapter-milestone',
     chapterOne: {
       ...initial.chapterOne,
-      currentNode: 'milestone-complete',
-      completedScenes: ['ch01_scene_01_port_bell', 'ch01_scene_02_black_ship'],
-      completedBattles: ['ch01_b01_outer_bay_rescue'],
-      lastResult: 'victory',
+      currentNode: 'chapter-complete',
+      activeSceneId: 'ch01_scene_30_first_deep_sea_license',
+      completedScenes: chapterOneContent.scenes.map((scene) => scene.id),
+      completedBattles: chapterOneContent.encounters.map((encounter) => encounter.id),
+      unlockedActorIds: ['zhaoli', 'mila', 'yanling', 'yilan', 'saifula', 'hanze'],
     },
-  });
+  })
 
-  render(<App />);
+  render(<App />)
 
-  expect(screen.getByRole('heading', { name: '第 3 幕尚未實裝' })).toBeVisible();
-  expect(screen.getByRole('button', { name: '重播戰鬥 1' })).toBeVisible();
-});
+  expect(screen.getByRole('heading', { name: '第一章正史完成' })).toBeVisible()
+  expect(screen.getByText('30 / 30 幕')).toBeVisible()
+  expect(screen.getByText('15 / 15 戰')).toBeVisible()
+  expect(screen.getByRole('img', { name: '第一張深海航照' })).toBeVisible()
+})
