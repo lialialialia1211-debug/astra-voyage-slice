@@ -141,8 +141,8 @@ export function StoryScreen() {
         </div>
         <div className="story-dialogue">
           <strong>{chapterSpeakerName(chapterLine)}</strong>
-          <p>{chapterLine.text}</p>
-          <div className="story-controls">
+          <p className="story-dialogue-text" data-testid="story-dialogue-text">{chapterLine.text}</p>
+          <div className="story-controls" data-testid="story-controls">
             <button
               disabled={state.chapterOne.activeLineIndex === 0}
               onClick={() => dispatch({ type: 'RETREAT_CHAPTER_LINE' })}
@@ -213,8 +213,8 @@ export function StoryScreen() {
       </div>
       <div className="story-dialogue">
         <strong>{legacySpeakerName(legacyLine)}</strong>
-        <p>{legacyLine.text}</p>
-        <div className="story-controls">
+        <p className="story-dialogue-text" data-testid="story-dialogue-text">{legacyLine.text}</p>
+        <div className="story-controls" data-testid="story-controls">
           <button onClick={() => setShowLog(true)} type="button">對話紀錄</button>
           <button onClick={completeLegacyStory} type="button">略過劇情</button>
           <button

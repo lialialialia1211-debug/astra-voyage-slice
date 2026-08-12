@@ -1684,6 +1684,10 @@ h1 {
 }
 
 .story-dialogue {
+  display: grid;
+  min-height: 0;
+  max-height: min(46vh, 340px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   padding: 18px 28px 22px;
   background: linear-gradient(145deg, rgb(7 26 40 / 98%), rgb(3 11 20 / 98%));
 }
@@ -1696,9 +1700,12 @@ h1 {
 .story-dialogue > p {
   min-height: 48px;
   margin: 8px 0 12px;
+  overflow-y: auto;
   color: #e5eef1;
   font-size: 1.05rem;
   line-height: 1.75;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   white-space: pre-wrap;
 }
 
@@ -1868,6 +1875,7 @@ h1 {
   width: min(100%, 1180px);
   max-height: calc(100vh - 32px);
   overflow: auto;
+  scrollbar-gutter: stable;
   border: 1px solid rgb(121 213 230 / 34%);
   border-radius: 24px;
   padding: clamp(20px, 3vw, 34px);
@@ -1971,6 +1979,17 @@ button.chapter-party-card { cursor: pointer; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.chapter-prep-actions {
+  position: sticky;
+  z-index: 4;
+  bottom: -1px;
+  margin: 18px calc(0px - clamp(20px, 3vw, 34px)) calc(0px - clamp(20px, 3vw, 34px));
+  border-top: 1px solid rgb(121 213 230 / 24%);
+  padding: 16px clamp(20px, 3vw, 34px) 20px;
+  background: linear-gradient(to top, rgb(4 13 23 / 100%) 78%, rgb(4 13 23 / 92%));
+  box-shadow: 0 -14px 30px rgb(0 0 0 / 24%);
 }
 
 .chapter-prep-actions p { color: #a9c1ca; }
