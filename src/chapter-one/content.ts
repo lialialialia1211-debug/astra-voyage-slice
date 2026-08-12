@@ -8,6 +8,7 @@ import type {
   ChapterEnemyDefinition,
   ChapterExpression,
   ChapterPlayableActorId,
+  ChapterSpeakerId,
   ChapterStoryScene,
   StarterWeaponDefinition,
 } from './types'
@@ -52,7 +53,7 @@ const scenes: readonly ChapterStoryScene[] = generatedScenes.map((scene) => ({
   lines: scene.lines.map((line) => {
     const positions = stagePositions(line.actors.length)
     return {
-      speakerId: 'narrator' as const,
+      speakerId: line.speakerId as ChapterSpeakerId,
       speakerName: line.speakerName,
       text: line.text,
       actors: line.actors.slice(0, 3).map((actorId, index) => ({
