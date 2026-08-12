@@ -20,7 +20,7 @@ it('offers six starter weapons and enters the first chapter battle', async () =>
 
   render(<App />);
 
-  expect(screen.getByRole('heading', { name: '外灣救援' })).toBeVisible();
+  expect(screen.getByRole('heading', { name: '外灣救難線' })).toBeVisible();
   expect(screen.getAllByRole('button', { name: /^選擇/ })).toHaveLength(6);
   expect(screen.getByText('首通 0 AP')).toBeVisible();
   await user.click(screen.getByRole('button', { name: '選擇赤燼長刃' }));
