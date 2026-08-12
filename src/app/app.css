@@ -1699,6 +1699,7 @@ h1 {
   color: #e5eef1;
   font-size: 1.05rem;
   line-height: 1.75;
+  white-space: pre-wrap;
 }
 
 .story-controls {
@@ -1763,6 +1764,7 @@ h1 {
 }
 
 .chapter-story-meta strong { color: #fff1c4; }
+.chapter-scene-progress { display: inline-block; margin-top: 5px; color: #79d5e6; font-weight: 800; }
 
 .chapter-story-stage {
   isolation: isolate;
@@ -1841,6 +1843,20 @@ h1 {
   object-fit: contain;
   box-shadow: 0 20px 50px rgb(0 0 0 / 64%);
 }
+
+.chapter-story-cg--adult-fade { filter: blur(14px) saturate(0.55); }
+.chapter-story-cg--hidden {
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  border: 1px solid rgb(196 154 75 / 42%);
+  padding: 24px;
+  color: #dcebf0;
+  background: linear-gradient(145deg, rgb(26 34 46 / 98%), rgb(7 17 27 / 98%));
+  text-align: center;
+}
+.chapter-story-cg--hidden strong { color: #fff1c4; font-size: 1.25rem; }
+.chapter-story-cg--hidden span { color: #9fc4cf; }
 
 .chapter-story--warning .chapter-story-background { filter: saturate(0.82) contrast(1.08); }
 .chapter-story--black-tide .chapter-story-background { filter: saturate(0.55) brightness(0.68); }

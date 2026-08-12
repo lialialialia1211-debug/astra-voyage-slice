@@ -80,10 +80,12 @@ export function StoryScreen() {
           <div>
             <p className="eyebrow">MAIN STORY // CHAPTER 01</p>
             <h1 id="story-title">{chapterScene.title}</h1>
+            <span className="chapter-scene-progress">第 {chapterScene.number} 幕 / 30</span>
           </div>
           <div className="chapter-story-meta">
             <span>{chapterScene.location}</span>
             <span>視點 <strong>{viewpoint?.name ?? chapterScene.viewpoint}</strong></span>
+            <span>正史來源：完整章節小說 v0.2</span>
           </div>
         </header>
         <div className="story-stage chapter-story-stage">
@@ -95,7 +97,8 @@ export function StoryScreen() {
           />
           {chapterLine.actors.map((stageActor) => {
             const actor = chapterOneContent.actors.find((entry) => entry.id === stageActor.actorId)!;
-            const isCurrent = chapterLine.speakerId === stageActor.actorId;
+            const isCurrent = chapterLine.speakerId === stageActor.actorId
+              || (chapterLine.speakerId === 'narrator' && stageActor.actorId === chapterScene.viewpoint);
             return (
               <article
                 className={`chapter-story-actor chapter-story-actor--${stageActor.position} ${isCurrent ? 'is-current' : 'is-listening'}`}
@@ -114,16 +117,26 @@ export function StoryScreen() {
               </article>
             );
           })}
-          {chapterLine.cgAssetId && (
+          {chapterLine.cgAssetId && chapterLine.adult && state.adultMode === 'hidden-thumbnails' && (
+            <div
+              aria-label="成人 CG 已依設定隱藏"
+              className="chapter-story-cg chapter-story-cg--hidden"
+              role="img"
+            >
+              <strong>成人內容縮圖已隱藏</strong>
+              <span>可在顯示設定切換；正史文字不受影響。</span>
+            </div>
+          )}
+          {chapterLine.cgAssetId && (!chapterLine.adult || state.adultMode !== 'hidden-thumbnails') && (
             <AssetArtwork
-              alt={`${chapterScene.title} 事件 CG`}
+              alt={`${chapterScene.title} 劇情 CG`}
               assetId={chapterLine.cgAssetId}
-              className="chapter-story-cg"
-              fallbackLabel="事件 CG"
+              className={`chapter-story-cg ${chapterLine.adult ? `chapter-story-cg--adult-${state.adultMode}` : ''}`}
+              fallbackLabel="劇情 CG"
             />
           )}
           <div className="story-progress">
-            {state.chapterOne.activeLineIndex + 1} / {chapterScene.lines.length}
+            {state.chapterOne.activeLineIndex + 1} / {chapterScene.lines.length} 節
           </div>
         </div>
         <div className="story-dialogue">
