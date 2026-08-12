@@ -93,7 +93,7 @@ it('hides adult CG thumbnails without gating canonical prose', () => {
   expect(screen.getByText(/賽芙拉交出完整訊號的那天/)).toBeVisible();
 });
 
-it('uses the selected captain portrait and can skip an unread scene', async () => {
+it('can skip an unread legacy scene without restoring retired captain portraits', async () => {
   const user = userEvent.setup();
   window.localStorage.setItem('astra-save-v1', JSON.stringify({
     ...createInitialState(),
@@ -108,7 +108,7 @@ it('uses the selected captain portrait and can skip an unread scene', async () =
 
   await user.click(screen.getByRole('button', { name: '下一句' }));
   await user.click(screen.getByRole('button', { name: '下一句' }));
-  expect(screen.getByRole('img', { name: '女性艦長 tense 表情' })).toBeVisible();
+  expect(screen.queryByRole('img', { name: '女性艦長 tense 表情' })).not.toBeInTheDocument();
   await user.click(screen.getByRole('button', { name: '略過劇情' }));
   expect(screen.getByRole('heading', { name: '地表遠征路線' })).toBeVisible();
 });

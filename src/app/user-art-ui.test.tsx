@@ -18,33 +18,37 @@ function renderAt(overrides: Partial<GameState>) {
 
 beforeEach(() => window.localStorage.clear());
 
-it('shows both completed captain cards on captain selection', () => {
+it('keeps captain selection usable without the retired captain artwork', () => {
   renderAt({ screen: 'captain-select' });
 
-  expect(screen.getByRole('img', { name: '男性艦長立繪' })).toBeVisible();
-  expect(screen.getByRole('img', { name: '女性艦長立繪' })).toBeVisible();
+  expect(screen.getByRole('button', { name: '男性艦長' })).toBeVisible();
+  expect(screen.getByRole('button', { name: '女性艦長' })).toBeVisible();
+  expect(screen.queryByRole('img', { name: /艦長立繪$/ })).not.toBeInTheDocument();
 });
 
-it('reveals completed reward artwork in recruitment', async () => {
+it('reveals legacy recruitment rewards without loading retired artwork', async () => {
   const user = userEvent.setup();
   renderAt({ screen: 'recruit', captainId: 'cap_f' });
   await user.click(screen.getByRole('button', { name: '全部揭曉' }));
 
-  expect(screen.getByRole('img', { name: '旭日裂潮劍武器圖' })).toBeVisible();
-  expect(screen.getByRole('img', { name: '光醫角色卡' })).toBeVisible();
+  expect(screen.getByText('旭日裂潮劍')).toBeVisible();
+  expect(screen.getByText('光醫・外星生物研究醫師')).toBeVisible();
+  expect(screen.queryByRole('img')).not.toBeInTheDocument();
 });
 
-it('shows completed character cards in formation', () => {
+it('keeps the legacy formation roster usable without retired character cards', () => {
   renderAt({
     screen: 'formation',
     captainId: 'cap_f',
     roster: [...fullParty],
   });
 
-  expect(screen.getAllByRole('img', { name: /角色卡$/ })).toHaveLength(4);
+  expect(screen.getByRole('heading', { name: '四人遠征編隊' })).toBeVisible();
+  expect(screen.getByRole('button', { name: /潮工/ })).toBeVisible();
+  expect(screen.queryByRole('img', { name: /角色卡$/ })).not.toBeInTheDocument();
 });
 
-it('shows ten weapon images and the selected summon in loadout', () => {
+it('keeps the legacy loadout usable without retired weapon and summon artwork', () => {
   renderAt({
     screen: 'loadout',
     captainId: 'cap_f',
@@ -54,11 +58,12 @@ it('shows ten weapon images and the selected summon in loadout', () => {
     summonId: 'smn_01_solar_leviathan',
   });
 
-  expect(screen.getAllByRole('img', { name: /武器圖$/ })).toHaveLength(10);
-  expect(screen.getByRole('img', { name: '旭日巨鯨召喚圖' })).toBeVisible();
+  expect(screen.getByRole('heading', { name: '艦裝武器盤' })).toBeVisible();
+  expect(screen.getByRole('combobox', { name: '召喚核心' })).toHaveValue('smn_01_solar_leviathan');
+  expect(screen.queryByRole('img', { name: /武器圖$|召喚圖$/ })).not.toBeInTheDocument();
 });
 
-it('shows completed party and enemy art in battle', () => {
+it('uses named fallbacks for legacy battle actors after their artwork retires', () => {
   const battle = createBattle({
     encounterId: 'enc_tutorial',
     partyIds: fullParty,
@@ -69,12 +74,14 @@ it('shows completed party and enemy art in battle', () => {
 
   render(<BattleStage initialBattle={battle} onComplete={vi.fn()} />);
 
-  expect(screen.getAllByRole('img', { name: /戰鬥立繪$/ })).toHaveLength(4);
-  expect(screen.getByRole('img', { name: '港區襲擊者敵人立繪' })).toBeVisible();
-  expect(screen.getByRole('img', { name: '潮汐無人機敵人立繪' })).toBeVisible();
+  const partyArtwork = screen.getAllByRole('img', { name: /戰鬥立繪$/ });
+  expect(partyArtwork).toHaveLength(4);
+  expect(partyArtwork.every((entry) => entry.classList.contains('asset-fallback'))).toBe(true);
+  expect(screen.getByRole('img', { name: '港區襲擊者敵人立繪' })).toHaveClass('asset-fallback');
+  expect(screen.getByRole('img', { name: '潮汐無人機敵人立繪' })).toHaveClass('asset-fallback');
 });
 
-it('shows the selected completed cabin art', () => {
+it('shows a named cabin placeholder after legacy cabin artwork retires', () => {
   renderAt({
     screen: 'cabin',
     captainId: 'cap_f',
@@ -82,10 +89,11 @@ it('shows the selected completed cabin art', () => {
     party: [...fullParty],
   });
 
-  expect(screen.getByRole('img', { name: '潮工艙室立繪' })).toBeVisible();
+  expect(screen.getByRole('img', { name: '潮工艙室立繪待匯入' })).toBeVisible();
+  expect(screen.queryByRole('img', { name: '潮工艙室立繪' })).not.toBeInTheDocument();
 });
 
-it('shows an unlocked event thumbnail from the completed collection art', () => {
+it('keeps an unlocked legacy event usable without its retired thumbnail', () => {
   renderAt({
     screen: 'gallery',
     captainId: 'cap_f',
@@ -99,10 +107,12 @@ it('shows an unlocked event thumbnail from the completed collection art', () => 
     },
   });
 
-  expect(screen.getByRole('img', { name: '深潛後的約定預覽' })).toBeVisible();
+  expect(screen.getByRole('heading', { name: '深潛後的約定' })).toBeVisible();
+  expect(screen.getAllByRole('button', { name: '開啟事件' })).toHaveLength(1);
+  expect(screen.queryByRole('img', { name: '深潛後的約定預覽' })).not.toBeInTheDocument();
 });
 
-it('unlocks all three adult CG events from the QA control', async () => {
+it('unlocks all three legacy events without restoring retired CG previews', async () => {
   const user = userEvent.setup();
   renderAt({ screen: 'gallery', captainId: 'cap_f', roster: [...fullParty] });
 
@@ -110,5 +120,5 @@ it('unlocks all three adult CG events from the QA control', async () => {
 
   expect(screen.getByRole('button', { name: 'QA：CG 已全解鎖' })).toBeDisabled();
   expect(screen.getAllByRole('button', { name: '開啟事件' })).toHaveLength(3);
-  expect(screen.getAllByRole('img', { name: /預覽$/ })).toHaveLength(3);
+  expect(screen.queryByRole('img', { name: /預覽$/ })).not.toBeInTheDocument();
 });
