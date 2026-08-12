@@ -33,9 +33,10 @@ export function ChapterPrepScreen() {
 
   const cost = chapterBattleApCost(encounter.id, state.chapterOne.completedBattles)
   const formalUnlocked = state.chapterOne.unlockedActorIds.filter((id) => id !== 'luoen')
+  const formalUnlockedSet = new Set<ChapterPlayableActorId>(formalUnlocked)
   const canSelectParty = encounter.partyMode === 'selectable' && formalUnlocked.length >= 4
   const savedPartyIsValid = state.chapterOne.selectedPartyIds.length === 4
-    && state.chapterOne.selectedPartyIds.every((id) => formalUnlocked.includes(id))
+    && state.chapterOne.selectedPartyIds.every((id) => formalUnlockedSet.has(id))
   const activePartyIds: readonly ChapterPlayableActorId[] = canSelectParty && savedPartyIsValid
     ? state.chapterOne.selectedPartyIds
     : encounter.defaultPartyIds
