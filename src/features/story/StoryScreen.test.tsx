@@ -37,6 +37,15 @@ it('renders three actor slots for the current canonical prose block', () => {
   expect(screen.getByText('旁白')).toBeVisible();
 });
 
+it('keeps AVG prose and navigation in separate layout regions', () => {
+  window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState(0)));
+
+  render(<App />);
+
+  expect(screen.getByTestId('story-dialogue-text')).toBeVisible();
+  expect(screen.getByTestId('story-controls')).toBeVisible();
+});
+
 it('renders any generated scene with chapter and line progress', () => {
   const initial = createInitialState(0);
   const scene = chapterOneContent.scenes[27]!;
