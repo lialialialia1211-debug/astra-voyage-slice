@@ -1,6 +1,7 @@
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { afterEach, expect, it } from 'vitest';
 import { CHAPTER_ONE_ASSETS, importChapterOneArt } from './import-chapter-one-art.mjs';
@@ -37,6 +38,20 @@ it('defines the complete and unique 140-asset Chapter 01 delivery', () => {
 
   for (const asset of CHAPTER_ONE_ASSETS) {
     expect(path.basename(asset.relativePath, '.png')).toBe(asset.assetId);
+  }
+});
+
+it('publishes all Chapter 01 assets in both checked-in manifests', async () => {
+  const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+  const publicManifest = JSON.parse(await readFile(path.join(projectRoot, 'public', 'assets', 'user', 'manifest.json'), 'utf8'));
+  const runtimeManifest = JSON.parse(await readFile(path.join(projectRoot, 'src', 'generated', 'user-art-manifest.json'), 'utf8'));
+
+  expect(runtimeManifest).toEqual(publicManifest);
+  expect(Object.keys(runtimeManifest)).toHaveLength(203);
+  for (const asset of CHAPTER_ONE_ASSETS) {
+    const expectedUrl = `/assets/user/${asset.assetId}.webp`;
+    expect(runtimeManifest[asset.assetId]).toBe(expectedUrl);
+    await expect(access(path.join(projectRoot, 'public', expectedUrl.slice(1)))).resolves.toBeUndefined();
   }
 });
 

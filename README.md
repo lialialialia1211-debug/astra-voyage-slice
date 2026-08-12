@@ -27,7 +27,7 @@
 - 淡出、遮罩與隱藏三種成人內容顯示模式
 - 存檔 JSON 匯出／匯入
 - 使用者美術檢查與 WebP 轉換流程
-- 舊原型 63／63 項人物、武器、召喚、敵人、首領與事件 CG 美術仍保留；第一章新美術待匯入
+- 舊原型 63／63 項美術仍保留，第一章 140／140 項背景、人物、CG、敵人、首領、武器與支援物件已完成匯入；目前 manifest 共 203 項
 
 ## 開始使用
 
@@ -58,7 +58,15 @@ pnpm build:ui-art
 
 ## 人物與 CG 美術
 
-舊原型的 63 張 PNG 已驗收並轉為 `public/assets/user/` 內的 WebP。第一章新素材規格位於 `outputs/chapter-01-art-production-spec-v2.md`；美術完成後只需提供完整資料夾絕對路徑，再統一驗證、轉檔與更新 manifest。
+舊原型的 63 張 PNG 與第一章的 140 張 PNG 已驗收並轉為 `public/assets/user/` 內的 WebP。第一章素材規格位於 `outputs/chapter-01-art-production-spec-v2.md`，完整目錄、尺寸、透明通道與 WebP 品質由 `scripts/import-chapter-one-art.mjs` 鎖定。
+
+如需重新匯入第一章素材：
+
+```powershell
+pnpm import:chapter-one-art -- C:\path\to\chapter01
+```
+
+匯入器會先完整驗證 140 張 PNG，並保留舊 manifest 項目；任一素材缺少、尺寸或透明通道不符、或目錄出現未登記 PNG 時都不會更新輸出。
 
 如需重新驗收或替換美術：
 
