@@ -368,7 +368,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'REPLAY_CHAPTER_BATTLE': {
       const encounter = state.chapterOne.activeEncounterId
         ? chapterOneContent.encounters.find((entry) => entry.id === state.chapterOne.activeEncounterId)
-        : encounterForNode(state.chapterOne.currentNode);
+        : encounterForNode(state.chapterOne.currentNode)
+          ?? chapterOneContent.encounters.find(
+            (entry) => entry.id === state.chapterOne.completedBattles.at(-1),
+          );
       if (!encounter) throw new Error('找不到要重試的章節戰鬥');
       return {
         ...state,

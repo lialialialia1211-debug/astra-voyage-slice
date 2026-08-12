@@ -1,3 +1,5 @@
+import { chapterOneContent } from '../../chapter-one/content';
+import { nodeAfterBattle, sceneForNode } from '../../chapter-one/flow';
 import { content } from '../../content';
 import { useGame } from '../../game/GameProvider';
 
@@ -12,19 +14,26 @@ export function ResultsScreen() {
 
   if (chapterResult) {
     const victory = chapterResult === 'victory';
+    const chapterEncounter = chapterOneContent.encounters.find(
+      (entry) => entry.id === state.chapterOne.activeEncounterId,
+    );
+    const nextNode = chapterEncounter ? nodeAfterBattle(chapterEncounter.id) : null;
+    const nextScene = nextNode ? sceneForNode(nextNode) : undefined;
     return (
       <section className={`screen-card result-screen result-screen--${chapterResult}`}>
-        <p className="eyebrow">CHAPTER 01 // RESCUE REPORT</p>
-        <h1>{victory ? '救援完成' : '作戰失敗'}</h1>
-        <p className="result-encounter">外灣救難線</p>
+        <p className="eyebrow">CHAPTER 01 // BATTLE {String(chapterEncounter?.number ?? 1).padStart(2, '0')}</p>
+        <h1>{victory ? '主線戰鬥完成' : '作戰失敗'}</h1>
+        <p className="result-encounter">{chapterEncounter?.name ?? '章節戰鬥'}</p>
         {victory ? (
           <>
-            <p className="intro-copy">昭黎與洛恩已清除外灣救難路徑，正史將繼續前往第 3 幕。</p>
+            <p className="intro-copy">
+              戰鬥結果已寫入唯一正史，下一站為第 {nextScene?.number ?? '?'} 幕〈{nextScene?.title ?? '未知'}〉。
+            </p>
             <button
               className="primary-action"
-              onClick={() => dispatch({ type: 'NAVIGATE', screen: 'chapter-milestone' })}
+              onClick={() => dispatch({ type: 'CONTINUE_CHAPTER' })}
               type="button"
-            >查看切片進度</button>
+            >前往第 {nextScene?.number ?? '?'} 幕</button>
           </>
         ) : (
           <>
@@ -32,7 +41,7 @@ export function ResultsScreen() {
             <p className="intro-copy">戰敗不改變正史。回到戰前準備後，可更換昭黎的主手再試一次。</p>
             <button
               className="primary-action"
-              onClick={() => dispatch({ type: 'NAVIGATE', screen: 'chapter-prep' })}
+              onClick={() => dispatch({ type: 'REPLAY_CHAPTER_BATTLE' })}
               type="button"
             >返回戰前準備</button>
           </>

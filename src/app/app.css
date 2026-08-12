@@ -1884,6 +1884,32 @@ h1 {
 
 .chapter-prep-cost strong { color: #fff1c4; font-size: 1.05rem; }
 
+.chapter-party-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 18px;
+}
+
+.chapter-party-card {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+  border: 1px solid rgb(121 213 230 / 26%);
+  border-radius: 14px;
+  padding: 10px;
+  color: #dcebf0;
+  background: rgb(8 28 43 / 92%);
+  text-align: left;
+}
+
+button.chapter-party-card { cursor: pointer; }
+.chapter-party-card.is-selected { border-color: #f0bd59; background: rgb(62 48 29 / 94%); }
+.chapter-party-card:disabled { cursor: not-allowed; opacity: 0.88; }
+.chapter-party-card-art { width: 100%; height: 112px; border-radius: 9px; object-fit: contain; }
+.chapter-party-card strong { color: #fff1c4; }
+.chapter-party-card small { color: #9fc4cf; }
+
 .starter-weapon-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1933,6 +1959,15 @@ h1 {
 
 .chapter-prep-actions p { color: #a9c1ca; }
 .chapter-milestone-screen { width: min(100%, 680px); }
+.chapter-complete-cg { width: 100%; max-height: 360px; border-radius: 14px; object-fit: cover; }
+.chapter-complete-counts { display: flex; justify-content: center; gap: 12px; margin: 18px 0; }
+.chapter-complete-counts strong {
+  border: 1px solid rgb(196 154 75 / 42%);
+  border-radius: 999px;
+  padding: 8px 16px;
+  color: #fff1c4;
+  background: rgb(4 15 25 / 78%);
+}
 .chapter-milestone-actions { justify-content: flex-end; margin-top: 22px; }
 .chapter-milestone-actions button:not(.primary-action) {
   border: 1px solid rgb(121 213 230 / 32%);
@@ -2046,4 +2081,5 @@ h1 {
   .chapter-story-actor { width: min(43%, 310px); }
   .starter-weapon-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .chapter-prep-header { align-items: flex-start; flex-direction: column; }
+  .chapter-party-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
