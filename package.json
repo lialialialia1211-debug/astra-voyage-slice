@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "build:ui-art": "node scripts/build-generated-ui.mjs",
+    "import:chapter-one-art": "node scripts/import-chapter-one-art.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
