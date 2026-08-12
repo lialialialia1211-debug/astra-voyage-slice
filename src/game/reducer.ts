@@ -1,7 +1,17 @@
 import { content } from '../content';
 import { chapterOneContent } from '../chapter-one/content';
-import { chapterBattleApCost } from '../chapter-one/flow';
-import type { ChapterSceneId, StarterWeaponId } from '../chapter-one/types';
+import {
+  chapterBattleApCost,
+  encounterForNode,
+  nodeAfterBattle,
+  nodeAfterScene,
+  sceneForNode,
+} from '../chapter-one/flow';
+import type {
+  ChapterPlayableActorId,
+  ChapterSceneId,
+  StarterWeaponId,
+} from '../chapter-one/types';
 import type {
   CaptainId,
   CharacterId,
@@ -51,10 +61,12 @@ export type GameAction =
   | { type: 'COMPLETE_CHAPTER_SCENE' }
   | { type: 'REPLAY_CHAPTER_SCENE'; sceneId: ChapterSceneId }
   | { type: 'SELECT_STARTER_WEAPON'; weaponId: StarterWeaponId }
+  | { type: 'SET_CHAPTER_PARTY'; partyIds: ChapterPlayableActorId[] }
   | { type: 'START_CHAPTER_BATTLE'; now: number }
   | { type: 'SAVE_CHAPTER_BATTLE_SNAPSHOT'; battle: BattleState }
   | { type: 'FINISH_CHAPTER_BATTLE'; result: 'victory' | 'defeat'; flags: string[]; enemyHp?: number }
   | { type: 'REPLAY_CHAPTER_BATTLE' }
+  | { type: 'CONTINUE_CHAPTER' }
   | { type: 'SYNC_AP'; now: number }
   | { type: 'USE_FIELD_RATION'; now: number }
   | { type: 'SELECT_STAGE'; stageId: StageId }
@@ -93,6 +105,22 @@ function grantVictoryRelation(state: GameState): GameState['relation'] {
 function advance(entry: GameState['relation']['chr_01']) {
   const xp = entry.xp + 40;
   return { xp, level: relationLevelForXp(xp) };
+}
+
+const chapterUnlocks: Readonly<Record<number, ChapterPlayableActorId>> = {
+  4: 'mila',
+  5: 'yanling',
+  7: 'yilan',
+  16: 'saifula',
+  24: 'hanze',
+};
+
+function unlockedAfterScene(
+  current: readonly ChapterPlayableActorId[],
+  sceneNumber: number,
+): ChapterPlayableActorId[] {
+  const unlocked = chapterUnlocks[sceneNumber];
+  return unlocked ? unique([...current, unlocked]) : [...current];
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
@@ -186,54 +214,67 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     case 'COMPLETE_CHAPTER_SCENE': {
       const sceneId = state.chapterOne.activeSceneId;
+      const scene = chapterOneContent.scenes.find((entry) => entry.id === sceneId);
+      if (!scene) throw new Error(`找不到章節場景：${sceneId}`);
       const completedScenes = unique([...state.chapterOne.completedScenes, sceneId]);
-      if (sceneId === 'ch01_scene_01_port_bell') {
-        return {
-          ...state,
-          screen: 'story',
-          chapterOne: {
-            ...state.chapterOne,
-            currentNode: 'scene-2',
-            activeSceneId: 'ch01_scene_02_black_ship',
-            activeLineIndex: 0,
-            completedScenes,
-          },
-        };
-      }
+      const currentNode = nodeAfterScene(sceneId);
+      const nextScene = sceneForNode(currentNode);
       return {
         ...state,
-        screen: 'chapter-prep',
+        screen: currentNode === 'chapter-complete'
+          ? 'chapter-milestone'
+          : currentNode.endsWith('-prep')
+            ? 'chapter-prep'
+            : 'story',
         chapterOne: {
           ...state.chapterOne,
-          currentNode: 'battle-1-prep',
+          currentNode,
+          activeSceneId: nextScene?.id ?? sceneId,
           activeLineIndex: 0,
           completedScenes,
+          unlockedActorIds: unlockedAfterScene(state.chapterOne.unlockedActorIds, scene.number),
         },
       };
     }
-    case 'REPLAY_CHAPTER_SCENE':
+    case 'REPLAY_CHAPTER_SCENE': {
+      const scene = chapterOneContent.scenes.find((entry) => entry.id === action.sceneId);
+      if (!scene) throw new Error(`找不到章節場景：${action.sceneId}`);
       return {
         ...state,
         screen: 'story',
         activeStoryId: null,
         chapterOne: {
           ...state.chapterOne,
-          currentNode: action.sceneId === 'ch01_scene_01_port_bell' ? 'scene-1' : 'scene-2',
+          currentNode: `scene-${scene.number}`,
           activeSceneId: action.sceneId,
           activeLineIndex: 0,
         },
       };
+    }
     case 'SELECT_STARTER_WEAPON':
       return {
         ...state,
         chapterOne: { ...state.chapterOne, selectedStarterWeaponId: action.weaponId },
       };
+    case 'SET_CHAPTER_PARTY': {
+      if (action.partyIds[0] !== 'zhaoli') throw new Error('昭黎必須固定在第一位');
+      if (new Set(action.partyIds).size !== action.partyIds.length) throw new Error('章節隊伍不可重複');
+      if (action.partyIds.some((actorId) => actorId !== 'luoen'
+        && !state.chapterOne.unlockedActorIds.includes(actorId))) {
+        throw new Error('隊伍包含尚未解鎖的角色');
+      }
+      return {
+        ...state,
+        chapterOne: { ...state.chapterOne, selectedPartyIds: [...action.partyIds] },
+      };
+    }
     case 'START_CHAPTER_BATTLE': {
-      if (state.screen !== 'chapter-prep' || state.chapterOne.currentNode !== 'battle-1-prep') {
+      const encounter = encounterForNode(state.chapterOne.currentNode);
+      if (state.screen !== 'chapter-prep' || !state.chapterOne.currentNode.endsWith('-prep') || !encounter) {
         throw new Error('第一章戰鬥尚未開放');
       }
       const ap = syncAp(state.ap, action.now);
-      const cost = chapterBattleApCost(state.chapterOne.completedBattles);
+      const cost = chapterBattleApCost(encounter.id, state.chapterOne.completedBattles);
       if (ap.current < cost) throw new Error('AP 不足');
       return {
         ...state,
@@ -241,8 +282,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ap: { ...ap, current: ap.current - cost },
         chapterOne: {
           ...state.chapterOne,
-          currentNode: 'battle-1',
-          activeEncounterId: 'ch01_b01_outer_bay_rescue',
+          currentNode: `battle-${encounter.number}`,
+          activeEncounterId: encounter.id,
           paidAp: cost,
           battleSnapshot: null,
           lastResult: null,
@@ -268,6 +309,10 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     case 'FINISH_CHAPTER_BATTLE': {
       if (!state.chapterOne.activeEncounterId) throw new Error('沒有進行中的第一章戰鬥');
+      const encounter = chapterOneContent.encounters.find(
+        (entry) => entry.id === state.chapterOne.activeEncounterId,
+      );
+      if (!encounter) throw new Error(`找不到章節戰鬥：${state.chapterOne.activeEncounterId}`);
       const shared = {
         ...state.chapterOne,
         battleSnapshot: null,
@@ -280,16 +325,16 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           screen: 'results',
           flags: unique([...state.flags, ...action.flags]),
           ap: { ...state.ap, current: Math.min(AP_MAX, state.ap.current + state.chapterOne.paidAp) },
-          chapterOne: { ...shared, currentNode: 'battle-1-prep' },
+          chapterOne: { ...shared, currentNode: `battle-${encounter.number}-prep` },
         };
       }
       return {
         ...state,
         screen: 'results',
-        flags: unique([...state.flags, ...action.flags, 'flag_ch01_b01_victory']),
+        flags: unique([...state.flags, ...action.flags, `flag_${encounter.id}_victory`]),
         chapterOne: {
           ...shared,
-          currentNode: 'milestone-complete',
+          currentNode: `battle-${encounter.number}`,
           completedBattles: unique([
             ...state.chapterOne.completedBattles,
             state.chapterOne.activeEncounterId,
@@ -297,13 +342,40 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         },
       };
     }
-    case 'REPLAY_CHAPTER_BATTLE':
+    case 'CONTINUE_CHAPTER': {
+      const encounterId = state.chapterOne.activeEncounterId;
+      if (!encounterId || state.chapterOne.lastResult !== 'victory') {
+        throw new Error('沒有可繼續的章節勝利');
+      }
+      const currentNode = nodeAfterBattle(encounterId);
+      const nextScene = sceneForNode(currentNode);
+      if (!nextScene) throw new Error(`找不到戰鬥後場景：${encounterId}`);
+      return {
+        ...state,
+        screen: 'story',
+        chapterOne: {
+          ...state.chapterOne,
+          currentNode,
+          activeSceneId: nextScene.id,
+          activeLineIndex: 0,
+          activeEncounterId: null,
+          paidAp: 0,
+          battleSnapshot: null,
+          lastResult: null,
+        },
+      };
+    }
+    case 'REPLAY_CHAPTER_BATTLE': {
+      const encounter = state.chapterOne.activeEncounterId
+        ? chapterOneContent.encounters.find((entry) => entry.id === state.chapterOne.activeEncounterId)
+        : encounterForNode(state.chapterOne.currentNode);
+      if (!encounter) throw new Error('找不到要重試的章節戰鬥');
       return {
         ...state,
         screen: 'chapter-prep',
         chapterOne: {
           ...state.chapterOne,
-          currentNode: 'battle-1-prep',
+          currentNode: `battle-${encounter.number}-prep`,
           activeEncounterId: null,
           paidAp: 0,
           tutorialStep: 'attack',
@@ -311,6 +383,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           lastResult: null,
         },
       };
+    }
     case 'SYNC_AP':
       return { ...state, ap: syncAp(state.ap, action.now) };
     case 'USE_FIELD_RATION': {

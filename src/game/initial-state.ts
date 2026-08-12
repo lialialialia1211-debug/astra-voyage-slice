@@ -14,6 +14,7 @@ import type { ApState, Inventory } from '../features/expedition/progression';
 import type {
   ChapterEncounterId,
   ChapterNodeId,
+  ChapterPlayableActorId,
   ChapterSceneId,
   StarterWeaponId,
 } from '../chapter-one/types';
@@ -55,7 +56,7 @@ export interface WeaponGrid {
 }
 
 export interface GameState {
-  version: 3;
+  version: 4;
   screen: ScreenId;
   adultConfirmed: boolean;
   adultMode: AdultDisplayMode;
@@ -99,6 +100,8 @@ export interface GameState {
     activeLineIndex: number;
     completedScenes: ChapterSceneId[];
     completedBattles: ChapterEncounterId[];
+    selectedPartyIds: ChapterPlayableActorId[];
+    unlockedActorIds: ChapterPlayableActorId[];
     selectedStarterWeaponId: StarterWeaponId;
     activeEncounterId: ChapterEncounterId | null;
     paidAp: 0 | 5;
@@ -136,7 +139,7 @@ const initialWeaponLevels: Record<WeaponId, GrowthLevel> = {
 
 export function createInitialState(now = Date.now()): GameState {
   return {
-    version: 3,
+    version: 4,
     screen: 'adult-gate',
     adultConfirmed: false,
     adultMode: 'full',
@@ -180,6 +183,8 @@ export function createInitialState(now = Date.now()): GameState {
       activeLineIndex: 0,
       completedScenes: [],
       completedBattles: [],
+      selectedPartyIds: ['zhaoli', 'luoen'],
+      unlockedActorIds: ['zhaoli'],
       selectedStarterWeaponId: 'wpn_water_01',
       activeEncounterId: null,
       paidAp: 0,
