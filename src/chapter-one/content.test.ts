@@ -1,47 +1,57 @@
-import { expect, it } from 'vitest';
-import * as contentModule from '../content';
+import { expect, it } from 'vitest'
+import { chapterOneContent } from './content'
 
-interface VerticalSliceContent {
-  scenes: readonly { id: string; lines: readonly unknown[] }[];
-  actors: readonly { id: string; age: number }[];
-  starterWeapons: readonly { id: string; element: string }[];
-  encounters: readonly { id: string; fixedPartyIds: readonly string[] }[];
-}
-
-function exportedChapterContent(): VerticalSliceContent | undefined {
-  return (contentModule as unknown as { chapterOneContent?: VerticalSliceContent }).chapterOneContent;
-}
-
-it('contains the approved first vertical slice', () => {
-  const chapter = exportedChapterContent();
-
-  expect(chapter?.scenes.map((scene) => scene.id)).toEqual([
-    'ch01_scene_01_port_bell',
-    'ch01_scene_02_black_ship',
-  ]);
-  expect(chapter?.encounters[0]).toMatchObject({
-    id: 'ch01_b01_outer_bay_rescue',
-    fixedPartyIds: ['zhaoli', 'luoen'],
-  });
-});
+it('contains the complete canonical first chapter', () => {
+  expect(chapterOneContent.scenes).toHaveLength(30)
+  expect(chapterOneContent.scenes.map((scene) => scene.number)).toEqual(
+    Array.from({ length: 30 }, (_, index) => index + 1),
+  )
+  expect(chapterOneContent.encounters).toHaveLength(15)
+  expect(chapterOneContent.actors.map((actor) => actor.id)).toEqual([
+    'zhaoli',
+    'yanling',
+    'saifula',
+    'mila',
+    'yilan',
+    'hanze',
+    'luoen',
+    'huicen',
+  ])
+})
 
 it('keeps every chapter actor adult and supplies six elemental starter weapons', () => {
-  const chapter = exportedChapterContent();
-
-  expect(chapter?.actors.every((actor) => actor.age >= 18)).toBe(true);
-  expect(chapter?.starterWeapons.map((weapon) => weapon.element)).toEqual([
+  expect(chapterOneContent.actors.every((actor) => actor.age >= 18)).toBe(true)
+  expect(chapterOneContent.starterWeapons.map((weapon) => weapon.element)).toEqual([
     'fire',
     'water',
     'earth',
     'wind',
     'light',
     'dark',
-  ]);
-});
+  ])
+})
 
-it('adapts both approved scenes into substantial AVG scripts', () => {
-  const chapter = exportedChapterContent();
+it('uses the approved fixed mainline adult scenes without affinity gates', () => {
+  const adultScenes = chapterOneContent.scenes.filter((scene) => scene.adult)
 
-  expect(chapter?.scenes[0]?.lines.length).toBeGreaterThanOrEqual(24);
-  expect(chapter?.scenes[1]?.lines.length).toBeGreaterThanOrEqual(24);
-});
+  expect(adultScenes.map((scene) => scene.number)).toEqual([15, 20, 25])
+  for (const scene of adultScenes) {
+    expect(new Set(scene.lines.map((line) => line.cgAssetId).filter(Boolean))).toHaveProperty('size', 3)
+  }
+})
+
+it('defines the approved battle insertion and enemy art sequence', () => {
+  expect(chapterOneContent.encounters.map((encounter) => encounter.afterSceneNumber)).toEqual([
+    2, 5, 8, 10, 12, 13, 16, 17, 19, 23, 24, 26, 27, 28, 29,
+  ])
+  expect(chapterOneContent.encounters[0]).toMatchObject({
+    id: 'ch01_b01_outer_bay_rescue',
+    defaultPartyIds: ['zhaoli', 'luoen'],
+    tutorialFocus: 'basic-attack',
+  })
+  expect(chapterOneContent.encounters[14]).toMatchObject({
+    id: 'ch01_b15_question_for_deep_ocean',
+    kind: 'boss',
+    tutorialFocus: null,
+  })
+})
