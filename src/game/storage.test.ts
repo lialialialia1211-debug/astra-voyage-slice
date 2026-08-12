@@ -64,7 +64,7 @@ it('round-trips a valid versioned save', () => {
   expect(repository.load()).toEqual({ state, corruptBackup: null });
 });
 
-it('migrates a tutorial-cleared v1 save into the land route', () => {
+it('migrates a tutorial-cleared v1 save into a fresh canonical chapter', () => {
   const oldState = versionOneState({ flags: ['flag_tutorial_victory'] });
   const repository = createSaveRepository(memoryStorage({
     'astra-save-v1': JSON.stringify(oldState),
@@ -73,15 +73,20 @@ it('migrates a tutorial-cleared v1 save into the land route', () => {
   const result = repository.load();
 
   expect(result.corruptBackup).toBeNull();
-  expect(result.state.version).toBe(2);
-  expect(result.state.firstClears).toEqual(['land_01_port_defense']);
-  expect(result.state.selectedStageId).toBe('land_02_surface_ruins');
+  expect(result.state.version).toBe(4);
+  expect(result.state.firstClears).toEqual([]);
+  expect(result.state.screen).toBe('story');
+  expect(result.state.chapterOne).toMatchObject({
+    currentNode: 'scene-1',
+    activeSceneId: 'ch01_scene_01_port_bell',
+    completedScenes: [],
+    completedBattles: [],
+  });
   expect(result.state.ap).toEqual({ current: 30, lastRecoveredAt: 1_000 });
   expect(result.state.inventory.fieldRation).toBe(1);
-  expect(result.state.relation.chr_02).toEqual({ xp: 100, level: 3 });
 });
 
-it('preserves a tidal-victory collection and marks all land content read', () => {
+it('does not map legacy collection progress into the canonical chapter', () => {
   const oldState = versionOneState({
     flags: ['flag_tutorial_victory', 'flag_tidal_boss_victory'],
     viewedEvents: ['evt_chr02_bond03'],
@@ -92,11 +97,68 @@ it('preserves a tidal-victory collection and marks all land content read', () =>
 
   const result = repository.load();
 
-  expect(result.state.firstClears).toHaveLength(4);
-  expect(result.state.viewedStories).toHaveLength(8);
-  expect(result.state.viewedEvents).toEqual(['evt_chr02_bond03']);
-  expect(result.state.flags).toContain('flag_tidal_boss_victory');
-  expect(result.state.screen).toBe('cabin');
+  expect(result.state.firstClears).toEqual([]);
+  expect(result.state.viewedStories).toEqual([]);
+  expect(result.state.viewedEvents).toEqual([]);
+  expect(result.state.flags).toEqual([]);
+  expect(result.state.screen).toBe('story');
+});
+
+it('migrates a v2 save while preserving safe display and AP settings', () => {
+  const legacy = {
+    ...createInitialState(1_000),
+    version: 2,
+    adultConfirmed: true,
+    adultMode: 'fade',
+    screen: 'cabin',
+    firstClears: ['land_01_port_defense'],
+    ap: { current: 20, lastRecoveredAt: 1_000 },
+  };
+  const repository = createSaveRepository(memoryStorage({
+    'astra-save-v1': JSON.stringify(legacy),
+  }), () => 1_000);
+
+  const result = repository.load();
+
+  expect(result.state.version).toBe(4);
+  expect(result.state.adultMode).toBe('fade');
+  expect(result.state.ap).toEqual({ current: 20, lastRecoveredAt: 1_000 });
+  expect(result.state.firstClears).toEqual([]);
+  expect(result.state.chapterOne.currentNode).toBe('scene-1');
+});
+
+it('migrates the completed v3 vertical slice to scene three', () => {
+  const initial = createInitialState(1_000);
+  const versionThree = {
+    ...initial,
+    version: 3,
+    adultConfirmed: true,
+    screen: 'chapter-milestone',
+    chapterOne: {
+      currentNode: 'milestone-complete',
+      activeSceneId: 'ch01_scene_02_black_ship',
+      activeLineIndex: 0,
+      completedScenes: ['ch01_scene_01_port_bell', 'ch01_scene_02_black_ship'],
+      completedBattles: ['ch01_b01_outer_bay_rescue'],
+      selectedStarterWeaponId: 'wpn_water_01',
+      activeEncounterId: 'ch01_b01_outer_bay_rescue',
+      paidAp: 0,
+      tutorialStep: 'victory-defeat',
+      battleSnapshot: null,
+      lastResult: 'victory',
+    },
+  };
+  const repository = createSaveRepository(memoryStorage({
+    'astra-save-v1': JSON.stringify(versionThree),
+  }), () => 1_000);
+
+  const result = repository.load();
+
+  expect(result.corruptBackup).toBeNull();
+  expect(result.state.version).toBe(4);
+  expect(result.state.screen).toBe('story');
+  expect(result.state.chapterOne.currentNode).toBe('scene-3');
+  expect(result.state.chapterOne.activeSceneId).toBe('ch01_scene_03_hand_that_would_not_let_go');
 });
 
 it('synchronizes offline AP when loading a v2 save', () => {

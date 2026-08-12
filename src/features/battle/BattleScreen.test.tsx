@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { App } from '../../app/App';
+import { chapterOneContent } from '../../chapter-one/content';
 import { content } from '../../content';
 import { createInitialState, type GameState } from '../../game/initial-state';
 import { createSaveRepository } from '../../game/storage';
@@ -36,6 +37,50 @@ it('telegraphs the tidal strike and allows all-party guard', async () => {
   await user.click(screen.getByRole('button', { name: '全隊防禦' }));
   expect(screen.getByText('全隊進入防禦姿態')).toBeVisible();
   expect(onSnapshot).toHaveBeenCalledWith(expect.objectContaining({ turn: 2 }));
+});
+
+it('shows only the attack command for the two-person first chapter tutorial', () => {
+  const initial = createInitialState(0);
+  const state = {
+    ...initial,
+    adultConfirmed: true,
+    screen: 'battle' as const,
+    chapterOne: {
+      ...initial.chapterOne,
+      currentNode: 'battle-1' as const,
+      activeEncounterId: 'ch01_b01_outer_bay_rescue' as const,
+      selectedStarterWeaponId: 'wpn_fire_01' as const,
+    },
+  } satisfies GameState;
+  createSaveRepository(window.localStorage).save(state);
+
+  render(<App />);
+
+  expect(screen.getByRole('heading', { name: '外灣救援' })).toBeVisible();
+  expect(screen.getByText('昭黎')).toBeVisible();
+  expect(screen.getByText('洛恩')).toBeVisible();
+  expect(screen.getByRole('button', { name: '全隊攻擊' })).toBeVisible();
+  expect(screen.queryByRole('button', { name: '全隊防禦' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: '召喚' })).not.toBeInTheDocument();
+});
+
+it('opens the complete RPG command set from chapter battle two onward', () => {
+  const encounter = chapterOneContent.encounters[1]!;
+  const battle = createBattle({
+    contentSet: 'chapter-one',
+    encounterId: encounter.id,
+    partyIds: encounter.defaultPartyIds,
+    elementOverrides: { zhaoli: 'water' },
+    loadoutAttack: 0,
+    loadoutHp: 0,
+    summonId: null,
+  });
+
+  render(<BattleStage initialBattle={battle} onComplete={vi.fn()} />);
+
+  expect(screen.getByRole('button', { name: '航向修正' })).toBeVisible();
+  expect(screen.getByRole('button', { name: '全隊防禦' })).toBeVisible();
+  expect(screen.getAllByRole('button', { name: '選擇奧義' })).toHaveLength(4);
 });
 
 it('keeps the selected loadout when retrying a defeat', async () => {

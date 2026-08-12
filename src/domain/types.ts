@@ -51,8 +51,8 @@ export interface SkillDefinition {
   effect?: SkillEffect | undefined;
 }
 
-export interface CharacterDefinition {
-  id: CharacterId;
+export interface CharacterDefinition<Id extends string = CharacterId> {
+  id: Id;
   name: string;
   age: number;
   element: Element;
@@ -101,8 +101,8 @@ export interface EnemyDefinition {
   actions: readonly EnemyActionDefinition[];
 }
 
-export interface EncounterDefinition {
-  id: EncounterId;
+export interface EncounterDefinition<Id extends string = EncounterId> {
+  id: Id;
   name: string;
   kind: 'tutorial' | 'normal' | 'boss';
   enemies: readonly EnemyDefinition[];

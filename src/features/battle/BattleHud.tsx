@@ -1,4 +1,4 @@
-import { content } from '../../content';
+import { battleEncounterFor } from './engine';
 import type { BattleState } from './types';
 
 interface BattleHudProps {
@@ -6,7 +6,7 @@ interface BattleHudProps {
 }
 
 export function BattleHud({ battle }: BattleHudProps) {
-  const encounter = content.encounters.find((entry) => entry.id === battle.encounterId);
+  const encounter = battleEncounterFor(battle.contentSet, battle.encounterId);
   const boss = battle.enemies[0];
 
   return (
