@@ -55,7 +55,7 @@ it('shows only the attack command for the two-person first chapter tutorial', ()
 
   render(<App />);
 
-  expect(screen.getByRole('heading', { name: '外灣救難線' })).toBeVisible();
+  expect(screen.getByRole('heading', { name: '外灣救援' })).toBeVisible();
   expect(screen.getByText('昭黎')).toBeVisible();
   expect(screen.getByText('洛恩')).toBeVisible();
   expect(screen.getByRole('button', { name: '全隊攻擊' })).toBeVisible();

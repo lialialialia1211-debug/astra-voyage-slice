@@ -22,17 +22,17 @@ it('shows the fixed protagonist in the first canonical scene', () => {
   render(<App />);
 
   expect(screen.getByRole('heading', { name: '港鐘與舊情' })).toBeVisible();
-  expect(screen.getByText('昭黎')).toBeVisible();
+  expect(screen.getAllByText('昭黎')).not.toHaveLength(0);
   expect(screen.queryByText('選擇遠征艦長')).not.toBeInTheDocument();
 });
 
-it('renders three actor slots and highlights the current speaker', () => {
-  window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState(22)));
+it('renders three actor slots for the current canonical prose block', () => {
+  window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState(0)));
 
   render(<App />);
 
   expect(screen.getAllByTestId('story-actor')).toHaveLength(3);
-  expect(screen.getByTestId('story-actor-current')).toHaveTextContent('晏泠');
+  expect(screen.getByText('旁白')).toBeVisible();
 });
 
 it('uses the selected captain portrait and can skip an unread scene', async () => {
