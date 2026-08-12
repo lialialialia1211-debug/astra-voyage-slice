@@ -19,6 +19,13 @@ it('contains the complete canonical first chapter', () => {
   ])
 })
 
+it('preserves generated character speakers in the playable AVG scene', () => {
+  const opening = chapterOneContent.scenes[0]!
+  const luoenLine = opening.lines.find((line) => line.text === '你查第二次才看見？')
+
+  expect(luoenLine).toMatchObject({ speakerId: 'luoen', speakerName: '洛恩' })
+})
+
 it('keeps every chapter actor adult and supplies six elemental starter weapons', () => {
   expect(chapterOneContent.actors.every((actor) => actor.age >= 18)).toBe(true)
   expect(chapterOneContent.starterWeapons.map((weapon) => weapon.element)).toEqual([
