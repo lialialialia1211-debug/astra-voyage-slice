@@ -1,4 +1,5 @@
 import generatedScenes from '../generated/chapter-one-scenes.json'
+import { scene01 } from './story/scenes/scene-01'
 import type {
   ChapterActorDefinition,
   ChapterActorId,
@@ -41,7 +42,7 @@ function stagePositions(count: number): readonly ChapterActorPosition[] {
   return ['left', 'center', 'right']
 }
 
-const scenes: readonly ChapterStoryScene[] = generatedScenes.map((scene) => ({
+const generatedStoryScenes: readonly ChapterStoryScene[] = generatedScenes.map((scene) => ({
   id: scene.id as ChapterStoryScene['id'],
   number: scene.number,
   title: scene.title,
@@ -68,6 +69,10 @@ const scenes: readonly ChapterStoryScene[] = generatedScenes.map((scene) => ({
     }
   }),
 }))
+
+const scenes: readonly ChapterStoryScene[] = generatedStoryScenes.map((scene) => (
+  scene.id === scene01.id ? scene01 : scene
+))
 
 const starterWeapons = [
   { id: 'wpn_fire_01', name: '赤燼長刃', element: 'fire', summary: '以灼熱斬擊切開阻礙。', assetId: 'wpn_fire_01' },

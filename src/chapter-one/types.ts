@@ -43,6 +43,7 @@ export interface ChapterStageActor {
   actorId: ChapterActorId
   position: ChapterActorPosition
   expression: ChapterExpression
+  action?: string
 }
 
 export interface ChapterAudioCue {

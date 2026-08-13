@@ -113,6 +113,11 @@ export function StoryScreen() {
                     fallbackLabel={actor.name}
                   />
                   <strong>{actor.name}</strong>
+                  {stageActor.action && (
+                    <span className="chapter-story-actor-action" data-testid="story-actor-action">
+                      {stageActor.action}
+                    </span>
+                  )}
                 </div>
               </article>
             );
