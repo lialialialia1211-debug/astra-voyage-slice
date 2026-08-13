@@ -36,9 +36,16 @@ it('opens scene one on character dialogue without parking Yanling on stage', () 
   expect(screen.getAllByTestId('story-actor')).toHaveLength(2);
   expect(screen.getAllByText('昭黎')).not.toHaveLength(0);
   expect(screen.getAllByText('洛恩')).not.toHaveLength(0);
-  expect(screen.getByTestId('story-actor-action')).toHaveTextContent('指腹停在磨平的繩眼。');
   expect(screen.queryByText('晏泠')).not.toBeInTheDocument();
   expect(screen.queryByText('旁白')).not.toBeInTheDocument();
+});
+
+it('shows actor action as a stage cue instead of a narration beat', () => {
+  window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState(0)));
+
+  render(<App />);
+
+  expect(screen.getByTestId('story-actor-action')).toHaveTextContent('指腹停在磨平的繩眼。');
 });
 
 it('keeps AVG prose and navigation in separate layout regions', () => {
