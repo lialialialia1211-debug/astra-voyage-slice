@@ -161,6 +161,54 @@ it('migrates the completed v3 vertical slice to scene three', () => {
   expect(result.state.chapterOne.activeSceneId).toBe('ch01_scene_03_hand_that_would_not_let_go');
 });
 
+it('restarts chapter one when loading the pre-rewrite v4 dialogue save', () => {
+  const initial = createInitialState(1_000);
+  const versionFour = {
+    ...initial,
+    version: 4,
+    adultConfirmed: true,
+    adultMode: 'fade' as const,
+    screen: 'story' as const,
+    storySettings: {
+      auto: true,
+      allowUnreadFastForward: true,
+      textSpeed: 3 as const,
+    },
+    audioSettings: {
+      master: 0.8,
+      bgm: 0.7,
+      ambience: 0.6,
+      sfx: 0.5,
+    },
+    chapterOne: {
+      ...initial.chapterOne,
+      currentNode: 'scene-2' as const,
+      activeSceneId: 'ch01_scene_02_black_ship' as const,
+      activeLineIndex: 32,
+      completedScenes: ['ch01_scene_01_port_bell' as const],
+    },
+  };
+  const repository = createSaveRepository(memoryStorage({
+    'astra-save-v1': JSON.stringify(versionFour),
+  }), () => 2_000);
+
+  const result = repository.load();
+
+  expect(result.corruptBackup).toBeNull();
+  expect(result.state.version).toBe(5);
+  expect(result.state.screen).toBe('story');
+  expect(result.state.adultMode).toBe('fade');
+  expect(result.state.storySettings).toEqual(versionFour.storySettings);
+  expect(result.state.audioSettings).toEqual(versionFour.audioSettings);
+  expect(result.state.chapterOne).toMatchObject({
+    currentNode: 'scene-1',
+    activeSceneId: 'ch01_scene_01_port_bell',
+    activeLineIndex: 0,
+    completedScenes: [],
+    completedBattles: [],
+  });
+});
+
 it('synchronizes offline AP when loading a v2 save', () => {
   const state = {
     ...createInitialState(1_000),
