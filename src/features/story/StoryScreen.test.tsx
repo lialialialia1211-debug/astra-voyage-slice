@@ -28,13 +28,16 @@ it('shows the fixed protagonist in the first canonical scene', () => {
   expect(screen.queryByText('選擇遠征艦長')).not.toBeInTheDocument();
 });
 
-it('renders three actor slots for the current canonical prose block', () => {
+it('opens scene one on character dialogue without parking Yanling on stage', () => {
   window.localStorage.setItem('astra-save-v1', JSON.stringify(chapterSceneState(0)));
 
   render(<App />);
 
-  expect(screen.getAllByTestId('story-actor')).toHaveLength(3);
-  expect(screen.getByText('旁白')).toBeVisible();
+  expect(screen.getAllByTestId('story-actor')).toHaveLength(2);
+  expect(screen.getAllByText('昭黎')).not.toHaveLength(0);
+  expect(screen.getAllByText('洛恩')).not.toHaveLength(0);
+  expect(screen.queryByText('晏泠')).not.toBeInTheDocument();
+  expect(screen.queryByText('旁白')).not.toBeInTheDocument();
 });
 
 it('keeps AVG prose and navigation in separate layout regions', () => {

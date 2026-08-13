@@ -19,11 +19,38 @@ it('contains the complete canonical first chapter', () => {
   ])
 })
 
-it('preserves generated character speakers in the playable AVG scene', () => {
+it('stages scene one as a compact character-driven AVG scene', () => {
   const opening = chapterOneContent.scenes[0]!
-  const luoenLine = opening.lines.find((line) => line.text === '你查第二次才看見？')
+  const narratorLines = opening.lines.filter((line) => (
+    line.speakerId === 'narrator' || line.speakerId === 'narration'
+  ))
+  const firstYanlingLine = opening.lines.findIndex((line) => line.speakerId === 'yanling')
 
-  expect(luoenLine).toMatchObject({ speakerId: 'luoen', speakerName: '洛恩' })
+  expect(opening.lines.length).toBeLessThanOrEqual(70)
+  expect(narratorLines.length).toBeLessThanOrEqual(2)
+  expect(opening.lines[0]?.speakerId).toBe('zhaoli')
+  expect(opening.lines[0]?.actors.map((actor) => actor.actorId)).toEqual(['zhaoli', 'luoen'])
+  expect(firstYanlingLine).toBeGreaterThan(0)
+  for (const line of opening.lines.slice(0, firstYanlingLine)) {
+    expect(line.actors.some((actor) => actor.actorId === 'yanling')).toBe(false)
+  }
+  expect(opening.lines.at(-1)?.actors.some((actor) => actor.actorId === 'yanling')).toBe(false)
+
+  for (const line of opening.lines) {
+    if (['zhaoli', 'yanling', 'luoen'].includes(line.speakerId)) {
+      expect(line.actors.some((actor) => actor.actorId === line.speakerId)).toBe(true)
+    }
+  }
+})
+
+it('keeps the approved scene-one event chain in character dialogue', () => {
+  const opening = chapterOneContent.scenes[0]!
+
+  expect(opening.lines.some((line) => line.speakerId === 'zhaoli' && /十五分/.test(line.text))).toBe(true)
+  expect(opening.lines.some((line) => line.speakerId === 'zhaoli' && /舊圖|新圖/.test(line.text))).toBe(true)
+  expect(opening.lines.some((line) => line.speakerId === 'luoen' && /自己的紀錄|不替/.test(line.text))).toBe(true)
+  expect(opening.lines.some((line) => line.speakerId === 'yanling' && /退出角/.test(line.text))).toBe(true)
+  expect(opening.lines.some((line) => line.speakerId === 'port-control' && /外灣|秋穗號/.test(line.text))).toBe(true)
 })
 
 it('keeps every chapter actor adult and supplies six elemental starter weapons', () => {
