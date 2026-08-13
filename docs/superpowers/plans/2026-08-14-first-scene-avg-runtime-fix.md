@@ -60,13 +60,16 @@ git commit -m "fix: restart chapter after dialogue revision"
 
 **Files:**
 - Create: `src/chapter-one/story/scenes/scene-01.ts`
+- Modify: `src/chapter-one/types.ts`
 - Modify: `src/chapter-one/content.ts`
 - Modify: `src/chapter-one/content.test.ts`
+- Modify: `src/features/story/StoryScreen.tsx`
 - Modify: `src/features/story/StoryScreen.test.tsx`
+- Modify: `src/app/app.css`
 
 **Interfaces:**
 - Consumes: `ChapterStoryScene`, the Scene 01 novel event order, v0.3 cards for Zhaoli/Yanling/Luoen, and the Scene 01 state table.
-- Produces: `scene01` as a complete typed stage snapshot sequence and an override map in `content.ts` keyed by `ch01_scene_01_port_bell`.
+- Produces: `scene01` as a complete typed stage snapshot sequence, optional `ChapterStageActor.action` cues rendered on the actor, and an override map in `content.ts` keyed by `ch01_scene_01_port_bell`.
 
 - [ ] **Step 1: Write failing content tests**
 
@@ -74,7 +77,7 @@ Assert that playable Scene 01 has at most 70 beats, at most two narration beats 
 
 - [ ] **Step 2: Write the failing StoryScreen test**
 
-Assert that a fresh Scene 01 visibly opens on a character line, shows exactly Zhaoli and Luoen, and does not render Yanling.
+Assert that a fresh Scene 01 visibly opens on a character line, shows exactly Zhaoli and Luoen, renders the current actor action as a stage cue, and does not render Yanling.
 
 - [ ] **Step 3: Push the combined test-only commit and verify RED remotely**
 
@@ -82,7 +85,7 @@ Expected failures: generated Scene 01 has 142 beats, begins with narration, and 
 
 - [ ] **Step 4: Author the typed Scene 01 module**
 
-Write 45–70 short beats covering: damaged towline inspection, three-ship dispatch, old passenger ship/new map comparison, gangway rescue, Yanling's late inspection, evidence seal/exit-angle questions, alarm, and Yanling's exit from the duty line. Dialogue follows each card's sentence order and avoids reading character thoughts aloud.
+Write 45–70 short beats covering: damaged towline inspection, three-ship dispatch, old passenger ship/new map comparison, gangway rescue, Yanling's late inspection, evidence seal/exit-angle questions, alarm, and Yanling's exit from the duty line. Dialogue follows each card's sentence order and avoids reading character thoughts aloud. Visible actions live on `ChapterStageActor.action` and do not consume narrator beats.
 
 - [ ] **Step 5: Override only Scene 01 in runtime content**
 
@@ -91,7 +94,7 @@ Import `scene01` in `content.ts` and select it by ID; generated Scenes 02–30 r
 - [ ] **Step 6: Commit the manual scene**
 
 ```powershell
-git add -- src/chapter-one/story/scenes/scene-01.ts src/chapter-one/content.ts src/chapter-one/content.test.ts src/features/story/StoryScreen.test.tsx
+git add -- src/chapter-one/story/scenes/scene-01.ts src/chapter-one/types.ts src/chapter-one/content.ts src/chapter-one/content.test.ts src/features/story/StoryScreen.tsx src/features/story/StoryScreen.test.tsx src/app/app.css
 git commit -m "feat: stage scene one as character-driven AVG"
 ```
 
