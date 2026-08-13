@@ -73,7 +73,7 @@ it('migrates a tutorial-cleared v1 save into a fresh canonical chapter', () => {
   const result = repository.load();
 
   expect(result.corruptBackup).toBeNull();
-  expect(result.state.version).toBe(4);
+  expect(result.state.version).toBe(5);
   expect(result.state.firstClears).toEqual([]);
   expect(result.state.screen).toBe('story');
   expect(result.state.chapterOne).toMatchObject({
@@ -120,7 +120,7 @@ it('migrates a v2 save while preserving safe display and AP settings', () => {
 
   const result = repository.load();
 
-  expect(result.state.version).toBe(4);
+  expect(result.state.version).toBe(5);
   expect(result.state.adultMode).toBe('fade');
   expect(result.state.ap).toEqual({ current: 20, lastRecoveredAt: 1_000 });
   expect(result.state.firstClears).toEqual([]);
@@ -155,7 +155,7 @@ it('migrates the completed v3 vertical slice to scene three', () => {
   const result = repository.load();
 
   expect(result.corruptBackup).toBeNull();
-  expect(result.state.version).toBe(4);
+  expect(result.state.version).toBe(5);
   expect(result.state.screen).toBe('story');
   expect(result.state.chapterOne.currentNode).toBe('scene-3');
   expect(result.state.chapterOne.activeSceneId).toBe('ch01_scene_03_hand_that_would_not_let_go');

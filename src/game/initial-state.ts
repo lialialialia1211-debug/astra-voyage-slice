@@ -56,7 +56,7 @@ export interface WeaponGrid {
 }
 
 export interface GameState {
-  version: 4;
+  version: 5;
   screen: ScreenId;
   adultConfirmed: boolean;
   adultMode: AdultDisplayMode;
@@ -139,7 +139,7 @@ const initialWeaponLevels: Record<WeaponId, GrowthLevel> = {
 
 export function createInitialState(now = Date.now()): GameState {
   return {
-    version: 4,
+    version: 5,
     screen: 'adult-gate',
     adultConfirmed: false,
     adultMode: 'full',

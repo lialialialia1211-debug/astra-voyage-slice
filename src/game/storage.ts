@@ -204,7 +204,7 @@ const versionThreeStateSchema = versionTwoStateSchema.extend({
   }),
 });
 
-export const gameStateSchema = versionThreeStateSchema.extend({
+const versionFourStateSchema = versionThreeStateSchema.extend({
   version: z.literal(4),
   chapterOne: z.object({
     currentNode: chapterNodeIdSchema,
@@ -221,6 +221,10 @@ export const gameStateSchema = versionThreeStateSchema.extend({
     battleSnapshot: battleStateSchema.nullable(),
     lastResult: z.enum(['victory', 'defeat']).nullable(),
   }),
+});
+
+export const gameStateSchema = versionFourStateSchema.extend({
+  version: z.literal(5),
 });
 
 const versionOneScreenSchema = z.enum([
@@ -251,6 +255,7 @@ const versionOneStateSchema = z.object({
 type VersionOneState = z.infer<typeof versionOneStateSchema>;
 type VersionTwoState = z.infer<typeof versionTwoStateSchema>;
 type VersionThreeState = z.infer<typeof versionThreeStateSchema>;
+type VersionFourState = z.infer<typeof versionFourStateSchema>;
 
 export function migrateV1State(input: VersionOneState, now: number): GameState {
   const base = createInitialState(now);
@@ -278,7 +283,7 @@ export function migrateV3State(input: VersionThreeState, now: number): GameState
   const completedSlice = input.chapterOne.currentNode === 'milestone-complete';
   return gameStateSchema.parse({
     ...input,
-    version: 4,
+    version: 5,
     screen: completedSlice ? 'story' : input.screen,
     chapterOne: {
       ...input.chapterOne,
@@ -294,6 +299,18 @@ export function migrateV3State(input: VersionThreeState, now: number): GameState
       battleSnapshot: null,
       lastResult: completedSlice ? null : input.chapterOne.lastResult,
     },
+  }) as GameState;
+}
+
+export function migrateV4State(input: VersionFourState, now: number): GameState {
+  const base = createInitialState(now);
+  return gameStateSchema.parse({
+    ...input,
+    version: 5,
+    screen: input.adultConfirmed ? 'story' : 'adult-gate',
+    activeStoryId: null,
+    storyReturnScreen: null,
+    chapterOne: base.chapterOne,
   }) as GameState;
 }
 
@@ -327,7 +344,9 @@ export function createSaveRepository(
             ? migrateV2State(versionTwoStateSchema.parse(json), now())
             : version === 3
               ? migrateV3State(versionThreeStateSchema.parse(json), now())
-              : gameStateSchema.parse(json) as GameState;
+              : version === 4
+                ? migrateV4State(versionFourStateSchema.parse(json), now())
+                : gameStateSchema.parse(json) as GameState;
         return {
           state: { ...loaded, ap: syncAp(loaded.ap, now()) },
           corruptBackup: null,

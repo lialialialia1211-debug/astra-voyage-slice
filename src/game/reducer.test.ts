@@ -17,7 +17,7 @@ it('moves confirmed adults directly to the first canonical scene', () => {
 
   expect(state.adultConfirmed).toBe(true);
   expect(state).toMatchObject({
-    version: 4,
+    version: 5,
     screen: 'story',
     chapterOne: {
       currentNode: 'scene-1',
@@ -65,7 +65,7 @@ function chapterPrepState(completedBattles: string[] = [], battleNumber = 1) {
   const afterSceneNumber = [2, 5, 8, 10, 12, 13, 16, 17, 19, 23, 24, 26, 27, 28, 29][battleNumber - 1] ?? 2;
   return {
     ...createInitialState(0),
-    version: 4,
+    version: 5,
     adultConfirmed: true,
     screen: 'chapter-prep',
     chapterOne: {
